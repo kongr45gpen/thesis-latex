@@ -1,0 +1,156 @@
+\documentclass[a4paper]{tufte-book}
+
+\hypersetup{colorlinks}% uncomment this line if you prefer colored hyperlinks (e.g., for onscreen viewing)
+
+%%
+% Book metadata
+\title{Design of Fault Detection, Isolation and Recovery in the AcubeSAT nanosatellite\thanks{AcubeSAT}}
+\author[kongr45gpen]{kongr45gpen}
+\publisher{Draft SpaceDot}
+
+%%
+% If they're installed, use Bergamo and Chantilly from www.fontsite.com.
+% They're clones of Bembo and Gill Sans, respectively.
+%\IfFileExists{bergamo.sty}{\usepackage[osf]{bergamo}}{}% Bembo
+%\IfFileExists{chantill.sty}{\usepackage{chantill}}{}% Gill Sans
+
+%\usepackage{microtype}
+
+%%
+% Just some sample text
+\usepackage{lipsum}
+
+%%
+% For nicely typeset tabular material
+\usepackage{booktabs}
+
+%%
+% For graphics / images
+\usepackage{graphicx}
+\setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
+\graphicspath{{graphics/}}
+
+% What
+\setcounter{secnumdepth}{3}
+
+
+%%
+% Prints a trailing space in a smart way.
+\usepackage{xspace}
+
+% Inserts a blank page
+\newcommand{\blankpage}{\newpage\hbox{}\thispagestyle{empty}\newpage}
+
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\usepackage{siunitx}
+
+\usepackage{acro}
+
+\DeclareAcronym{FDIR}{short=FDIR,long={Fault Detection, Isolation and Recovery}}
+
+% Generates the index
+\usepackage{makeidx}
+\makeindex
+
+\begin{document}
+
+% Front matter
+%\frontmatter
+
+% r.1 blank page
+%\blankpage
+
+% r.3 full title page
+\maketitle
+
+
+% v.4 copyright page
+\newpage
+\begin{fullwidth}
+~\vfill
+\thispagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{\baselineskip}
+Copyright \copyright\ \the\year\ \thanklessauthor
+
+\par\smallcaps{Published by \thanklesspublisher}
+
+\par\smallcaps{tufte-latex.github.io/tufte-latex/}
+
+\par Licensed under the Apache License, Version 2.0 (the ``License''); you may not
+use this file except in compliance with the License. You may obtain a copy
+of the License at \url{http://www.apache.org/licenses/LICENSE-2.0}. Unless
+required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an \smallcaps{``AS IS'' BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND}, either express or implied. See the
+License for the specific language governing permissions and limitations
+under the License.\index{license}
+
+\par\textit{First printing, 2021}
+\end{fullwidth}
+
+% r.5 contents
+\tableofcontents
+
+\listoffigures
+
+\listoftables
+
+%\chapter*{List of Acronyms}
+%\acuseall%
+\printacronyms[pages={display=all,seq/use=false}]
+
+% r.9 introduction
+\cleardoublepage
+\chapter*{Introduction}
+
+This sample book discusses the design of Edward Tufte's
+books\cite{Tufte2001,Tufte1990,Tufte1997,Tufte2006}.
+
+
+%%
+% Start the main matter (normal chapters)
+\mainmatter
+
+
+\chapter{Reliability Engineering in CubeSat Systems}
+\label{sec:fdir}
+
+
+%\newthought{The pages} of a book are usually divided into three major
+%sections: the front matter (also called preliminary matter or prelim), the
+%main matter (the core text of the book), and the back matter (or end
+%matter).
+
+%\newthought{The front matter} of a book refers to all of the material that
+%comes before the main text.  The following table from shows a list of
+%material that appears in the front matter of
+%along with its page number.  Page numbers that appear in parentheses refer
+%to folios that do not have a printed page number (but they are still
+%counted in the page number sequence).
+
+\section{Kalispera}
+space is very important
+\acf{FDIR}
+
+\chapter{The AcubeSAT mission}
+
+\chapter{\ac{FDIR} concept in AcubeSAT}
+
+\chapter{Software implementation of \ac{FDIR}}
+
+\chapter{Hardware implementation of \ac{FDIR}}
+
+
+\backmatter
+
+\bibliography{sample-handout}
+\bibliographystyle{plainnat}
+
+
+\printindex
+
+\end{document}
+
