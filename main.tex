@@ -1,58 +1,14 @@
-\documentclass[a4paper]{tufte-book}
+\documentclass[a4paper,nobib]{tufte-book}
 
 \hypersetup{colorlinks}% uncomment this line if you prefer colored hyperlinks (e.g., for onscreen viewing)
+
+\input{preamble.tex}
 
 %%
 % Book metadata
 \title{Design of Fault Detection, Isolation and Recovery in the AcubeSAT nanosatellite\thanks{AcubeSAT}}
 \author[kongr45gpen]{kongr45gpen}
 \publisher{Draft SpaceDot}
-
-%%
-% If they're installed, use Bergamo and Chantilly from www.fontsite.com.
-% They're clones of Bembo and Gill Sans, respectively.
-%\IfFileExists{bergamo.sty}{\usepackage[osf]{bergamo}}{}% Bembo
-%\IfFileExists{chantill.sty}{\usepackage{chantill}}{}% Gill Sans
-
-%\usepackage{microtype}
-
-%%
-% Just some sample text
-\usepackage{lipsum}
-
-%%
-% For nicely typeset tabular material
-\usepackage{booktabs}
-
-%%
-% For graphics / images
-\usepackage{graphicx}
-\setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
-\graphicspath{{graphics/}}
-
-% What
-\setcounter{secnumdepth}{3}
-
-
-%%
-% Prints a trailing space in a smart way.
-\usepackage{xspace}
-
-% Inserts a blank page
-\newcommand{\blankpage}{\newpage\hbox{}\thispagestyle{empty}\newpage}
-
-\usepackage{hyperref}
-\usepackage{cleveref}
-
-\usepackage{siunitx}
-
-\usepackage{acro}
-
-\DeclareAcronym{FDIR}{short=FDIR,long={Fault Detection, Isolation and Recovery}}
-
-% Generates the index
-\usepackage{makeidx}
-\makeindex
 
 \begin{document}
 
@@ -88,6 +44,10 @@ WARRANTIES OR CONDITIONS OF ANY KIND}, either express or implied. See the
 License for the specific language governing permissions and limitations
 under the License.\index{license}
 
+\par The AcubeSAT project is carried out with the support of the Education Office of the \href{https://www.esa.int/}{European Space Agency}, under the educational \href{https://www.esa.int/Education/CubeSats_-_Fly_Your_Satellite/}{Fly Your Satellite! programme}.
+
+\par The views expressed herein by the authors can in no way be taken to reflect the official opinion, or endorsement, of the European Space Agency.
+
 \par\textit{First printing, 2021}
 \end{fullwidth}
 
@@ -104,10 +64,14 @@ under the License.\index{license}
 
 % r.9 introduction
 \cleardoublepage
-\chapter*{Introduction}
 
-This sample book discusses the design of Edward Tufte's
-books\cite{Tufte2001,Tufte1990,Tufte1997,Tufte2006}.
+\chapter*{Abstract}
+
+%This sample book discusses the design of Edward Tufte's
+%books\cite{Tufte2001,Tufte1990,Tufte1997,Tufte2006}.
+\justify
+Space is not a welcoming environment; while the aerospace engineering community has managed to reliably operate thousands of satellites in orbit, CubeSats, the most popular class of nanosatellite, only have a 50\% success rate. Low costs, lack of strict technical requirements and scarcity of publicly available documentation often drives up the risks for educational, scientific and commercial CubeSats. This thesis investigates a configurable and modular Fault Detection, Isolation and Recovery (FDIR) architecture that uses the ECSS Packet Utilisation Standard. This FDIR concept, along with the provided open-source software implementation, can be used by CubeSat missions to increase the reliability of their design and chances of mission success, by autonomously responding to on-board errors. The thesis also includes background information regarding CubeSat reliability, and explores the software and hardware used to implement the proposed FDIR design on the AcubeSAT mission, currently under design by students of the Aristotle University of Thessaloniki.
+
 
 
 %%
@@ -132,10 +96,68 @@ books\cite{Tufte2001,Tufte1990,Tufte1997,Tufte2006}.
 %counted in the page number sequence).
 
 \section{Kalispera}
-space is very important
+space is very important \autocite{durou_hierarchical_2002}
 \acf{FDIR}
 
 \chapter{The AcubeSAT mission}
+
+\section{CubeSat}
+
+
+\section{Subsystems}
+
+The AcubeSAT nanosatellite is technically and programmatically split into \draft{N} different subteams or \textbf{subsystems}, each responsible for a different section of the satellite, and made up out of \draft{M} dedicated members.
+
+In the following sections, a brief introduction on the function and design of each subsystem is presented. For more detailed information, the reader is encouraged to refer to \foothref{https://acubesat.spacedot.gr/subsystems/}{AcubeSAT's website}, or to the publicly available \foothref{https://gitlab.com/acubesat/documentation/cdr-public}{\ac{CDR} documents}.
+\subsection{\acf{ADCS}}
+
+\subsection{\acf{COMMS}}
+
+The communications subsystem is responsible for transmitting data between the Earth and the spacecraft in orbit. The transmitted data is split into 3 different categories:
+\begin{itemize}
+	\item \textbf{\acf{TC}}: Commands from the Earth to the satellite. They can be used to request information, or to perform specific spacecraft actions.
+	\item \textbf{\acf{TM}}: Information sent from the satellite towards Earth, typically including vital information such as sensor values, system status, timestamps and events.
+	\item \textbf{Science data}: The scientific data generated by the payload. These are the highest-volume data and represent the main scientific output of the mission.
+\end{itemize}
+
+It is important to mention that the satellite orbit only allows for a very short visibility duration every day, increasing the needs for on-board autonomy and the importance of a correctly implemented \acs{FDIR} method.
+
+\begin{marginfigure}
+	\includegraphics{satnogs-comms}
+	\caption{The SatNOGS COMMS board}
+\end{marginfigure}
+
+The main component of the \acs{COMMS} subsystems is the \textbf{SatNOGS COMMS board} \autocite{surligas_satnogs-comms_2021}, an open-source \acs{RF} transceiver developed by the \href{https://libre.space/}{LibreSpace Foundation}, based on \acs{CCSDS} telecommunications standards.
+
+Communication will take place using 2 frequency bands on the \acs{ISM} range, namely \SI{436.5}{\mega\hertz} and \SI{2.425}{\giga\hertz}, supported by a deployable turnstile and a directional patch antenna respectively. The use of \acs{ISM} frequencies allows easy radio-amateur access to the satellite.
+
+The communications subsystem is also responsible for the \ac{EMC} analysis and interference mitigation, as well as the design and construction of the satellite \acl{GS}. The \acl{GS} will be part of \textbf{SatNOGS}\autocite{white_overview_2018}, a global network of satellite ground stations based on open technologies and open data.
+
+\subsection{\acf{EPS}}
+The \ac{EPS} is the subsystem responsible for the generation, distribution and storage of electrical power of the spacecraft. It is a critical aspect of the spacecraft due to the direct dependence of all subsystems to the high power needs of many CubeSat subsystems, and is theorised to be the most common reason for CubeSat failure.\autocite{langer_reliability_2016}.
+
+AcubeSAT has opted for a \ac{COTS} subsystem approach for the \ac{EPS}:
+\begin{itemize}
+	\item \textbf{Solar panels} are procured from EnduroSat. Four 3U panels cover the \(X\) and \(Y\) faces of the satellite, and one 1U panel covers the \(-Z\) face.
+	\item The \textbf{\ac{PCDU}} is procured from NanoAvionics and offers 10 switched channels with overcurrent protection over 4 voltage rails, as well as 4 \ac{MPPT} converters.
+	\item The \textbf{battery pack}, also procured from NanoAvionics, contains 4 18650 Li-Ion cells in a 2S2P\footnote{2 series, 2 parallel} configuration.
+\end{itemize}
+
+\subsection{\acf{OBDH}}
+
+\subsection{\acf{OPS}}
+
+\subsection{Structural}
+
+\subsection{\acf{SYE}}
+
+\subsection{\acf{SU}}
+
+\subsection{Thermal}
+
+\subsection{Trajectory}
+
+\section{Tools used}
 
 \chapter{\ac{FDIR} concept in AcubeSAT}
 
@@ -146,8 +168,7 @@ space is very important
 
 \backmatter
 
-\bibliography{sample-handout}
-\bibliographystyle{plainnat}
+\printbibliography
 
 
 \printindex

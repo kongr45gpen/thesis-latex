@@ -1,0 +1,54 @@
+%%
+% If they're installed, use Bergamo and Chantilly from www.fontsite.com.
+% They're clones of Bembo and Gill Sans, respectively.
+%\IfFileExists{bergamo.sty}{\usepackage[osf]{bergamo}}{}% Bembo
+%\IfFileExists{chantill.sty}{\usepackage{chantill}}{}% Gill Sans
+
+%\usepackage{microtype}
+
+%%
+% Just some sample text
+\usepackage{lipsum}
+
+%%
+% For nicely typeset tabular material
+\usepackage{booktabs}
+
+%%
+% For graphics / images
+\usepackage{graphicx}
+\setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
+\graphicspath{{media/}}
+
+% What
+\setcounter{secnumdepth}{3}
+
+% Bibliography
+\usepackage[
+style=ieee,
+citestyle=verbose,
+autocite=footnote,
+backend=biber
+]{biblatex}
+\addbibresource{bibliography.bib}
+
+
+%%
+% Prints a trailing space in a smart way.
+\usepackage{xspace}
+
+% Inserts a blank page
+\newcommand{\blankpage}{\newpage\hbox{}\thispagestyle{empty}\newpage}
+
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\usepackage{siunitx}
+
+\usepackage{acro}
+\input{acronyms.tex}
+\input{commands.tex}
+
+% Generates the index
+\usepackage{makeidx}
+\makeindex

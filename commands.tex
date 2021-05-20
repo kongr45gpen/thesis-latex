@@ -1,0 +1,22 @@
+\NewDocumentCommand\draft{m}{%
+	\textcolor[HTML]{bf616a}{\textbf{#1}}%
+}
+
+\makeatletter
+\newcommand\footurl@[1]{\footnote{\url@{#1}}}
+\DeclareRobustCommand{\footurl}{\hyper@normalise\footurl@}
+
+\newcommand\foothref@[2]{\href@{#1}{#2}\footnote{\url@{#1}}}
+\def\Hy@foothref#{%
+	\hyper@normalise\foothref@
+}
+\DeclareRobustCommand*{\foothref}[1][]{%
+	\begingroup
+	\setkeys{href}{#1}%
+	\@ifnextchar\bgroup\Hy@foothref{\hyper@normalise\foothref@}%
+}
+\makeatother
+
+\makeatletter
+
+\makeatother
