@@ -8,7 +8,7 @@
 % Book metadata
 \title{Design of Fault Detection, Isolation and Recovery in the AcubeSAT nanosatellite\thanks{AcubeSAT}}
 \author[kongr45gpen]{kongr45gpen}
-\publisher{Draft SpaceDot}
+\publisher{Draft SpaceDot (the title page will change)}
 
 \begin{document}
 
@@ -72,7 +72,7 @@ under the License.\index{license}
 \justify
 Space is not a welcoming environment; while the aerospace engineering community has managed to reliably operate thousands of satellites in orbit, CubeSats, the most popular class of nanosatellite, only have a 50\% success rate. Low costs, lack of strict technical requirements and scarcity of publicly available documentation often drives up the risks for educational, scientific and commercial CubeSats. This thesis investigates a configurable and modular Fault Detection, Isolation and Recovery (FDIR) architecture that uses the ECSS Packet Utilisation Standard. This FDIR concept, along with the provided open-source software implementation, can be used by CubeSat missions to increase the reliability of their design and chances of mission success, by autonomously responding to on-board errors. The thesis also includes background information regarding CubeSat reliability, and explores the software and hardware used to implement the proposed FDIR design on the AcubeSAT mission, currently under design by students of the Aristotle University of Thessaloniki.
 
-
+\newthought{kapou edw} \draft{tha mpei kai to abstract sta ellhnika}
 
 %%
 % Start the main matter (normal chapters)
@@ -96,7 +96,7 @@ Space is not a welcoming environment; while the aerospace engineering community 
 %counted in the page number sequence).
 
 \section{Kalispera}
-space is very important \autocite{durou_hierarchical_2002}
+space is very important \autocite{durou_hierarchical_fault_2002}
 \acf{FDIR}
 
 \chapter{The AcubeSAT mission}
@@ -106,14 +106,15 @@ space is very important \autocite{durou_hierarchical_2002}
 
 \section{Subsystems}
 
-The AcubeSAT nanosatellite is technically and programmatically split into \draft{N} different subteams or \textbf{subsystems}, each responsible for a different section of the satellite, and made up out of \draft{M} dedicated members.
+The AcubeSAT nanosatellite is technically and programmatically split into \draft{N} different subteams or \textbf{subsystems}, each responsible for a different se\autocite{white_overview_satellite_2018}ction of the satellite, and made up out of \draft{M} dedicated members.
 
 In the following sections, a brief introduction on the function and design of each subsystem is presented. For more detailed information, the reader is encouraged to refer to \foothref{https://acubesat.spacedot.gr/subsystems/}{AcubeSAT's website}, or to the publicly available \foothref{https://gitlab.com/acubesat/documentation/cdr-public}{\ac{CDR} documents}.
 \subsection{\acf{ADCS}}
+\label{sec:adcs}
 
 \subsection{\acf{COMMS}}
 
-The communications subsystem is responsible for transmitting data between the Earth and the spacecraft in orbit. The transmitted data is split into 3 different categories:
+The communications subsystem is responsible for transmitting data between the Earth and the spacecraft in orbit. The transmitted data is split into 3 different categories\autocite{DDJF_TTC}:
 \begin{itemize}
 	\item \textbf{\acf{TC}}: Commands from the Earth to the satellite. They can be used to request information, or to perform specific spacecraft actions.
 	\item \textbf{\acf{TM}}: Information sent from the satellite towards Earth, typically including vital information such as sensor values, system status, timestamps and events.
@@ -127,25 +128,85 @@ It is important to mention that the satellite orbit only allows for a very short
 	\caption{The SatNOGS COMMS board}
 \end{marginfigure}
 
-The main component of the \acs{COMMS} subsystems is the \textbf{SatNOGS COMMS board} \autocite{surligas_satnogs-comms_2021}, an open-source \acs{RF} transceiver developed by the \href{https://libre.space/}{LibreSpace Foundation}, based on \acs{CCSDS} telecommunications standards.
+The main component of the \acs{COMMS} subsystem is the \textbf{SatNOGS COMMS board} \autocite{surligas_satnogscomms_2021}, an open-source \acs{RF} transceiver developed by the \href{https://libre.space/}{LibreSpace Foundation}, based on \acs{CCSDS} telecommunications standards.
 
 Communication will take place using 2 frequency bands on the \acs{ISM} range, namely \SI{436.5}{\mega\hertz} and \SI{2.425}{\giga\hertz}, supported by a deployable turnstile and a directional patch antenna respectively. The use of \acs{ISM} frequencies allows easy radio-amateur access to the satellite.
 
-The communications subsystem is also responsible for the \ac{EMC} analysis and interference mitigation, as well as the design and construction of the satellite \acl{GS}. The \acl{GS} will be part of \textbf{SatNOGS}\autocite{white_overview_2018}, a global network of satellite ground stations based on open technologies and open data.
+The communications subsystem is also responsible for the \ac{EMC} analysis and interference mitigation, as well as the design and construction of the satellite \acl{GS}. The \acl{GS} will be part of \textbf{SatNOGS}\autocite{white_overview_satellite_2018}, a global network of satellite ground stations based on open technologies and open data.
 
 \subsection{\acf{EPS}}
-The \ac{EPS} is the subsystem responsible for the generation, distribution and storage of electrical power of the spacecraft. It is a critical aspect of the spacecraft due to the direct dependence of all subsystems to the high power needs of many CubeSat subsystems, and is theorised to be the most common reason for CubeSat failure.\autocite{langer_reliability_2016}.
+The \ac{EPS} is the subsystem responsible for the generation, distribution and storage of electrical power of the spacecraft. It is a critical aspect of the spacecraft due to the direct dependence of all subsystems to the high power needs of many CubeSat subsystems, and is theorised to be the most common reason for CubeSat failure.\autocite{langer_reliability_cubesats_2016}
 
-AcubeSAT has opted for a \ac{COTS} subsystem approach for the \ac{EPS}:
+AcubeSAT has opted for a \ac{COTS} subsystem approach for the \ac{EPS}:\autocite{DDJF_SYS}
 \begin{itemize}
 	\item \textbf{Solar panels} are procured from EnduroSat. Four 3U panels cover the \(X\) and \(Y\) faces of the satellite, and one 1U panel covers the \(-Z\) face.
 	\item The \textbf{\ac{PCDU}} is procured from NanoAvionics and offers 10 switched channels with overcurrent protection over 4 voltage rails, as well as 4 \ac{MPPT} converters.
 	\item The \textbf{battery pack}, also procured from NanoAvionics, contains 4 18650 Li-Ion cells in a 2S2P\footnote{2 series, 2 parallel} configuration.
 \end{itemize}
 
+\begin{margintable}
+	\caption{AcubeSAT nominal mode power budget}
+	\label{tab:power_budget}
+	\begin{tabularx}{\linewidth}{@{}lX@{}}
+		\toprule
+		\textbf{Consumer}            & \textbf{Power}            \\ \midrule
+		\acs{ADCS}          & \SI{1.10}{\watt} \\
+		\acs{COMMS}         & \SI{0.85}{\watt} \\
+		\acs{EPS}           & \SI{0.99}{\watt} \\
+		\acs{OBC}           & \SI{0.12}{\watt} \\
+		\acs{SU}            & \SI{0.25}{\watt} \\ \midrule
+		Total               & \SI{3.30}{\watt} \\
+		Orbit Average Power & \SI{4.24}{\watt} \\ \bottomrule
+	\end{tabularx}
+\end{margintable}
+
+\FloatBarrier
+A dynamic approach is taken with regards to power budget calculation:
+\begin{enumerate}
+	\item The in-orbit power generation is calculated for the duration of the mission using the \textbf{STK} software, taking into account satellite orientation, pointing profiles and eclipse, with a \SI{1}{\minute} resolution.
+	\item The power consumption of the system is calculated on average for each different operational mode.
+	\item \acs{MPPT} efficiencies and battery charge level are calculated for each timepoint, assuming worst-case thermal and electrical conditions
+	\item A system-wide 10\% margin is applied to the results
+\end{enumerate}
+
+We have created a Python library consolidating the above steps\footurl{https://gitlab.com/acubesat/eps/power-budget} and producing the necessary outputs to prove the adequacy of the design.
+
+\begin{figure*}[h]
+%	\begin{subfigure}[b]{.45\textwidth}
+	\includegraphics[height=4cm]{Sun Pointing 11:00.total.pdf}
+%	\end{subfigure}
+	\hfill
+%	\begin{subfigure}[b]{.45\textwidth}
+	\includegraphics[height=4cm]{Sun Pointing 11:00.discharge.pdf}
+%	\end{subfigure}
+%	\includegraphics[width=.45\textwidth]{/home/kongr45gpen/Pictures/jeka8ara kapoglis.png}
+
+	\caption{Dynamic power budget analysis. Left: Power consumption \& generation for the orbit. Right: Battery discharge level throughout the mission}
+\end{figure*}
+
 \subsection{\acf{OBDH}}
 
 \subsection{\acf{OPS}}
+% here we write about system modes
+
+The operations subsystem is responsible
+
+the following system modes:\autocite{zaras_acubesat_mission_2021}
+\begin{itemize}
+	\item \textbf{Launch/Off mode}: During this mode, the satellite is turned completely off, and no subsystems are energised. This is used to represent the state of the spacecraft inside the deployer, where no electronics are allowed to be energised,\autocite[req. 3.3.3]{CDS13} and the CubeSat is in a completely dormant state.
+	
+	\item \textbf{Commissioning mode}: This mode is initiated as soon as the CubeSat exits the deployer, meaning that launch is complete. It contains the initial startup actions of the spacecraft, including detumbling and antenna deployment. No science takes place during commissioning mode.
+	
+	\item \textbf{Nominal mode}: This mode represents the state where the CubeSat will spend most of the time on. Apart from the necessary autonomy functions and battery charging, the CubeSat will also downlink telemetry and science data. No science takes place during nominal mode, except for health checks commanded from the ground. Nominal mode is also the only mode where the satellite performs nadir or sun pointing (\Cref{sec:adcs}).
+	
+	\item \textbf{Science mode}: This is where the main experiment takes place and payload data are generated. This mode includes operation of the fluidic system, control of the microfluidic chip, reinvigoration of the cells, and periodic acquisition of pictures using the miniaturised microscope.
+	
+	AcubeSAT has split science mode into \textbf{3 distinct occurrences}, termed sub-experiments \(\alpha\), \(\beta\) and \(\gamma\), lasting 72 hours each, and taking place at different points of the mission to investigate the time-dependence of the observed results.
+	
+	\item \textbf{Safe mode}: It is common for spacecraft systems to include a \emph{safe mode}, where 
+\end{itemize}
+
+\draft{transition diagram, conops, functional flows}
 
 \subsection{Structural}
 
@@ -160,6 +221,22 @@ AcubeSAT has opted for a \ac{COTS} subsystem approach for the \ac{EPS}:
 \section{Tools used}
 
 \chapter{\ac{FDIR} concept in AcubeSAT}
+
+\section{The \acs{ECSS} \acl{PUS}}
+
+\subsection{The \acs{ECSS} services}
+
+\begin{itemize}
+	\item \textbf{\texttt{ST[01]}: Request verification}
+	
+	\draft{blablablab}
+	
+	\item \textbf{\texttt{ST[02]}: \draft{Device management}}
+	
+	\draft{blablablablba}
+\end{itemize}
+
+\section{The SAVOIR standard}
 
 \chapter{Software implementation of \ac{FDIR}}
 
