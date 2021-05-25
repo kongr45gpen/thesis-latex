@@ -108,7 +108,7 @@ space is very important \autocite{durou_hierarchical_fault_2002}
 
 The AcubeSAT nanosatellite is technically and programmatically split into \draft{N} different subteams or \textbf{subsystems}, each responsible for a different se\autocite{white_overview_satellite_2018}ction of the satellite, and made up out of \draft{M} dedicated members.
 
-In the following sections, a brief introduction on the function and design of each subsystem is presented. For more detailed information, the reader is encouraged to refer to \foothref{https://acubesat.spacedot.gr/subsystems/}{AcubeSAT's website}, or to the publicly available \foothref{https://gitlab.com/acubesat/documentation/cdr-public}{\ac{CDR} documents}.
+In the following sections, a brief introduction on the function and design of each subsystem is presented. As the Systems Engineering and \acl{PA} process is inherently connected to the function of all subsystems, the details relevant to \acs{FDIR} are also mentioned. For more detailed information, the reader is encouraged to refer to \foothref{https://acubesat.spacedot.gr/subsystems/}{AcubeSAT's website}, or to the publicly available \foothref{https://gitlab.com/acubesat/documentation/cdr-public}{\ac{CDR} documents}.
 \subsection{\acf{ADCS}}
 \label{sec:adcs}
 
@@ -130,7 +130,7 @@ It is important to mention that the satellite orbit only allows for a very short
 
 The main component of the \acs{COMMS} subsystem is the \textbf{SatNOGS COMMS board} \autocite{surligas_satnogscomms_2021}, an open-source \acs{RF} transceiver developed by the \href{https://libre.space/}{LibreSpace Foundation}, based on \acs{CCSDS} telecommunications standards.
 
-Communication will take place using 2 frequency bands on the \acs{ISM} range, namely \SI{436.5}{\mega\hertz} and \SI{2.425}{\giga\hertz}, supported by a deployable turnstile and a directional patch antenna respectively. The use of \acs{ISM} frequencies allows easy radio-amateur access to the satellite.
+Communication will take place using 2 frequency bands on the \acs{ISM} range, namely \SI{436.5}{\mega\hertz} and \SI{2.425}{\giga\hertz}, supported by a deployable turnstile and a directional patch antenna respectively. The use of \acs{ISM} frequencies allows easy radio-amateur access to the satellite. The first (\acs{UHF}) band also emits a periodic \textbf{beacon}, listing information about satellite status.
 
 The communications subsystem is also responsible for the \ac{EMC} analysis and interference mitigation, as well as the design and construction of the satellite \acl{GS}. The \acl{GS} will be part of \textbf{SatNOGS}\autocite{white_overview_satellite_2018}, a global network of satellite ground stations based on open technologies and open data.
 
@@ -203,16 +203,62 @@ the following system modes:\autocite{zaras_acubesat_mission_2021}
 	
 	AcubeSAT has split science mode into \textbf{3 distinct occurrences}, termed sub-experiments \(\alpha\), \(\beta\) and \(\gamma\), lasting 72 hours each, and taking place at different points of the mission to investigate the time-dependence of the observed results.
 	
-	\item \textbf{Safe mode}: It is common for spacecraft systems to include a \emph{safe mode},\autocite[385]{aguirre_introduction_space_2013} where 
+	\item \textbf{Safe mode}: It is common for spacecraft systems to include a \emph{safe mode},\autocite[385]{aguirre_introduction_space_2013} where the spacecraft switches off all non-essential systems and function, in order to respond to major malfunctions that cannot be corrected by autonomous procedures. Safe mode is intended as a well-defined and well-tested mode which is easy to maintain and reduces risk of any malfunction.
+	
+	On AcubeSAT, spacecraft functionality is significantly reduced, and the attitude profile includes pointing only. However, \ac{UHF} communication and beacon transmission are still active for observability purposes.
 \end{itemize}
 
-\draft{transition diagram, conops, functional flows}
+\begin{table*}[h]
+	\centering
+	\caption{Overview of AcubeSAT functionality on different modes}
+	\label{tab:acubesatmodes}
+	\begin{tabular}{@{}llllll@{}}
+		\toprule
+		Function    & Launch & Commissioning  & Nominal                 & Science        & Safe             \\ \midrule
+		\acs{ADCS}  & \color{off} Off    & Detumbling     & \color{on} Pointing                & Detumbling     & Detumbling       \\
+		\acs{COMMS} & \color{off} Off    & \acs{UHF} only & \color{on} \acs{UHF} and S-Band    & \acs{UHF} only & \acs{UHF} only   \\
+		\acs{EPS}   & \color{off} Off    & \color{on} On             & \color{on} On                      & \color{on} On             & \color{on} On               \\
+		\acs{OBC}   & \color{off} Off    & \color{on} On             & \color{on} On                      & \color{on} On             & \color{on} On               \\
+		\acs{SU}    & \color{off} Off    & \color{off} Off            & Maintenance \& data only & \color{on} On             & Maintenance only \\ \bottomrule
+	\end{tabular}
+	\vspace{1em}
+\end{table*}
+
+
+Each mode is associated with a \textbf{functional flow} diagram, showing a high-level description of the spacecraft operation during this mode.\autocite{acubesat_functional_2021}
+
+\begin{figure}
+	\centering
+	\caption{Safe mode functional flow}
+	\label{fig:safemode}
+	\includegraphics{Safe_Mode.pdf}
+\end{figure}
 
 \subsection{Structural}
 
 \subsection{\acf{SYE}}
 
 \subsection{\acf{SU}}
+
+The \acl{SU} subteam is responsible for the conceptualisation and implementation of the mission's scientific payload, namely the high-throughput study of the effects of \ac{LEO} environments on yeast cells.
+
+The payload is composed of the following functional parts:\autocite{DDJF_PL}
+\begin{itemize}
+	\item A \textbf{microfluidic chip} based on \ac{PDMS}, hosting 384 d
+\end{itemize}
+
+\begin{figure*}
+	\centering
+	\caption{The microfluidic chip and its separation into 3 subexperiments and 1 test line. The fluid inlets are shown on the left side of the chip, while the outlets are on the right. \emph{Green:} flow layer. \emph{Blue:} control layer.}
+	\label{fig:chip}
+	\includegraphics{final_chip.pdf}
+	\begin{tikzpicture}[overlay]
+	\draw[very thick,dashed,solarized-base01] (5,10.9) rectangle (-7,11.5) node[below right] {Test line};
+	\draw[very thick,dashed,solarized-green] (5,7.85) rectangle (-7,10.8) node[below right] {Subexperiment $\alpha$};
+	\draw[very thick,dashed,solarized-blue] (5,4.95) rectangle (-7,7.8) node[below right] {Subexperiment $\beta$};
+	\draw[very thick,dashed,solarized-red] (5,2) rectangle (-7,4.9) node[below right] {Subexperiment $\gamma$};
+	\end{tikzpicture}
+\end{figure*}
 
 \subsection{Thermal}
 
@@ -226,14 +272,116 @@ the following system modes:\autocite{zaras_acubesat_mission_2021}
 
 \subsection{The \acs{ECSS} services}
 
+\begin{figure}
+	\draft{TODO}
+	\caption{The \ac{PUS} data transfer model}
+	\label{fig:pusmodel}
+\end{figure}
+
+blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
+
 \begin{itemize}
 	\item \textbf{\texttt{ST[01]}: Request verification}
 	
-	\draft{blablablab}
+	Provides acknowledgement or failure reports for executed commands. This service essentially informs the operators about the status of \ac{TC} sent to the spacecraft, and reports any occurred errors during parsing or execution.
 	
-	\item \textbf{\texttt{ST[02]}: \draft{Device management}}
+	\item \textbf{\texttt{ST[02]}: Device access}
 	
-	\draft{blablablablba}
+	Allows toggling, controlling and reconfiguring any on-board peripherals that do not support the \ac{PUS} paradigm, but rely on simpler protocols to communicate.
+	
+	\item \textbf{\texttt{ST[03]}: Housekeeping}
+	
+	Produces periodic reports containing values of on-board parameters. This service essentially composes the periodic \acs{RF} \textbf{beacon} of the satellite, by storing and transmitting parameter values without any prior \acs{TC} request.
+	
+	\item \textbf{\texttt{ST[04]}: Parameter statistics reporting}
+	
+	Allows reporting statistics (min, max, mean, standard deviation) for specific parameters over specified intervals. This is a memory-efficient alternative to the \texttt{ST[03]} housekeeping service.
+	
+	\item \textbf{\texttt{ST[05]}: Event reporting}
+	
+	Generates reports when notable occurrences take place on-board, such as:
+	\begin{itemize}
+		\item Autonomous on-board actions
+		\item Detected failures or anomalies
+		\item Predefined steps during an operation
+	\end{itemize}
+	
+	\item \textbf{\texttt{ST[06]}: Memory management}
+	
+	Allows writing and reading directly from an on-board memory unit. This can be useful for debugging and investigative purposes, fetching mission data, or uploading new software to the spacecraft avionics. The service also provides for downlinking and uplinking files in a file system.
+	
+	\item \textbf{\texttt{ST[07]}: Task management} \emph{(deprecated)}
+	
+	Allows stopping, suspending or resuming software tasks in case of contingency. This service has been removed from the standard and is only mentioned as a reference.
+	
+	\item \textbf{\texttt{ST[08]}: Function management}
+	
+	Provides the capability of running predefined actions that can receive further parameters. These actions can correspond to payload, platform, or any other functionality.
+	
+	\item \textbf{\texttt{ST[09]}: Time management}
+	
+	Allows periodic reporting of the current absolute spacecraft time for observability and correlation purposes.
+	
+	\item \textbf{\texttt{ST[10]}: Time packet} \emph{(deprecated)}
+	
+	Used in the past for time packet generation. This service has been removed from the standard and is only mentioned as a reference.
+	
+	\item \textbf{\texttt{ST[11]}: Time-based scheduling}
+	
+	Allows the operators to \textbf{"time-tag"} telecommands for execution at future timestamps, instead of immediately.
+	
+	\item \textbf{\texttt{ST[12]}: On-board monitoring}
+	
+	This service allows checking parameter values to ensure that they remain within configurable limits. Whenever a violation occurs, an \texttt{ST[05]} can be optionally generated for further processing.
+	
+	\item \textbf{\texttt{ST[13]}: Large packet transfer}
+	
+	Provides a method of message segmentation, for message payloads that are too large to fit within the maximum allowed length for \ac{TC} or \ac{TM}.
+	
+	\item \textbf{\texttt{ST[14]}: Real-time forwarding control}
+	
+	This service is responsible of controlling which types of generated reports are immediately transmitted to the \acl{GS}.
+	
+	\item \textbf{\texttt{ST[15]}: On-board storage and retrieval}
+	
+	This service allows storing generated report on-board, as well as their commanded mass retrieval when the spacecraft has \acl{GS} visibility.
+	
+	\item \textbf{\texttt{ST[16]}: On-board traffic management} \emph{(deprecated)}
+	
+	Allows monitoring the status and load of an on-board data bus and provides commands for resolution of errors. This service has been removed from the standard and is only mentioned as a reference.
+	
+	\item \textbf{\texttt{ST[17]}: Test}
+	
+	This service allows performing on-board connection and "are-you-alive" checks.
+	
+	\item \textbf{\texttt{ST[18]}: On-board operations procedure}
+	
+	Allows loading, controlling (start, suspend, resume, abort) and configuring On-Board Control Procedures, which are sequences of commands written in an application-specific language.
+	
+	\item \textbf{\texttt{ST[19]}: Event-action}
+	
+	Provides the operators with the capability of autonomously executing \acp{TC} when an \texttt{ST[05]} event is triggered.
+	
+	\item \textbf{\texttt{ST[20]}: On-board parameter management}
+	
+	Provides the capability of reading and setting on-board parameters. Parameters are some of the most important entities defined in the \acs{PUS}, and can represent:
+	\begin{itemize}
+		\item Read-write configuration variables for the system or lower-level components
+		\item Read-only sensor and other telemetry values
+		\item \ac{FDIR} results and diagnostics
+	\end{itemize}
+	
+	\item \textbf{\texttt{ST[21]}: Request sequencing}
+	
+	Allows operators to load series of \acp{TC} to be executed in a sequential order.
+	
+	\item \textbf{\texttt{ST[22]}: Position-based scheduling}
+	
+	Provides the capability of executing \acp{TC} when the spacecraft reaches a specific point in its orbit.
+	
+	\item \textbf{\texttt{ST[23]}: File management}
+	
+	Provides the capability of managing on-board file systems, with functions such as \emph{copy}, \emph{move}, \emph{delete}, or \emph{create directory}.
 \end{itemize}
 
 \section{The SAVOIR standard}
@@ -251,7 +399,9 @@ the following system modes:\autocite{zaras_acubesat_mission_2021}
 
 \backmatter
 
+\begin{fullwidth}
 \printbibliography
+\end{fullwidth}
 
 
 \printindex
