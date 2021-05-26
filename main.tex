@@ -112,6 +112,33 @@ In the following sections, a brief introduction on the function and design of ea
 \subsection{\acf{ADCS}}
 \label{sec:adcs}
 
+The \ac{ADCS} subteam is responsible for controlling the \textbf{attitude} and orientation of the spacecraft in orbit. This is achieved using a series of \ac{COTS} control actuators (one 3-axis magnetorquer board, one 1-axis reaction wheel), sensors for attitude determination (1 gyroscope and 2 magnetometers), and filtering, determination \& control algorithms.\autocite{DDJF_AOCS}
+
+The \ac{ADCS} can operate under different pointing profiles for different attitude needs:
+\begin{enumerate}
+	\item \textbf{Detumbling}, where the satellite is attempting to minimize its angular acceleration close to 0, to ensure a stable communications link, prevent detachment of parts and allow easier regaining of pointing.
+	
+	Detumbling mode is implemented in the simplest possible way, using only one of the 2 redundant magnetometers and a simple control algorithm. It is activated when there is no need to apply any of the specific pointing modes, or if the spacecraft angular rate is too high. In AcubeSAT, system-wide \emph{Safe Mode}, \emph{Commissioning Mode} and \emph{Science Mode} apply detumbling.
+	
+	\item \textbf{Nadir pointing}, where the satellite points the \(+X\) side towards the Earth. This profile is used during \emph{Nominal Mode} on passes over the \acl{GS}, where the directional patch antenna needs direct visibility.
+	
+	\item \textbf{Sun pointing}, where the satellite points two sides to the sun with a \SI{45}{\degree} angle of incident each, in order to maximise solar panel input. This profile is used during \emph{Nominal Mode}, between \ac{GS} passes, in order to ensure a positive power budget.
+\end{enumerate}
+
+\begin{margintable}
+	\centering
+	\caption{Maximum \ac{ADCS} error values after stabilisation}
+	\label{tab:adcsape}
+	\begin{tabular}{@{}ll@{}}
+		\toprule
+		Error                      & Value                    \\ \midrule
+		Absolute Performance Error & \( < \SI{30}{\degree} \) \\
+		Absolute Knowledge Error   & \( < \SI{1}{\degree} \) 
+	\end{tabular}
+\end{margintable}
+
+The performance of the \ac{ADCS} system can be summarised using performance metrics such as the ones presented in \Cref{tab:adcsape}.
+
 \subsection{\acf{COMMS}}
 
 The communications subsystem is responsible for transmitting data between the Earth and the spacecraft in orbit. The transmitted data is split into 3 different categories\autocite{DDJF_TTC}:
@@ -186,6 +213,16 @@ We have created a Python library consolidating the above steps\footurl{https://g
 
 \subsection{\acf{OBDH}}
 
+The \ac{OBDH} subsystem is responsible for the design of the spacecraft's data interfaces, as well as the design of the \textbf{\acf{OBC}} board, tasked with controlling the basic spacecraft functions.\autocite{DDJF_OBDH}
+
+The \ac{OBC} board contains the main \ac{OBC} logic, and is based around a \foothref{https://www.microchip.com/wwwproducts/en/SAMV71Q21RT}{Microchip SAMV71Q21RT} radiation-tolerant microcontroller and an \acs{MRAM} memory, used to store critical data. The board also hosts the in-house implemented components of the \ac{ADCS} subsystem, as a space-saving measure.
+
+AcubeSAT's data interface is using a cold-redundant \ac{CAN} bus to facilitate cross-subsystem communication, selected due to its robustness and reliability. \autocite{bouwmeester_survey_implementation_2017} AcubeSAT boards implement the PC/104 mechanical interface.\autocite{PC104}
+
+\subsection{\acf{OBSW}}
+
+
+
 \subsection{\acf{OPS}}
 % here we write about system modes
 
@@ -244,7 +281,18 @@ The \acl{SU} subteam is responsible for the conceptualisation and implementation
 
 The payload is composed of the following functional parts:\autocite{DDJF_PL}
 \begin{itemize}
-	\item A \textbf{microfluidic chip} based on \ac{PDMS}, hosting 384 d
+	\item The \textbf{payload container}, an almost 2U aluminum structure, pressurised at standard atmospheric pressure, and designed to host all the payload instrumentation. The container also accomodates a unibody which mechanically supports all \ac{SU} components.
+	\item A \textbf{microfluidic chip} based on \ac{PDMS}, hosting 384 chambers capable of probing 190 distinct strains of \emph{Saccharomyces Cerevisiae} for each subexperiment.
+	\item A \textbf{fluidic system} composed from 2 pumps, 8 latching solenoid valves, 6 non-latching solenoid valves, and 3 fluid medium containers
+	\begin{marginfigure}
+		\includegraphics{chipFluor}
+		\caption{Example mission image output \cite{DDJF_PL}}
+		\label{fig:chip_fluor}
+	\end{marginfigure}
+	\item An \textbf{imaging system} operating as a microscope, containing a camera and a series of lights, filters and a lens
+	\item A number of \textbf{heaters} to control component operational temperatures
+	\item A number of redundant \textbf{sensors} for environmental measurements
+	\item A \ac{PCB} containing the microcontroller and rest of the control components of the payload
 \end{itemize}
 
 \begin{figure*}
@@ -260,9 +308,31 @@ The payload is composed of the following functional parts:\autocite{DDJF_PL}
 	\end{tikzpicture}
 \end{figure*}
 
+There is a number of constraints that the payload imposes on \ac{FDIR} design:
+\begin{enumerate}
+	\item \textbf{Interruption} of one of the three 72-hour subexperiments during execution may mean complete loss of the subexperiment. The impact of such an event depends on the duration and timepoint of its occurence. In any case, adequate observability will allow the ground-control experiment to mimic the in-orbit conditions as much as possible.
+	\item \textbf{Freezing} of liquids inside the chip and fluidic tubes may lead to permanent damage on the setup. As such, heater operation may be required even during safe mode, after the first sub-experiment has been performed and liquid has flown into the system. This characteristics imposes further restrictions on the minimum availability of the system, depending on the thermal conditions.
+\end{enumerate}
+
 \subsection{Thermal}
 
+The Thermal subteam is responsible for the thermal analysis of the satellite, where the solar and earth albedo conditions are combined with the components' heat dissipation to determine the worst-case temperatures experienced by the satellite in hot and cold conditions.
+
+The results of thermal analysis typically lead to implementation of passive or active thermal control methods. Notably, in AcubeSAT, 3 electronically-controlled heaters are used for the batteries, \acs{PDMS} chip and valves.
+
 \subsection{Trajectory}
+
+The Trajectory subteam is responsible for the analysis of the spacecraft's orbit, the calculation of radiation effects, the satellite's compliance to space debris regulations, and the estimation of its orbital lifetime.
+
+AcubeSAT's requirements do not dictate use of thrusters, meaning that the satellite's orbit will be determined solely by the launcher, and cannot be altered in flight. As the selected launcher opportunity is unknown until some time before satellite delivery, a number of sensitivity analyses are executed to determine the allowed orbits.
+
+\begin{figure}
+	\includegraphics{GmatScreenShot_002}
+	\caption{Ground track of an example AcubeSAT orbit, generated using NASA'S \acl{GMAT}}
+	\label{fig:gmat}
+\end{figure}
+
+% Maybe add some info about the sensitivity results and LTAN value?
 
 \section{Tools used}
 
@@ -274,7 +344,7 @@ The payload is composed of the following functional parts:\autocite{DDJF_PL}
 
 \begin{figure}
 	\draft{TODO}
-	\caption{The \ac{PUS} data transfer model}
+	\caption[][-1em]{The \ac{PUS} data transfer model}
 	\label{fig:pusmodel}
 \end{figure}
 
