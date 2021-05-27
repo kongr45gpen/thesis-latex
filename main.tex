@@ -221,14 +221,15 @@ AcubeSAT's data interface is using a cold-redundant \ac{CAN} bus to facilitate c
 
 \subsection{\acf{OBSW}}
 
+The \ac{OBSW} subsystem is responsible for the design and development of the nanosatellite's software. The language chosen to be used in the system's 4 \acp{MCU} is a reduced form of \textbf{C++}, and the code is guarded under a number of standards and static checkers.\autocite{DDJF_OBSW} All software runs under the Free\acs{RTOS} operating system.
+
 
 
 \subsection{\acf{OPS}}
-% here we write about system modes
 
-The operations subsystem is responsible
+The operations subsystem is responsible for the devising the operational modes \& procedures of the spacecraft, and ensuring the functionality, commandability and observability of the satellite before and during its mission.
 
-the following system modes:\autocite{zaras_acubesat_mission_2021}
+During flight, AcubeSAT can remain within one of the following \textbf{system modes}:\autocite{zaras_acubesat_mission_2021}
 \begin{itemize}
 	\item \textbf{Launch/Off mode}: During this mode, the satellite is turned completely off, and no subsystems are energised. This is used to represent the state of the spacecraft inside the deployer, where no electronics are allowed to be energised,\autocite[req. 3.3.3]{CDS13} and the CubeSat is in a completely dormant state.
 	
