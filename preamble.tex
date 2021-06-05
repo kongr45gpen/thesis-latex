@@ -13,6 +13,13 @@
 %%
 % For nicely typeset tabular material
 \usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{adjustbox}
+\usepackage{array}
+
+\newcolumntype{L}[1]{>{\noindent\RaggedRight\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{R}[1]{>{\noindent\RaggedLeft\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{C}[1]{>{\noindent\Centering\arraybackslash\hspace{0pt}}p{#1}}
 
 %%
 % For graphics / images
