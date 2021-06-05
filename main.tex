@@ -8,7 +8,7 @@
 % Book metadata
 \title{Design of Fault Detection, Isolation and Recovery in the AcubeSAT nanosatellite\thanks{AcubeSAT}}
 \author[kongr45gpen]{kongr45gpen}
-\publisher{Draft SpaceDot (the title page will change)}
+\publisher{demo title page will be changed}
 
 \begin{document}
 
@@ -54,13 +54,19 @@ under the License.\index{license}
 % r.5 contents
 \tableofcontents
 
+\begin{fullwidth}
 \listoffigures
 
 \listoftables
 
 %\chapter*{List of Acronyms}
 %\acuseall%
-\printacronyms[pages={display=all,seq/use=false}]
+\bgroup
+\setlength\parskip{1ex}
+\printacronyms[pages={display=all,seq/use=false},]
+\egroup
+
+\end{fullwidth}
 
 % r.9 introduction
 \cleardoublepage
@@ -71,6 +77,12 @@ under the License.\index{license}
 %books\cite{Tufte2001,Tufte1990,Tufte1997,Tufte2006}.
 \justify
 Space is not a welcoming environment; while the aerospace engineering community has managed to reliably operate thousands of satellites in orbit, CubeSats, the most popular class of nanosatellite, only have a 50\% success rate. Low costs, lack of strict technical requirements and scarcity of publicly available documentation often drives up the risks for educational, scientific and commercial CubeSats. This thesis investigates a configurable and modular Fault Detection, Isolation and Recovery (FDIR) architecture that uses the ECSS Packet Utilisation Standard. This FDIR concept, along with the provided open-source software implementation, can be used by CubeSat missions to increase the reliability of their design and chances of mission success, by autonomously responding to on-board errors. The thesis also includes background information regarding CubeSat reliability, and explores the software and hardware used to implement the proposed FDIR design on the AcubeSAT mission, currently under design by students of the Aristotle University of Thessaloniki.
+
+\begin{description}
+	\item[First] \hfill \\ The first item
+	\item[Second] \hfill \\ The second item
+	\item[Third] \hfill \\ The third etc \ldots
+\end{description}
 
 \newthought{kapou edw} \draft{tha mpei kai to abstract sta ellhnika}
 
@@ -95,8 +107,13 @@ Space is not a welcoming environment; while the aerospace engineering community 
 %to folios that do not have a printed page number (but they are still
 %counted in the page number sequence).
 
-\section{Kalispera}
-space is very important \autocite{durou_hierarchical_fault_2002}
+\section{Introduction to space engineering}
+cubesat reliablity \autocite{durou_hierarchical_fault_2002}
+
+\section{Nanosatellites \& CubeSats}
+
+\section{CubeSat reliability}
+
 \acf{FDIR}
 
 \chapter{The AcubeSAT mission}
@@ -127,7 +144,7 @@ The \ac{ADCS} can operate under different pointing profiles for different attitu
 
 \begin{margintable}
 	\centering
-	\caption{Maximum \ac{ADCS} error values after stabilisation}
+	\caption[Maximum ADCS error values after stabilisation]{Maximum \ac{ADCS} error values after stabilisation}
 	\label{tab:adcsape}
 	\begin{tabular}{@{}ll@{}}
 		\toprule
@@ -189,12 +206,12 @@ AcubeSAT has opted for a \ac{COTS} subsystem approach for the \ac{EPS}:\autocite
 
 \FloatBarrier
 A dynamic approach is taken with regards to power budget calculation:
-\begin{enumerate}
+\begin{compactenum}
 	\item The in-orbit power generation is calculated for the duration of the mission using the \textbf{STK} software, taking into account satellite orientation, pointing profiles and eclipse, with a \SI{1}{\minute} resolution.
 	\item The power consumption of the system is calculated on average for each different operational mode.
 	\item \acs{MPPT} efficiencies and battery charge level are calculated for each timepoint, assuming worst-case thermal and electrical conditions
 	\item A system-wide 10\% margin is applied to the results
-\end{enumerate}
+\end{compactenum}
 
 We have created a Python library consolidating the above steps\footurl{https://gitlab.com/acubesat/eps/power-budget} and producing the necessary outputs to prove the adequacy of the design.
 
@@ -208,7 +225,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 %	\end{subfigure}
 %	\includegraphics[width=.45\textwidth]{/home/kongr45gpen/Pictures/jeka8ara kapoglis.png}
 
-	\caption{Dynamic power budget analysis. Left: Power consumption \& generation for the orbit. Right: Battery discharge level throughout the mission}
+	\caption[Dynamic power budget analysis]{Dynamic power budget analysis. Left: Power consumption \& generation for the orbit. Right: Battery discharge level throughout the mission}
 \end{figure*}
 
 \subsection{\acf{OBDH}}
@@ -277,11 +294,11 @@ Each mode is associated with a \textbf{functional flow} diagram, showing a high-
 
 \begin{marginfigure}
 	\includegraphics{structure}
-	\caption{The CubeSat's 3U }
+	\caption{The CubeSat's 3U structure}
 \end{marginfigure}
 
-\footnote{I'd like a tost\footnotemark}
-\footnotetext{Toast is awesome}
+%\footnote{I'd like a tost\footnotemark}
+%\footnotetext{Toast is awesome}
 
 \subsection{\acf{SYE}}
 
@@ -290,24 +307,24 @@ Each mode is associated with a \textbf{functional flow} diagram, showing a high-
 The \acl{SU} subteam is responsible for the conceptualisation and implementation of the mission's scientific payload, namely the high-throughput study of the effects of \ac{LEO} environments on yeast cells.
 
 The payload is composed of the following functional parts:\autocite{DDJF_PL}
-\begin{itemize}
+\begin{compactitem}
 	\item The \textbf{payload container}, an almost 2U aluminum structure, pressurised at standard atmospheric pressure, and designed to host all the payload instrumentation. The container also accomodates a unibody which mechanically supports all \ac{SU} components.
 	\item A \textbf{microfluidic chip} based on \ac{PDMS}, hosting 384 chambers capable of probing 190 distinct strains of \emph{Saccharomyces Cerevisiae} for each subexperiment.
 	\item A \textbf{fluidic system} composed from 2 pumps, 8 latching solenoid valves, 6 non-latching solenoid valves, and 3 fluid medium containers
 	\begin{marginfigure}
 		\includegraphics{chipFluor}
-		\caption{Example mission image output \cite{DDJF_PL}}
+		\caption[Example mission image output]{Example mission image output (\cite{DDJF_PL})}
 		\label{fig:chip_fluor}
 	\end{marginfigure}
 	\item An \textbf{imaging system} operating as a microscope, containing a camera and a series of lights, filters and a lens
 	\item A number of \textbf{heaters} to control component operational temperatures
 	\item A number of redundant \textbf{sensors} for environmental measurements
 	\item A \ac{PCB} containing the microcontroller and rest of the control components of the payload
-\end{itemize}
+\end{compactitem}
 
 \begin{figure*}
 	\centering
-	\caption{The microfluidic chip and its separation into 3 subexperiments and 1 test line. The fluid inlets are shown on the left side of the chip, while the outlets are on the right. \emph{Green:} flow layer. \emph{Blue:} control layer.}
+	\caption[The microfluidic chip and its separation into 3 subexperiments and 1 test line]{The microfluidic chip and its separation into 3 subexperiments and 1 test line. The fluid inlets are shown on the left side of the chip, while the outlets are on the right. \emph{Green:} flow layer. \emph{Blue:} control layer.}
 	\label{fig:chip}
 	\includegraphics{final_chip.pdf}
 	\begin{tikzpicture}[overlay]
@@ -338,7 +355,7 @@ AcubeSAT's requirements do not dictate use of thrusters, meaning that the satell
 
 \begin{figure}
 	\includegraphics{GmatScreenShot_002}
-	\caption{Ground track of an example AcubeSAT orbit, generated using NASA'S \acl{GMAT}}
+	\caption[Ground track of an example AcubeSAT orbit, generated using NASA's GMAT]{Ground track of an example AcubeSAT orbit, generated using NASA's \acl{GMAT}}
 	\label{fig:gmat}
 \end{figure}
 
@@ -360,7 +377,7 @@ AcubeSAT's requirements do not dictate use of thrusters, meaning that the satell
 
 blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 
-\begin{itemize}
+\begin{compactitem}
 	\item \textbf{\texttt{ST[01]}: Request verification}
 	
 	Provides acknowledgement or failure reports for executed commands. This service essentially informs the operators about the status of \ac{TC} sent to the spacecraft, and reports any occurred errors during parsing or execution.
@@ -380,11 +397,11 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 	\item \textbf{\texttt{ST[05]}: Event reporting}
 	
 	Generates reports when notable occurrences take place on-board, such as:
-	\begin{itemize}
+	\begin{compactitem}
 		\item Autonomous on-board actions
 		\item Detected failures or anomalies
 		\item Predefined steps during an operation
-	\end{itemize}
+	\end{compactitem}
 	
 	\item \textbf{\texttt{ST[06]}: Memory management}
 	
@@ -462,7 +479,7 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 	\item \textbf{\texttt{ST[23]}: File management}
 	
 	Provides the capability of managing on-board file systems, with functions such as \emph{copy}, \emph{move}, \emph{delete}, or \emph{create directory}.
-\end{itemize}
+\end{compactitem}
 
 \section{The SAVOIR standard}
 
@@ -493,12 +510,12 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 \chapter{Practical demonstration of \ac{FDIR}}
 
 As a proof of concept for AcubeSAT's \ac{FDIR} implementation, a practical setup to simulate the satellite's behaviour was prepared (\Cref{fig:block}). Key elements of the setup are:
-\begin{itemize}
+\begin{compactitem}
 	\item A Cortex-M7 \textbf{microcontroller}, used to simulate a \textbf{satellite subsystem}
 	\item A number of redundant \textbf{sensors} used as the potential failure points
 	\item The accompanying \textbf{software} that includes an implementation of the \ac{ECSS} services and the \ac{SAVOIR} \ac{FDIR} methodology
 	\item A desktop computer, serving as the \textbf{ground station} to provide the necessary commanding and observing capabilities
-\end{itemize}
+\end{compactitem}
 
 \begin{figure*}[h]
 	\includegraphics{SystemDescription}
@@ -545,12 +562,12 @@ The \ac{FDIR} functionality is structured around the \textbf{ECSS-E-ST-70-41C \a
 The \ac{MCU} software and business logic are built on \textbf{\foothref{https://www.freertos.org/}{Free\acs{RTOS}}}, a low-footprint real-time operating system targeted towards embedded devices. FreeRTOS provides the capability of safe concurrency, along with support for well-controlled tasks and a number of synchronisation primitives.
 
 To ensure high reliability and a low resource footprint of the software, the following \textbf{constraints} are enacted in C++ development:
-\begin{enumerate}
+\begin{compactenum}
 	\item Dynamic memory allocation\footnote{Use of \texttt{malloc}, \texttt{new} etc.} is banned completely from the code
 	\label{itm:malloc}
 	\item \Cref{itm:malloc} means that standard C++ containers cannot be used. Instead, the \foothref{https://www.etlcpp.com/}{\acf{ETL}} is integrated in the software.
 	\item "Expensive" features such as Run-Time Type Inference or exceptions are also prohibited.
-\end{enumerate}
+\end{compactenum}
 
 The \foothref{https://www.microchip.com/en-us/development-tools-tools-and-software/embedded-software-center/mplab-harmony-v3}{MPLAB Harmony} \ac{HAL} and configurator are used to interface with all the \acs{MCU}'s peripherals. \foothref{https://www.jetbrains.com/clion/}{CLion} has been selected as the \acs{IDE}, along with the \foothref{https://cmake.org/}{CMake} build system.
 
@@ -645,11 +662,11 @@ As a required input for the \ac{FDIR} detailed design, a \ac{FMEA} analysis need
 \subsection{\ac{FDIR} detailed design}
 
 After defining the possible failure modes of the system, we are ready to analyse each entry to provide the correct software inputs to implement the required \ac{FDIR}. More specifically, for each failure, the following must be defined: \autocite[84]{SAVOIR-HB-003}
-\begin{itemize}
+\begin{compactitem}
 	\item Parameters to be monitored for detection
 	\item Value ranges to be used to warn that a parameter is exceeding a specified range
 	\item Isolation and reconfiguration actions to prevent failure propagation and, if possible, bring the system to a well operating state
-\end{itemize}
+\end{compactitem}
 
 The above information is listed in the \acf{HSIA} table, which links each failure (identified in the \ac{FMEA}) to the corresponding low-level software parameters (\Cref{tab:hsia}).
 
@@ -672,7 +689,7 @@ These parameters are telemetered to the ground segment and displayed to the user
 
 \begin{table}[h]
 	\centering
-	\caption{List of \texttt{ST[20]} parameters\\R: Read-only\\RW: Read-write}
+	\caption[List of \texttt{ST[20]} parameters]{List of \texttt{ST[20]} parameters\\R: Read-only\\RW: Read-write}
 	\label{tab:demo_params}
 	\begin{tabularx}{\textwidth}{@{}rlllX@{}}
 		\toprule
@@ -692,7 +709,7 @@ After defining the parameters, the monitoring definitions that establish the acc
 
 \begin{table*}[h]
 	\centering
-	\caption[][5pt]{List of \texttt{ST[12]} monitoring definitions. \(t\) and \(\Delta\) are used as placeholders for parameter values.}
+	\caption[List of \texttt{ST[12]} monitoring definitions][5pt]{List of \texttt{ST[12]} monitoring definitions. \(t\) and \(\Delta\) are used as placeholders for parameter values.}
 	\label{tab:demo_monitoring}
 	\begin{adjustbox}{width=\textwidth}
 	\begin{tabular}{@{}L{1cm}L{2.5cm}L{2.8cm}L{2cm}L{2cm}L{2cm}ll@{}}
@@ -722,7 +739,7 @@ After defining the parameters, the monitoring definitions that establish the acc
 
 \begin{table}[h]
 	\centering
-	\caption{\texttt{ST[19]} event-action definitions}
+	\caption{List of \texttt{ST[19]} event-action definitions}
 	\label{tab:demo_eventaction}
 	\begin{tabular}{@{}lL{2cm}L{7cm}@{}}
 		\toprule
@@ -740,11 +757,11 @@ After defining the parameters, the monitoring definitions that establish the acc
 \clearpage
 \section{Test results}
 
+%\backmatter
 \appendix
-\backmatter
 
 \begin{fullwidth}
-\printbibliography[heading=bibintoc]
+\printbibliography[heading=bibnumbered]
 \end{fullwidth}
 
 

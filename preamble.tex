@@ -51,12 +51,61 @@ mincitenames=1,
 % Inserts a blank page
 \newcommand{\blankpage}{\newpage\hbox{}\thispagestyle{empty}\newpage}
 
+% Referencing
 \usepackage{hyperref}
 \usepackage{cleveref}
 
 \usepackage[binary-units=true]{siunitx}
 
+% Modifications to the default tufte template to make it more applicable to a thesis
+% Credit goes to Tiffany Tseng, lalider, see https://github.com/lalider/tufte-latex-thesis
+
+\usepackage[parfill]{parskip}
+
+% remove paragraph indentation
+\makeatletter
+% Paragraph indentation and separation for normal text
+\renewcommand{\@tufte@reset@par}{%
+	\setlength{\RaggedRightParindent}{0.0pc}%
+	\setlength{\JustifyingParindent}{0.0pc}%
+	\setlength{\parindent}{0pc}%
+	\setlength{\parskip}{\baselineskip}%
+}
+\@tufte@reset@par
+
+% Paragraph indentation and separation for marginal text
+\renewcommand{\@tufte@margin@par}{%
+	\setlength{\RaggedRightParindent}{0.0pc}%
+	\setlength{\JustifyingParindent}{0.0pc}%
+	\setlength{\parindent}{0.0pc}%
+	\setlength{\parskip}{10pt}%
+}
+\makeatother
+
+\titleformat{\section}%
+[hang]% shape
+{\normalfont\Large}% format applied to label+text
+{\thesection}% label
+{1em}% horizontal separation between label and title body
+{}% before the title body
+[]% after the title body
+
+%\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+%\titlespacing*{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus.2ex}
+\titlespacing*{\section}{0pt}{30pt}{20pt}
+\titlespacing*{\subsection}{0pt}{20pt}{5pt}
+
+
+% Disable adding empty pages without a purpose (not intended for printing in a book format...)
+\makeatletter
+\def\cleardoublepage{
+	\clearpage%
+}
+\makeatother
+
+% Acronyms
 \usepackage{acro}
+\acsetup{case-sensitive=false}
 \input{acronyms.tex}
 \input{commands.tex}
 
