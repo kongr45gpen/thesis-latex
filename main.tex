@@ -212,6 +212,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 \end{figure*}
 
 \subsection{\acf{OBDH}}
+\label{sec:obdh}
 
 The \ac{OBDH} subsystem is responsible for the design of the spacecraft's data interfaces, as well as the design of the \textbf{\acf{OBC}} board, tasked with controlling the basic spacecraft functions.\autocite{DDJF_OBDH}
 
@@ -345,14 +346,14 @@ AcubeSAT's requirements do not dictate use of thrusters, meaning that the satell
 
 \section{Tools used}
 
-\chapter{\ac{FDIR} concept in AcubeSAT}
+\chapter{The SAVOIR \ac{FDIR} concept}
 
 \section{The \acs{ECSS} \acl{PUS}}
 
 \subsection{The \acs{ECSS} services}
 
 \begin{figure}
-	\draft{TODO}
+	\includegraphics{ECSS-rq}
 	\caption[][-1em]{The \ac{PUS} data transfer model}
 	\label{fig:pusmodel}
 \end{figure}
@@ -465,6 +466,20 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 
 \section{The SAVOIR standard}
 
+\begin{figure*}[h]
+	\includegraphics{../cdr/04 FMEA/media/FDIRpus}
+	\caption{blablabla}
+\end{figure*}
+
+\chapter{\ac{FDIR} in AcubeSAT}
+
+\section{\ac{FDIR} principles}
+
+\draft{\begin{itemize}
+		\item The 7 AcubeSAT FDIR principles
+		\item SAVOIR FDIR requirements and compliance
+\end{itemize}}
+
 \section{Failure causes and recovery actions}
 
 \subsection{Failure causes}
@@ -473,17 +488,126 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 
 \subsection{Corrective actions}
 
+\section{\ac{FDIR} operating modes}
+
 \chapter{Practical demonstration of \ac{FDIR}}
 
+As a proof of concept for AcubeSAT's \ac{FDIR} implementation, a practical setup to simulate the satellite's behaviour was prepared (\Cref{fig:block}). Key elements of the setup are:
+\begin{itemize}
+	\item A Cortex-M7 \textbf{microcontroller}, used to simulate a \textbf{satellite subsystem}
+	\item A number of redundant \textbf{sensors} used as the potential failure points
+	\item The accompanying \textbf{software} that includes an implementation of the \ac{ECSS} services and the \ac{SAVOIR} \ac{FDIR} methodology
+	\item A desktop computer, serving as the \textbf{ground station} to provide the necessary commanding and observing capabilities
+\end{itemize}
+
+\begin{figure*}[h]
+	\includegraphics{SystemDescription}
+	\caption{High-level block diagram of the demonstration system}
+	\label{fig:block}
+\end{figure*}
+
+\section{System Description}
+
+\subsection{Hardware}
+
+The centre of the demonstration system is the \ac{MCU} used to simulate the design and functionality of one of AcubeSAT's subsystems (\Cref{sec:obdh}). The selected \ac{MCU} is the Atmel \texttt{ATSAMV71Q21} hosted on the \foothref{https://www.microchip.com/Developmenttools/ProductDetails/ATSAMV71-XULT}{\texttt{ATSAMV71-XULT}} development board. This \ac{MCU} is functionally identical to the one that will be used in orbit, featuring a 32-bit ARM Cortex-M7 core with \SI{2}{\mebi\byte} of flash and \SI{384}{\kibi\byte} of \acs{SRAM} memory, and a maximum clock speed of \SI{300}{\mega\hertz}.
+
+The \ac{MCU} is accompanied by two \textbf{temperature sensors} which are used to simulate subsystem components which are prone to failure. The selected sensor is the Microchip \foothref{https://www.microchip.com/wwwproducts/en/MCP9808}{\texttt{MCP9808}} which offers an accurate and frequent temperature readout over an \ac{I2C} bus.
+
+The two sensors are wired in a \textbf{hot-redundant}\footnote{Meaning they are both operating and generating measurements at the same time} configuration, due to their extremely low operating power. The two sensors are connected to different \ac{I2C} buses, so that the failure of one bus will not affect the operation of the other sensor.
+
+\subsection{Flight Segment Software}
+
+All \ac{FDIR} operations and functionality are developed using the \textbf{C++} language\footnote{The \texttt{C++17} standard has been selected} on the \ac{MCU}. All developments rely on free and open source software which is freely available for download and modification. The \foothref{https://git-scm.com/}{Git} version control is used for all software projects.
+
+The \ac{FDIR} functionality is structured around the \textbf{ECSS-E-ST-70-41C \ac{PUS} implementation created by the AcubeSAT team}\footnote{\url{https://gitlab.com/acubesat/obc/ecss-services}}, which offers a modular implementation of the standard utilising modern C++.
+
+The \ac{MCU} software and business logic are built on \textbf{\foothref{https://www.freertos.org/}{Free\acs{RTOS}}}, a low-footprint real-time operating system targeted towards embedded devices. FreeRTOS provides the capability of safe concurrency, along with support for well-controlled tasks and a number of synchronisation primitives.
+
+To ensure high reliability and a low resource footprint of the software, the following \textbf{constraints} are enacted in C++ development:
+\begin{enumerate}
+	\item Dynamic memory allocation\footnote{Use of \texttt{malloc}, \texttt{new} etc.} is banned completely from the code
+	\label{itm:malloc}
+	\item \Cref{itm:malloc} means that standard C++ containers cannot be used. Instead, the \foothref{https://www.etlcpp.com/}{\acf{ETL}} is integrated in the software.
+	\item "Expensive" features such as Run-Time Type Inference or exceptions are also prohibited.
+\end{enumerate}
+
+All software developed in the scope of this thesis is available online, and listed in \Cref{tab:new_software}. The most critical parts of the developed software are expanded in \Cref{sec:source_code}.\draft{check} A summary of used libraries can also be found in \Cref{tab:old_software}.
+
+\begin{table*}[h]
+	\centering
+	\caption{List of new software developed for this thesis}
+	\label{tab:new_software}
+	\begin{tabularx}{\textwidth}{@{}lXp{6cm}@{}}
+		\toprule
+		Library name & Description & URL \\ \midrule
+		\textbf{\texttt{fdir-demo}} & Full microcontroller code for the demonstration & \small \url{https://github.com/kongr45gpen/fdir-demo} \\
+		\textbf{\texttt{fdir-demo-yamcs}} & Ground segment software: files and source code for \acs{YAMCS} integration and \acs{MCU} communications & \small \url{https://github.com/kongr45gpen/fdir-demo-yamcs} \\
+		\bottomrule
+	\end{tabularx}
+\end{table*}
+
+\begin{table*}[h]
+	\centering
+	\caption{List of used software libraries}
+	\label{tab:old_software}
+	\begin{tabularx}{\textwidth}{@{}lp{4cm}X@{}}
+		\toprule
+		Library name & Description & Modifications \\ \midrule
+		\href{https://www.freertos.org/}{FreeRTOS} & Real-time operating system for embedded devices & \\
+		\href{https://gitlab.com/acubesat/obc/ecss-services}{\texttt{ecss-services}} & C++ implementation of the ECSS-E-ST-70-41C \ac{PUS} %\autocite{ECSS-E-ST-70-41C} 
+		& \small Missing services were implemented and some interface improvements were made to improve integration with the \acs{MCU}\newline\small\url{https://gitlab.com/kongr45gpen/ecss-services/-/tree/fdir}
+		 \\
+		 \href{https://www.etlcpp.com/}{\acs{ETL}}  & C++ library (including containers, algorithms and other utilities) for applications with embedded constraints &
+		 \\
+ 		\href{https://github.com/yamcs/yamcs}{\acs{YAMCS}}  & Software framework for mission \& spacecraft control & %\autocite{cheshire_consistent_overhead_1997}
+ 		\\
+		\href{https://github.com/cmcqueen/cobs-c}{\texttt{cobs-c}}  & Implementation of \ac{COBS} %\autocite{cheshire_consistent_overhead_1997}
+		 & \\
+		\bottomrule
+	\end{tabularx}
+\end{table*}
+
+%\subsection{Space Segment}
+
+%\subsection{Ground Segment}
+
+\subsection{Ground Segment Software}
+
+\section{\ac{FDIR} setup}
+
+\begin{table}[h]
+	\centering
+	\caption{List of \texttt{ST[20]} parameters}
+	\label{tab:demo_params}
+	\begin{tabularx}{\textwidth}{@{}rllX@{}}
+		\toprule
+		Param. ID & Parameter              & Units & Type \\ \midrule
+		0            & Temperature 1          & \si{\celsius}      & \texttt{float}     \\
+		1            & Temperature 2          & \si{\celsius}      & \texttt{float}     \\
+		2            & \(\Delta\) Temperature & \si{\celsius}      & \texttt{float}     \\
+		3            & Temperature 1 Status         &       & Enumerated     \\
+		4            & Temperature 2 Status         &       & Enumerated     \\ \bottomrule
+	\end{tabularx}
+\end{table}
+
+\section{Test results}
 
 \backmatter
 
 \begin{fullwidth}
-\printbibliography
+\printbibliography[heading=bibintoc]
 \end{fullwidth}
 
 
 \printindex
+
+\chapter{Source code}
+\label{sec:source_code}
+
+\begin{verbatim}
+here we write code
+\end{verbatim}
 
 \end{document}
 
