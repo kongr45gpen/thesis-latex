@@ -112,12 +112,12 @@ cubesat reliablity \autocite{durou_hierarchical_fault_2002}
 
 \chapter{The AcubeSAT mission}
 
-\section{CubeSat}
-
+\section{The mission}
+\draft{Here we write the history of the project and a description of the mission and the satellite...}
 
 \section{Subsystems}
 
-The AcubeSAT nanosatellite is technically and programmatically split into \draft{N} different subteams or \textbf{subsystems}, each responsible for a different section of the satellite, and made up out of \draft{M} dedicated members.
+The AcubeSAT nanosatellite is technically and programmatically split into 11 different subteams or \textbf{subsystems}, each responsible for a different section of the satellite, and made up out of \SIrange{2}{9}{} dedicated members.
 
 In the following sections, a brief introduction on the function and design of each subsystem is presented. As the Systems Engineering and \acl{PA} process is inherently connected to the function of all subsystems, the details relevant to \acs{FDIR} are also mentioned. For more detailed information, the reader is encouraged to refer to \foothref{https://acubesat.spacedot.gr/subsystems/}{AcubeSAT's website}, or to the publicly available \foothref{https://gitlab.com/acubesat/documentation/cdr-public}{\ac{CDR} documents}.
 \subsection{\acf{ADCS}}
@@ -229,6 +229,13 @@ The \ac{OBDH} subsystem is responsible for the design of the spacecraft's data i
 
 The \ac{OBC} board contains the main \ac{OBC} logic, and is based around a \foothref{https://www.microchip.com/wwwproducts/en/SAMV71Q21RT}{Microchip SAMV71Q21RT} radiation-tolerant microcontroller and an \acs{MRAM} memory, used to store critical data. The board also hosts the in-house implemented components of the \ac{ADCS} subsystem, as a space-saving measure.
 
+\begin{marginfigure}
+	\centering
+	\includegraphics[width=.7\textwidth]{SAMV71Q21RT}
+	\caption{The \texttt{SAMV71Q21RT} microcontroller}
+	\label{fig:samv71}
+\end{marginfigure}
+
 AcubeSAT's data interface is using a cold-redundant \ac{CAN} bus to facilitate cross-subsystem communication, selected due to its robustness and reliability. \autocite{bouwmeester_survey_implementation_2017} AcubeSAT boards implement the PC/104 mechanical interface.\autocite{PC104}
 
 \subsection{\acf{OBSW}}
@@ -279,23 +286,32 @@ Each mode is associated with a \textbf{functional flow} diagram, showing a high-
 
 \begin{figure}
 	\centering
-	\caption{Safe mode functional flow}
-	\label{fig:safemode}
-	\includegraphics{Safe_Mode.pdf}
+	\includegraphics[width=.6\textwidth]{AcubeSAT_System_Modes}
+	\caption[][3cm]{All transitions between system modes}
+	\label{fig:transitions}
 \end{figure}
 
+
 \subsection{Structural}
+
+The Structural subsystem has taken over:
+\begin{itemize}
+	\item The analysis and configuration of the \ac{COTS} 3-unit structure (\Cref{fig:structure}) housing all the CubeSat's components. Vibration analyses are especially important, as they serve to investigate whether the CubeSat can withstand the launcher's loads.
+	\item The complete design, manufacturing and assembly of the \textbf{payload container} and its unibody, hosting the scientific experiment of the mission (\Cref{fig:container}).
+\end{itemize}
 
 \begin{marginfigure}
 	\centering
 	\includegraphics[width=.5\textwidth]{structure}
-	\caption{\draft{The CubeSat's 3U structure}}
+	\caption{The CubeSat's 3U \acs{COTS} structure}
+	\label{fig:structure}
 \end{marginfigure}
 
-%\footnote{I'd like a tost\footnotemark}
-%\footnotetext{Toast is awesome}
-
 \subsection{\acf{SYE}}
+
+The \acl{SYE} subteam serves as the technical authority for the satellite. It is responsible for coordinating the developments and interfaces between subsystems, ensuring the conformance to standards and technical requirements, and identifying \& resolving all issues arising from the complex multi-discipline design of the CubeSat.
+
+Additionally, the \ac{SYE} team is responsible for some specific technical developments that do not belong in any of the other subsystems, such as \ac{RAMS}, \ac{FMEA}, harnessing and the \acl{MAIV} plan.
 
 \subsection{\acf{SU}}
 
@@ -317,6 +333,18 @@ The payload is composed of the following functional parts:\autocite{DDJF_PL}
 	\item A \ac{PCB} containing the microcontroller and rest of the control components of the payload
 \end{compactitem}
 
+\begin{marginfigure}
+	\includegraphics{Glass_Payload}
+	\caption{Transparent view of the payload container and its internals}
+	\label{fig:container}
+\end{marginfigure}
+
+There is a number of constraints that the payload imposes on \ac{FDIR} design:
+\begin{enumerate}
+	\item \textbf{Interruption} of one of the three 72-hour subexperiments during execution may mean complete loss of the subexperiment. The impact of such an event depends on the duration and timepoint of its occurence. In any case, adequate observability will allow the ground-control experiment to mimic the in-orbit conditions as much as possible.
+	\item \textbf{Freezing} of liquids inside the chip and fluidic tubes may lead to permanent damage on the setup. As such, heater operation may be required even during safe mode, after the first sub-experiment has been performed and liquid has flown into the system. This characteristics imposes further restrictions on the minimum availability of the system, depending on the thermal conditions.
+\end{enumerate}
+
 \begin{figure*}
 	\centering
 	\caption[The microfluidic chip and its separation into 3 subexperiments and 1 test line]{The microfluidic chip and its separation into 3 subexperiments and 1 test line. The fluid inlets are shown on the left side of the chip, while the outlets are on the right. \emph{Green:} flow layer. \emph{Blue:} control layer.}
@@ -329,12 +357,6 @@ The payload is composed of the following functional parts:\autocite{DDJF_PL}
 	\draw[very thick,dashed,solarized-red] (5,2) rectangle (-7,4.9) node[below right] {Subexperiment $\gamma$};
 	\end{tikzpicture}
 \end{figure*}
-
-There is a number of constraints that the payload imposes on \ac{FDIR} design:
-\begin{enumerate}
-	\item \textbf{Interruption} of one of the three 72-hour subexperiments during execution may mean complete loss of the subexperiment. The impact of such an event depends on the duration and timepoint of its occurence. In any case, adequate observability will allow the ground-control experiment to mimic the in-orbit conditions as much as possible.
-	\item \textbf{Freezing} of liquids inside the chip and fluidic tubes may lead to permanent damage on the setup. As such, heater operation may be required even during safe mode, after the first sub-experiment has been performed and liquid has flown into the system. This characteristics imposes further restrictions on the minimum availability of the system, depending on the thermal conditions.
-\end{enumerate}
 
 \subsection{Thermal}
 
@@ -357,6 +379,7 @@ AcubeSAT's requirements do not dictate use of thrusters, meaning that the satell
 % Maybe add some info about the sensitivity results and LTAN value?
 
 \section{Tools used}
+\draft{Here we write a small paragraph about OCDT and other MBSE tools and utilities used by AcubeSAT or developed in-house...}
 
 \chapter{The SAVOIR \ac{FDIR} concept}
 
