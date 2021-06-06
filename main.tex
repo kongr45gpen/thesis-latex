@@ -287,8 +287,9 @@ Each mode is associated with a \textbf{functional flow} diagram, showing a high-
 \subsection{Structural}
 
 \begin{marginfigure}
-	\includegraphics{structure}
-	\caption{The CubeSat's 3U structure}
+	\centering
+	\includegraphics[width=.5\textwidth]{structure}
+	\caption{\draft{The CubeSat's 3U structure}}
 \end{marginfigure}
 
 %\footnote{I'd like a tost\footnotemark}
@@ -491,6 +492,15 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 		\item SAVOIR FDIR requirements and compliance
 \end{itemize}}
 
+\section{Investigation on different architectures}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=.5\textwidth]{demoplot}
+	\caption{\draft{Error rates}}
+\end{figure}
+
+\FloatBarrier
 \section{Failure causes and recovery actions}
 
 \subsection{Failure causes}
@@ -616,6 +626,8 @@ All software developed in the scope of this thesis is available online, and list
 The ground segment desktop computer needs to parse received packets and send commands, as well as display information about the sensor measurements, \ac{FDIR} status and health of the connected flight system.
 
 The \acs{YAMCS} \autocite{sela_yamcs_lightweight_2012} framework was selected to cover the aforementioned needs, and has been tailored to provide the capabilities needed for this demonstration.
+
+The \ac{ECSS} protocol\autocite{ECSS-E-ST-70-41C} is not supported by \acs{YAMCS} by default. However, the necessary commands have been integrated into the system using the supported \ac{XTCE} specification.\autocite{simon_xtce_standard_2004} The source code of the integration can be found in \Cref{app:xtce}.
 
 \begin{figure}[h]
 	\includegraphics{screenshots/yamcs_replay}
@@ -944,6 +956,7 @@ The power of \acs{SAVOIR}'s \ac{FDIR} approach lies in the fact that the entire 
 
 \newpage
 \section*{\texttt{xtce.xml}}
+\label{app:xtce}
 
 \inputminted{xml}{code/xtce.xml}
 
