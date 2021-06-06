@@ -78,12 +78,6 @@ under the License.\index{license}
 \justify
 Space is not a welcoming environment; while the aerospace engineering community has managed to reliably operate thousands of satellites in orbit, CubeSats, the most popular class of nanosatellite, only have a 50\% success rate. Low costs, lack of strict technical requirements and scarcity of publicly available documentation often drives up the risks for educational, scientific and commercial CubeSats. This thesis investigates a configurable and modular Fault Detection, Isolation and Recovery (FDIR) architecture that uses the ECSS Packet Utilisation Standard. This FDIR concept, along with the provided open-source software implementation, can be used by CubeSat missions to increase the reliability of their design and chances of mission success, by autonomously responding to on-board errors. The thesis also includes background information regarding CubeSat reliability, and explores the software and hardware used to implement the proposed FDIR design on the AcubeSAT mission, currently under design by students of the Aristotle University of Thessaloniki.
 
-\begin{description}
-	\item[First] \hfill \\ The first item
-	\item[Second] \hfill \\ The second item
-	\item[Third] \hfill \\ The third etc \ldots
-\end{description}
-
 \newthought{kapou edw} \draft{tha mpei kai to abstract sta ellhnika}
 
 %%
@@ -506,6 +500,7 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 \subsection{Corrective actions}
 
 \section{\ac{FDIR} operating modes}
+\label{sec:fdir_operating_modes}
 
 \chapter{Practical demonstration of \ac{FDIR}}
 
@@ -551,7 +546,11 @@ The two sensors are wired in a \textbf{hot-redundant}\footnote{Meaning they are 
 
 As the \acs{UART} protocol does not offer packetisation facilities by default, \ac{COBS} encoding \autocite{cheshire_consistent_overhead_1997} is implemented for all transmitted messages.
 
-
+\begin{figure}[h]
+	\missingfigure[figwidth=6cm]{electrical schematic}
+	\caption{Electrical schematic of the implementation}
+	\label{fig:schematic}
+\end{figure}
 
 \subsection{Flight Segment Software}
 
@@ -566,12 +565,12 @@ To ensure high reliability and a low resource footprint of the software, the fol
 	\item Dynamic memory allocation\footnote{Use of \texttt{malloc}, \texttt{new} etc.} is banned completely from the code
 	\label{itm:malloc}
 	\item \Cref{itm:malloc} means that standard C++ containers cannot be used. Instead, the \foothref{https://www.etlcpp.com/}{\acf{ETL}} is integrated in the software.
-	\item "Expensive" features such as Run-Time Type Inference or exceptions are also prohibited.
+	\item "Expensive" features such as Run-Time Type Inference, Dynamic Casts or exceptions are also prohibited.
 \end{compactenum}
 
 The \foothref{https://www.microchip.com/en-us/development-tools-tools-and-software/embedded-software-center/mplab-harmony-v3}{MPLAB Harmony} \ac{HAL} and configurator are used to interface with all the \acs{MCU}'s peripherals. \foothref{https://www.jetbrains.com/clion/}{CLion} has been selected as the \acs{IDE}, along with the \foothref{https://cmake.org/}{CMake} build system.
 
-All software developed in the scope of this thesis is available online, and listed in \Cref{tab:new_software}. The most critical parts of the developed software are expanded in \Cref{sec:source_code}.\draft{check} A summary of used libraries can also be found in \Cref{tab:old_software}.
+All software developed in the scope of this thesis is available online, and listed in \Cref{tab:new_software}. The most critical parts of the developed software are expanded in \Cref{sec:source_code}. A summary of used libraries can also be found in \Cref{tab:old_software}.
 
 \begin{table*}[h]
 	\centering
@@ -627,6 +626,7 @@ The \acs{YAMCS} \autocite{sela_yamcs_lightweight_2012} framework was selected to
 
 The purpose of the test setup is to observe the response of the system to any failure of the two "vulnerable" temperature sensors. For this purpose, we will attempt to simulate every failure mode of each sensor, and design an \ac{FDIR} implementation that anticipates all those failures.
 
+\marginnote{Double failures are not investigated in the scope of this document, as they are mostly considered only for launchers and manned missions \cite{SAVOIR-HB-003}.}
 As a required input for the \ac{FDIR} detailed design, a \ac{FMEA} analysis needs to be prepared for the system. All \ac{FMEA} performed follows the requirements of the ECSS-Q-ST-30-02C standard.\autocite{ECSS-Q-ST-30-02C} The analysis is based on the \ac{FMEA} performed for the AcubeSAT nanosatellite,\autocite{retselis_acubesat_fmea_2020} and can be seen in \Cref{tab:fmea} for the reduced system. All expected failure modes for the two sensors are investigated, as well as a failure mode for the entire system that can be detected by correctly-operating sensors. Each of those failure modes will be later verified by injecting software or hardware modifications.
 
 \begin{table*}[h]
@@ -661,21 +661,125 @@ As a required input for the \ac{FDIR} detailed design, a \ac{FMEA} analysis need
 
 \subsection{\ac{FDIR} detailed design}
 
-After defining the possible failure modes of the system, we are ready to analyse each entry to provide the correct software inputs to implement the required \ac{FDIR}. More specifically, for each failure, the following must be defined: \autocite[84]{SAVOIR-HB-003}
+\begin{figure}[ht]
+	\includegraphics{TempSensorFDIR}
+	\caption{Overview of the temperature sensor \ac{FDIR} process}
+	\label{fig:fdirtemp}
+\end{figure}
+
+The \ac{FDIR} of the sensors follows the hierarchical process described in \Cref{sec:fdir_operating_modes}, which is shown in \Cref{fig:fdirtemp} as tailored for the sensors.
+
+The approach acts using the following steps, which are constantly being executed in the background:
+\marginnote{For this demonstration, we will not investigate failures of the microcontroller itself and its internals. Refer to \cite{retselis_acubesat_fmea_2020} for AcubeSAT's \acs{FMEA} and \acs{HSIA} on the microcontrollers.}
+\begin{compactenum}
+	\item The \ac{I2C} bus health status is monitored. Any failure or lack of communication indicates a failure in the sensor's electronics.
+	\item The temperature output of the sensors is monitored. Any values which are outside the bounds of the physically possible thermal conditions are considered to indicate sensor or communication failures. Any values outside the operational limits of the subsystem's electronics are considered to indicate overheating and lead to a subsystem restart.
+	\item In order to recover from the failures, first a restart of the sensor is attempted. If the erroneous values still persist, then the sensor cannot recover from the failure, but is just isolated and disabled instead.
+\end{compactenum}
+
+\clearpage
+\paragraph{\acl{HSIA}}
+
+After defining the possible failure modes and logic of the system, we are ready to analyse each entry to provide the correct software inputs to implement the required \ac{FDIR}. More specifically, for each failure, the following must be defined: \autocite[84]{SAVOIR-HB-003}
 \begin{compactitem}
 	\item Parameters to be monitored for detection
 	\item Value ranges to be used to warn that a parameter is exceeding a specified range
 	\item Isolation and reconfiguration actions to prevent failure propagation and, if possible, bring the system to a well operating state
 \end{compactitem}
 
-The above information is listed in the \acf{HSIA} table, which links each failure (identified in the \ac{FMEA}) to the corresponding low-level software parameters (\Cref{tab:hsia}).
+The above information is listed in the \acf{HSIA} table, which links each failure (identified in the \acl{FMEA}) to the corresponding low-level software parameters (\Cref{tab:hsia}).
 
-\begin{table}
+For the purposes of this demonstration, we will consider that all \ac{FMEA} items can lead to \emph{feared events}, i.e. that \ac{FDIR} will anticipate all identified possible failures.
+
+The \ac{HSIA} adds the following significant pieces of information to the \ac{FMEA}:\autocite{ECSS-Q-ST-30-02C}
+\begin{itemize}
+	\item The \textbf{monitored parameters} and the \textbf{conditions} that trigger the recovery action.
+	
+	These are listed here in terms of \ac{PUS} parameters which can be easily identified and compared by software. This list is then linked to the corresponding \emph{\texttt{ST[12]} on-board monitoring} service definitions, listed in \Cref{tab:demo_monitoring}.
+	
+	It is important to note that no single out-of-bounds value can trigger a recovery action. This is recommended in order to prevent transient errors or temporary communication protocol issues from triggering an unnecessary response which might disable a well-functioning component.
+	
+	\marginnote{\textbf{Temporary failure}: Caused by events such as bit flips, noise or transients, and can be corrected without intervention, or with a simple restart/power-cycle.\par\textbf{Permament failure}: A failure (typically in hardware, e.g. due to latchups or short-circuits) that cannot be corrected autonomously.}
+	The distinction between \emph{temporary} and \emph{permanent} failures is made by \textbf{counting the number of consecutive failures}. Before a permanent action to disable a sensor is enacted, at least 5 attempts to communicate must have failed.
+	
+	The use of 2 hot-redundant sensor also allows us to investigate the difference between the two temperatures to deduce the health of the produced data. If the absolute difference between the 2 values is too high, assuming the sensors are placed close enough together, an error condition is assumed. However, as triple modular redundancy was not implemented for this system, it is not possible to deduce which sensor has failed.
+	
+	\item The \textbf{failure recovery and isolation actions}.
+	
+	These are listed in terms of \ac{PUS} events (\emph{\texttt{ST[05]} event reporting}) and event-actions (\emph{\texttt{ST[19]} eventaction}), which are linked to \Cref{tab:demo_eventaction}.
+	
+	The selected recovery actions match the approach shown in \Cref{fig:fdirtemp}. Additionally, when it is not known which sensor has failed, a fail-safe approach of restarting or disabling both sensors is used.
+\end{itemize}
+
+\begin{table*}
 	\centering
 	\caption{HSIA table}
 	\label{tab:hsia}
-	\draft{HSIA table}
-\end{table}
+	\begin{tabular}{@{}lL{4cm}L{4cm}L{1cm}L{1cm}L{3.5cm}@{}}
+		\toprule
+		ID & Failure Mode & Monitored Parameters & Monitoring ID & Event ID & Failure Recovery Action \\ \midrule
+		\multicolumn{6}{l}{Temperature sensor MCP9808 \#1} \\ \midrule
+		
+		
+		
+		\textbf{\texttt{F-010}} & Temporary loss of function & \(\texttt{T1\_Status} = \texttt{TIMEOUT}\) \newline for 2 times & 0 & 0 & Power-cycle sensor 1 \\
+		\textbf{\texttt{F-020}} & Permanent loss of function & \(\texttt{T1\_Status} = \texttt{TIMEOUT}\) \newline for 5 times & 2 & 2 & Ignore sensor 1 values \\
+		\textbf{\texttt{F-030}} & Short Circuit between power pins & \(\texttt{T1\_Status} = \texttt{TIMEOUT}\) \newline for 5 times & 2 & 2 & Ignore sensor 1 values \\[5ex]
+		\textbf{\texttt{F-040}} & Temporary Value Shift & 
+		\(
+		\begin{cases}
+			\left|\Delta T\right| & > \SI{20}{\celsius} \text{ or} \\
+			T_1 &> \SI{100}{\celsius} \text{ or} \\
+			T_1 &< \SI{-40}{\celsius}
+		\end{cases}
+		\) \newline for 2 times
+		 & 4, 6 & 0, 4 & Power-cycle sensor 1 \\
+		\textbf{\texttt{F-050}} & Permanent Value Shift & \(
+		\begin{cases}
+		\left|\Delta T\right| & > \SI{20}{\celsius} \text{ or} \\
+		T_1 &> \SI{100}{\celsius} \text{ or} \\
+		T_1 &< \SI{-40}{\celsius}
+		\end{cases}
+		\) \newline for 5 times & 7, 9 & 2, 5 & Ignore sensor 1 values \\[9ex]
+		\textbf{\texttt{F-060}} & \acs{I2C} bus pin output stuck & \(\texttt{T1\_Status} = \texttt{TIMEOUT}\) \newline for 5 times & 2 & 2 & Ignore sensor 1 values \\ \midrule
+		
+		
+		
+		\multicolumn{6}{l}{Temperature sensor MCP9808 \#2} \\ \midrule
+		
+		
+		
+		\textbf{\texttt{F-070}} & Temporary loss of function & \(\texttt{T2\_Status} = \texttt{TIMEOUT}\) \newline for 2 times & 1 & 1 & Power-cycle sensor 2 \\
+		\textbf{\texttt{F-080}} & Permanent loss of function & \(\texttt{T2\_Status} = \texttt{TIMEOUT}\) \newline for 5 times & 3 & 3 & Ignore sensor 2 values \\
+		\textbf{\texttt{F-090}} & Short Circuit between power pins & \(\texttt{T2\_Status} = \texttt{TIMEOUT}\) \newline for 5 times & 3 & 3 & Ignore sensor 2 values \\[5ex]
+		\textbf{\texttt{F-100}} & Temporary Value Shift & 
+		\(
+		\begin{cases}
+		\left|\Delta T\right| & > \SI{20}{\celsius} \text{ or} \\
+		T_2 &> \SI{100}{\celsius} \text{ or} \\
+		T_2 &< \SI{-40}{\celsius}
+		\end{cases}
+		\) \newline for 2 times
+		& 5, 6 & 1, 4 & Power-cycle sensor 2 \\
+		\textbf{\texttt{F-110}} & Permanent Value Shift & \(
+		\begin{cases}
+		\left|\Delta T\right| & > \SI{20}{\celsius} \text{ or} \\
+		T_2 &> \SI{100}{\celsius} \text{ or} \\
+		T_2 &< \SI{-40}{\celsius}
+		\end{cases}
+		\) \newline for 5 times & 8, 9 & 3, 5 & Ignore sensor 2 values \\[9ex]
+		\textbf{\texttt{F-120}} & \acs{I2C} bus pin output stuck & \(\texttt{T2\_Status} = \texttt{TIMEOUT}\) \newline for 5 times & 3 & 3 & Ignore sensor 2 values \\ \midrule
+		
+		
+		
+		\multicolumn{6}{l}{Subsystem} \\ \midrule
+		
+		
+		
+		\textbf{\texttt{F-130}} & Overheating & \(T_1 > \SI{40}{\celsius}\) or \(T_2 > \SI{40}{\celsius}\) & 10, 11 & 6 & Restart subsystem \\ \bottomrule
+	\end{tabular}
+	\vspace{2pt}
+\end{table*}
 
 \clearpage
 
@@ -707,6 +811,8 @@ These parameters are telemetered to the ground segment and displayed to the user
 
 After defining the parameters, the monitoring definitions that establish the acceptable and actionable ranges for each parameter should be outlined. These are then managed by the \emph{\texttt{ST[12]} on-board monitoring} \ac{PUS} service.
 
+The \emph{check validity conditions} are important to mention in this case, as they use the three \emph{Status} parameters to prevent executing checks for disabled peripherals. As such, sensors that are not providing values due to hardware issues, \ac{FDIR} actions or operator intervention, will not be able to trigger \ac{FDIR} actions.
+
 \begin{table*}[h]
 	\centering
 	\caption[List of \texttt{ST[12]} monitoring definitions][5pt]{List of \texttt{ST[12]} monitoring definitions. \(t\) and \(\Delta\) are used as placeholders for parameter values.}
@@ -737,6 +843,15 @@ After defining the parameters, the monitoring definitions that establish the acc
 
 \paragraph{Event-action definitions}
 
+The final part of the puzzle are the event-action definitions, which can be seen on \Cref{tab:demo_eventaction} and combine:
+\begin{itemize}
+	\item \ac{PUS} events (\texttt{ST[05]} service) which are automatically generated when an on-board monitoring definition goes out of limits
+	\item \ac{PUS} event-action definitions (\texttt{ST[19]} service), which link every occurrence of an event to a stored \ac{TC} that is immediately executed.
+	They define the \acs{FDIR} recovery actions.
+\end{itemize}
+
+All the aforementioned definitions can be easily modified by operators using single commands that affect the on-board stored \ac{PUS} database.
+
 \begin{table}[h]
 	\centering
 	\caption{List of \texttt{ST[19]} event-action definitions}
@@ -755,7 +870,54 @@ After defining the parameters, the monitoring definitions that establish the acc
 \end{table}
 
 \clearpage
-\section{Test results}
+\section{\ac{FDIR} validation}
+
+\subsection{Nominal operation}
+
+\begin{figure}
+	\centering
+	\includegraphics{media/screenshots/yamcs_housekeeping}
+	\caption{View of housekeeping packets generated by the \acs{MCU} in \acs{YAMCS}}
+	\label{fig:yamcshousekeeping}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics{media/screenshots/yamcs_parameter}
+	\caption{View of one temperature parameter in \acs{YAMCS}}
+	\label{fig:yamcsparameter}
+\end{figure}
+
+\begin{figure}
+\begin{cminted}{text}
+909601  [debug  ] T1 = 28.18
+909701  [debug  ] T1 = 28.08
+909801  [debug  ] T1 = 28.14
+909901  [debug  ] T1 = 27.97
+910000  [trace  ] New TM [3,25]
+910001  [debug  ] T1 = 28.10
+910101  [debug  ] T1 = 28.03
+910201  [debug  ] T1 = 28.12
+910301  [debug  ] T1 = 27.90
+910401  [debug  ] T1 = 28.08
+\end{cminted}
+\caption[Log output during nominal operation]{Log output during nominal operation. The first number is the \ac{MCU} tick counter in milliseconds since boot.}
+\end{figure}
+
+\subsection{Simulation of failures}
+
+The following methods were used to simulate each failure:
+\begin{itemize}
+	\item For component communication failures, each sensor was just physically disconnected from the system
+	\item For small changes in temperature, a hot air gun or other hot air source was pointed towards each sensor
+	\item For changes in temperature which were impractical to simulate, the failure was injected in software, by manually modifying the variable
+\end{itemize}
+
+\subsection{Real-time modification of \ac{FDIR}}
+
+The power of \acs{SAVOIR}'s \ac{FDIR} approach lies in the fact that the entire \ac{FDIR} concept can be safely modified via \ac{TC} without requiring any modifications or reuploads of the spacecraft's software.
+
+\section{Future work}
 
 %\backmatter
 \appendix
@@ -770,9 +932,22 @@ After defining the parameters, the monitoring definitions that establish the acc
 \chapter{Source code}
 \label{sec:source_code}
 
-\begin{verbatim}
-here we write code
-\end{verbatim}
+\setminted{
+	bgcolor={}
+}
+
+%\begin{fullwidth}
+
+\section*{\texttt{main.cpp}}
+
+\inputminted{cpp}{code/main.cpp}
+
+\newpage
+\section*{\texttt{xtce.xml}}
+
+\inputminted{xml}{code/xtce.xml}
+
+%\end{fullwidth}
 
 \end{document}
 

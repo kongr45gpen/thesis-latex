@@ -45,6 +45,9 @@ mincitenames=1,
 
 
 %%
+% Maths
+\usepackage{amsmath}
+
 % Prints a trailing space in a smart way.
 \usepackage{xspace}
 
@@ -122,3 +125,16 @@ mincitenames=1,
 \definecolor{off}{HTML}{e53935}
 \definecolor{on}{HTML}{43a047}
 \usepackage{xcolor-solarized}
+
+\usepackage{todonotes}
+
+% Code
+\usepackage{minted}
+\usepackage{xpatch,letltxmacro}
+\LetLtxMacro{\cminted}{\minted}
+\let\endcminted\endminted
+\xpretocmd{\cminted}{\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}}{}{}
+\definecolor{mintedbg}{rgb}{0.95,0.95,0.93}
+\setminted{
+	bgcolor=mintedbg
+}
