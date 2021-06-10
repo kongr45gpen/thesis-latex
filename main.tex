@@ -19,6 +19,27 @@
 %\blankpage
 
 % r.3 full title page
+\makeatletter
+\renewcommand{\maketitle}{%
+	\newpage
+	\global\@topnum\z@% prevent floats from being placed at the top of the page
+	\begingroup
+	\setlength{\parindent}{0pt}%
+	\setlength{\parskip}{4pt}%
+	\let\@@title\@empty
+	\let\@@author\@empty
+	\let\@@date\@empty
+	\begin{fullwidth}
+	\begin{center}
+		\includegraphics[width=.8\textwidth]{auth_logo_text}
+	\end{center}
+	\end{fullwidth}
+	\endgroup
+	\thispagestyle{plain}% suppress the running head
+	\tuftebreak% add some space before the text begins
+	\@afterindentfalse\@afterheading% suppress indentation of the next paragraph
+}
+\makeatother
 \maketitle
 
 
@@ -85,6 +106,15 @@ Space is not a welcoming environment; while the aerospace engineering community 
 \mainmatter
 
 
+\chapter{Introduction}
+
+\section{Thesis research area}
+\draft{1-2 pages}
+
+\section{Thesis goals \& contribution}
+
+\section{Thesis structure}
+
 \chapter{Reliability Engineering in CubeSat Systems}
 \label{sec:fdir}
 
@@ -100,6 +130,8 @@ Space is not a welcoming environment; while the aerospace engineering community 
 %along with its page number.  Page numbers that appear in parentheses refer
 %to folios that do not have a printed page number (but they are still
 %counted in the page number sequence).
+
+
 
 \section{Introduction to space engineering}
 cubesat reliablity \autocite{durou_hierarchical_fault_2002}
@@ -555,6 +587,7 @@ As a proof of concept for AcubeSAT's \ac{FDIR} implementation, a practical setup
 \section{System Description}
 
 \subsection{Functionality}
+\label{sec:tsvcd}
 
 In order to emulate the most core functions of a spacecraft subsystem, we implemented a system with a single functional requirement:
 \begin{quote}
@@ -910,6 +943,8 @@ All the aforementioned definitions can be easily modified by operators using sin
 
 \subsection{Nominal operation}
 
+During nominal operation, no failures are simulated. The system is connected to power and outputs \ac{ECSS} telemetry (\Cref{fig:yamcshousekeeping}), which includes parameter values parsed by (\Cref{fig:yamcsparameter}). Additionally, a log file is kept for diagnostic purposes (\Cref{fig:lognominal}). The system is compliant with its requirements (\Cref{sec:tsvcd}) and can transmit the temperature to the ground station as expected.
+
 \begin{figure}
 	\centering
 	\includegraphics{media/screenshots/yamcs_housekeeping}
@@ -938,20 +973,25 @@ All the aforementioned definitions can be easily modified by operators using sin
 910401  [debug  ] T1 = 28.08
 \end{cminted}
 \caption[Log output during nominal operation]{Log output during nominal operation. The first number is the \ac{MCU} tick counter in milliseconds since boot.}
+\label{fig:lognominal}
 \end{figure}
 
 \subsection{Simulation of failures}
 
 The following methods were used to simulate each failure:
 \begin{itemize}
-	\item For component communication failures, each sensor was just physically disconnected from the system
-	\item For small changes in temperature, a hot air gun or other hot air source was pointed towards each sensor
-	\item For changes in temperature which were impractical to simulate, the failure was injected in software, by manually modifying the variable
+	\item For component communication failures, each sensor was just physically disconnected from the system.
+	\item For small changes in temperature, a hot air gun or other hot air source was pointed towards each sensor. Care was taken to not exceed the rated temperatures of the affected components.
+	\item For changes in temperature which were impractical to simulate, the failure was injected in software, by manually modifying the variable.
 \end{itemize}
 
 \subsection{Real-time modification of \ac{FDIR}}
 
 The power of \acs{SAVOIR}'s \ac{FDIR} approach lies in the fact that the entire \ac{FDIR} concept can be safely modified via \ac{TC} without requiring any modifications or reuploads of the spacecraft's software.
+
+The \ac{YAMCS} platform was once again used to generate the wanted commands.
+
+\chapter{Conclusions and Future Work}
 
 \section{Future work}
 
@@ -969,7 +1009,8 @@ The power of \acs{SAVOIR}'s \ac{FDIR} approach lies in the fact that the entire 
 \label{sec:source_code}
 
 \setminted{
-	bgcolor={}
+	bgcolor={},
+	fontsize=\fontsize{9pt}{9pt}
 }
 
 %\begin{fullwidth}
@@ -981,6 +1022,8 @@ The power of \acs{SAVOIR}'s \ac{FDIR} approach lies in the fact that the entire 
 \newpage
 \section*{\texttt{xtce.xml}}
 \label{app:xtce}
+
+fixme
 
 \inputminted{xml}{code/xtce.xml}
 
