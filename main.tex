@@ -645,7 +645,15 @@ The centre of the demonstration system is the \ac{MCU} used to simulate the desi
 
 The \ac{MCU} is accompanied by two \textbf{temperature sensors} which are used to simulate subsystem components which are prone to failure. The selected sensor is the Microchip \foothref{https://www.microchip.com/wwwproducts/en/MCP9808}{\texttt{MCP9808}} which offers an accurate and frequent temperature readout over an \ac{I2C} bus. The maximum acquisition interval for the sensor is \SI{250}{\milli\second}.
 
-The two sensors are wired in a \textbf{hot-redundant}\footnote{Meaning they are both operating and generating measurements at the same time} configuration, due to their extremely low operating power. The two sensors are connected to different \ac{I2C} buses, so that the failure of one bus will not affect the operation of the other sensor.
+\marginnote{%
+\textbf{Cold redundancy:} Only one component is operating, while the other is not.
+
+\textbf{Warm redundancy:} One component is operating fully, and the other is operating with reduced functionality.
+
+\textbf{Hot redundancy:} Two or more simultaneously active parts operate in parallel. \cite{SAVOIR-HB-003}
+}
+
+The two sensors are wired in a \textbf{hot-redundant}\footnote{Meaning they are both operating and generating measurements at the same time \draft{(maybe add a full definition here)}} configuration, due to their extremely low operating power. The two sensors are connected to different \ac{I2C} buses, so that the failure of one bus will not affect the operation of the other sensor.
 
 \paragraph{\acs{USB} interface} In order to receive \acl{TM} and transmit \acl{TC} to the demonstrative space segment, a \acs{USB} link with a desktop computer is integrated into the design. This link uses the \acs{UART} peripheral of the microcontroller, which solely transfers \acs{ECSS} messages between the microcontroller and the desktop. These messages include the typical \acs{TM} reports and \acs{TC} requests, but also log messages intended for diagnostic purposes.
 
@@ -665,9 +673,15 @@ The \ac{FDIR} functionality is structured around the \textbf{ECSS-E-ST-70-41C \a
 
 The \ac{MCU} software and business logic are built on \textbf{\foothref{https://www.freertos.org/}{Free\acs{RTOS}}}, a low-footprint real-time operating system targeted towards embedded devices. FreeRTOS provides the capability of safe concurrency, along with support for well-controlled tasks and a number of synchronisation primitives.
 
+\begin{figure*}[h]
+	\includegraphics{SoftwareFlow}
+	\caption{View of the software components and the data flow between them}
+	\label{sec:softwareflow}
+\end{figure*}
+
 To ensure high reliability and a low resource footprint of the software, the following \textbf{constraints} are enacted in C++ development:
 \begin{compactenum}
-	\item Dynamic memory allocation\footnote{Use of \texttt{malloc}, \texttt{new} etc.} is banned completely from the code
+	\item Dynamic memory allocation\footnote{Use of \texttt{malloc}, \texttt{new} etc.} is banned completely from the code.
 	\label{itm:malloc}
 	\item \Cref{itm:malloc} means that standard C++ containers cannot be used. Instead, the \foothref{https://www.etlcpp.com/}{\acf{ETL}} is integrated in the software.
 	\item "Expensive" features such as Run-Time Type Inference, Dynamic Casts or exceptions are also prohibited.
