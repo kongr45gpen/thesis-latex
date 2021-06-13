@@ -653,17 +653,17 @@ The \ac{MCU} is accompanied by two \textbf{temperature sensors} which are used t
 \textbf{Hot redundancy:} Two or more simultaneously active parts operate in parallel. \cite{SAVOIR-HB-003}
 }
 
-The two sensors are wired in a \textbf{hot-redundant}\footnote{Meaning they are both operating and generating measurements at the same time \draft{(maybe add a full definition here)}} configuration, due to their extremely low operating power. The two sensors are connected to different \ac{I2C} buses, so that the failure of one bus will not affect the operation of the other sensor.
+The two sensors are wired in a \textbf{hot-redundant} configuration, due to their extremely low operating power. The two sensors are connected to different \ac{I2C} buses, so that the failure of one bus will not affect the operation of the other sensor.
 
 \paragraph{\acs{USB} interface} In order to receive \acl{TM} and transmit \acl{TC} to the demonstrative space segment, a \acs{USB} link with a desktop computer is integrated into the design. This link uses the \acs{UART} peripheral of the microcontroller, which solely transfers \acs{ECSS} messages between the microcontroller and the desktop. These messages include the typical \acs{TM} reports and \acs{TC} requests, but also log messages intended for diagnostic purposes.
 
 As the \acs{UART} protocol does not offer packetisation facilities by default, \ac{COBS} encoding \autocite{cheshire_consistent_overhead_1997} is implemented for all transmitted messages.
 
-\begin{figure}[h]
-	\missingfigure[figwidth=6cm]{electrical schematic}
+\begin{figure*}[h]
+	\includegraphics{ElectricalSchematic}
 	\caption{Electrical schematic of the implementation}
 	\label{fig:schematic}
-\end{figure}
+\end{figure*}
 
 \subsection{Flight Segment Software}
 
@@ -782,11 +782,11 @@ As a required input for the \ac{FDIR} detailed design, a \ac{FMEA} analysis need
 
 \subsection{\ac{FDIR} detailed design}
 
-\begin{figure}[ht]
+\begin{figure*}[ht]
 	\includegraphics{TempSensorFDIR}
 	\caption{Overview of the temperature sensor \ac{FDIR} process}
 	\label{fig:fdirtemp}
-\end{figure}
+\end{figure*}
 
 The \ac{FDIR} of the sensors follows the hierarchical process described in \Cref{sec:fdir_operating_modes}, which is shown in \Cref{fig:fdirtemp} as tailored for the sensors.
 
@@ -1035,6 +1035,8 @@ The following methods were used to simulate each failure:
 	\item For component communication failures, each sensor was just physically disconnected from the system.
 	\item For small changes in temperature, a hot air gun or other hot air source was pointed towards each sensor. Care was taken to not exceed the rated temperatures of the affected components.
 	\item For changes in temperature which were impractical to simulate, the failure was injected in software, by manually modifying the variable.
+	
+	The two buttons present on the development board were used as a simple interface to "inject" extreme temperature values.
 \end{itemize}
 
 \subsection{Real-time modification of \ac{FDIR}}
