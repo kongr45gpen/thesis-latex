@@ -661,7 +661,7 @@ As the \acs{UART} protocol does not offer packetisation facilities by default, \
 
 \begin{figure*}[h]
 	\includegraphics{ElectricalSchematic}
-	\caption{Electrical schematic of the implementation}
+	\caption{Simplified electrical schematic of the implementation. The two sensors are wired via \ac{I2C} with the necessary pull-up resistors. Their power is controlled directly by microcontroller outputs, allowing the user to completely cut the power of the sensors if needed. The \texttt{A} pins of the sensors are arbitrarily set to select the \ac{I2C} address of each device. The same address was used, as the two \ac{I2C} buses are separate. Decoupling capacitors, crystals and other boilerplate components are not shown, as they are already included in the \ac{MCU} development board.}
 	\label{fig:schematic}
 \end{figure*}
 
