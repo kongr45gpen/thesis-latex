@@ -661,7 +661,7 @@ As the \acs{UART} protocol does not offer packetisation facilities by default, \
 
 \begin{figure*}[h]
 	\includegraphics{ElectricalSchematic}
-	\caption{Simplified electrical schematic of the implementation. The two sensors are wired via \ac{I2C} with the necessary pull-up resistors. Their power is controlled directly by microcontroller outputs, allowing the user to completely cut the power of the sensors if needed. The \texttt{A} pins of the sensors are arbitrarily set to select the \ac{I2C} address of each device. The same address was used, as the two \ac{I2C} buses are separate. Decoupling capacitors, crystals and other boilerplate components are not shown, as they are already included in the \ac{MCU} development board.}
+	\caption[Simplified electrical schematic of the implementation]{Simplified electrical schematic of the implementation. The two sensors are wired via \ac{I2C} with the necessary pull-up resistors. Their power is controlled directly by microcontroller outputs, allowing the user to completely cut the power of the sensors if needed. The \texttt{A} pins of the sensors are arbitrarily set to select the \ac{I2C} address of each device. The same address was used, as the two \ac{I2C} buses are separate. Decoupling capacitors, crystals and other boilerplate components are not shown, as they are already included in the \ac{MCU} development board.}
 	\label{fig:schematic}
 \end{figure*}
 
@@ -735,7 +735,49 @@ All software developed in the scope of this thesis is available online, and list
 
 %\subsection{Ground Segment}
 
-\subsection{Detecting Failures}
+\subsection{\ac{I2C} Failure Detection}
+
+It is of interest to investigate how the hardware \ac{I2C} peripheral provided by the microcontroller can be used to monitor the symptoms of bus failure.
+
+\begin{enumerate}
+	\item \textbf{Microcontroller peripheral errors}
+	
+	\marginnote{To ensure detection of peripheral errors, it is important to make sure that the error status of the peripheral is not discarded after every operation. Interrupts and the \href{https://en.cppreference.com/w/cpp/language/attributes/nodiscard}{\mintinline{cpp}{[[nodiscard]]}} C++ feature are used to ensure that all errors are caught.}
+	The microcontroller's \ac{I2C} peripheral is capable of generating an error whenever \emph{the communicating peripheral does not set the "acknowledge" bit}. Failure to set this bit might be a result of disconnection of the clock or data lines, failure of the bus, or non-operation of the peripheral itself.
+	
+	\item \textbf{Response timeout}
+	
+	For some adverse \ac{I2C} bus conditions, such as incorrectly chosen pull-up resistor values or large amounts of capacitive load, \ac{I2C} signal integrity may be lost (\Cref{subfig:i2c_clean}). This error is not detected by the microcontroller's peripheral directly, but can be diagnosed by adding a timeout to the sensor's data readouts.
+	
+	\item \textbf{Chip ID}
+	
+	\begin{margintable}
+		\centering
+		\caption{Read-only registers for the MCP9808}
+		\label{tab:mcp9808readonly}
+		\begin{tabularx}{\linewidth}{@{}lXl@{}}
+			\toprule
+			Address & Register Name & Value \\ \midrule
+			\texttt{0x06} & Manufacturer ID & \texttt{0x0054} \\
+			\texttt{0x07} & Device ID & \texttt{0x0400} \\ \bottomrule
+		\end{tabularx}
+	\end{margintable}
+	
+	It is possible that the sensor suffers a severe fault but is still able to respond to \ac{I2C} commands or set the \emph{acknowledge} bit. For this reason, a more rigid check of the sensor's status is performed before each temperature read: the \emph{permanently-set} registers of the peripheral contain values which, under nominal conditions, are hard-coded and will not change, barring hardware failure. If any value other than the expected one is return, the peripheral or the bus are assumed to have a fault.
+\end{enumerate}
+
+\begin{figure}[h]
+	\includegraphics[trim={0 10cm 0 1.8cm},clip]{scope_1}
+	\label{subfig:i2c_clean}
+\end{figure}
+
+\begin{figure}[h]
+	\includegraphics[trim={0 10cm 0 1.8cm},clip]{scope_5}
+	\caption{blablabla}
+	\label{subfig:i2c_dirty}
+\end{figure}
+
+\FloatBarrier
 
 \subsection{Mission Control}
 
@@ -749,6 +791,9 @@ The \ac{ECSS} protocol\autocite{ECSS-E-ST-70-41C} is not supported by \acs{YAMCS
 	\includegraphics{screenshots/yamcs_replay}
 	\caption{\acs{YAMCS} parameter and archive views}
 \end{figure}
+
+\subsection{\acs{PUS} database}
+
 
 \section{\ac{FDIR} setup}
 
@@ -791,7 +836,7 @@ As a required input for the \ac{FDIR} detailed design, a \ac{FMEA} analysis need
 
 \begin{figure*}[ht]
 	\includegraphics{TempSensorFDIR}
-	\caption{Overview of the temperature sensor \ac{FDIR} process}
+	\caption[Overview of the temperature sensor FDIR process]{Overview of the temperature sensor \ac{FDIR} process. For every process executed and failure detected, corresponding telemetry is generated as well.}
 	\label{fig:fdirtemp}
 \end{figure*}
 
