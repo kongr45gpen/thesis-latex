@@ -56,12 +56,25 @@ mincitenames=1,
 \newcommand{\blankpage}{\newpage\hbox{}\thispagestyle{empty}\newpage}
 
 % Referencing
-\usepackage{hyperref}
+\usepackage[unicode]{hyperref}
 \usepackage{cleveref}
 
 \hypersetup{%
 	bookmarksnumbered = true, % Show section numbering in the PDF table of contents. Allows easier browsing of the document
+	colorlinks = true, % uncomment this line if you prefer colored hyperlinks (e.g., for onscreen viewing)
+%	pdfborder = {0 0 0},
+	bookmarksdepth = subsection,
+%	citecolor = DarkGreen,
+%	linkcolor = DarkBlue,
+%	urlcolor = DarkGreen,
 }
+
+%\AtBeginDocument{%
+%	\hypersetup{
+%		pdfauthor={\plainauthor}
+%		pdftitle={\plaintitle},
+%	}%
+%}
 
 \usepackage[binary-units=true]{siunitx}
 
