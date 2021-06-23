@@ -251,7 +251,7 @@ cubesat reliablity \autocite{durou_hierarchical_fault_2002}
 	\item \textbf{Επιστημονικά δεδομένα}: Τα επιστημονικά δεδομένα που παράγονται από το ωφέλιμο φορτίο (payload). Αυτά είναι τα δεδομένα με τον μεγαλύτερο όγκο και αντιπροσωπεύουν τα κύρια επιστημονικά αποτελέσματα της αποστολής.
 \end{itemize}
 
-Είναι σημαντικό να αναφερθεί ότι η τροχιά του δορυφόρου επιτρέπει μόνο μια πολύ μικρή διάρκεια ορατότητας από τον Σταθμό Βάσης (\acf{GS}) κάθε μέρα, αυξάνοντας τις ανάγκες για αυτονομία επί του σκάφους και τη σημασία μιας σωστά εφαρμοσμένης μεθόδου \acs{FDIR}.
+Είναι σημαντικό να αναφερθεί ότι η τροχιά του δορυφόρου επιτρέπει μόνο μια πολύ μικρή διάρκεια ορατότητας από τον Σταθμό Βάσης (\acf{GS}) κάθε μέρα, αυξάνοντας τις ανάγκες για αυτονομία και τη σημασία μιας σωστά εφαρμοσμένης μεθόδου \acs{FDIR}.
 
 \begin{marginfigure}
 	\includegraphics{satnogs-comms}
@@ -260,12 +260,11 @@ cubesat reliablity \autocite{durou_hierarchical_fault_2002}
 
 Το κύριο συστατικό του υποσυστήματος \acs{COMMS} είναι η πλακέτα \textbf{SatNOGS COMMS} \autocite{surligas_satnogscomms_2021}, ένας \acs{RF} πομποδέκτης ανοικτού κώδικα που αναπτύσσεται από την \href{https://libre.space/}{LibreSpace Foundation}, βασισμένη στα τηλεπικοινωνιακά πρότυπα \acs{CCSDS}.
 
-Η επικοινωνία πραγματοποιείται με τη χρήση 2 ζωνών συχνοτήτων στην περιοχή \acs{ISM}, \SI{436.5}{\mega\hertz} και \SI{2.425}{\giga\hertz}, μέσω μίας κεραίας διπόλων και μίας κατευθυντικής επιφανειακής κεραίας (patch antenna). Η χρήση των συχνοτήτων \acs{ISM} επιτρέπει την εύκολη ραδιοερασιτεχνική πρόσβαση στο δορυφόρο. Η πρώτη (\acs{UHF}) ζώνη εκπέμπει επίσης ένα περιοδικό σήμα \textbf{beacon} (ραδιοφάρος), που περιέχει κρίσιμες πληροφορίες σχετικά με την κατάσταση του δορυφόρου.
+Η επικοινωνία πραγματοποιείται με τη χρήση 2 ζωνών συχνοτήτων στην περιοχή \acs{ISM}, \SI{436.5}{\mega\hertz} και \SI{2.425}{\giga\hertz}, μέσω μίας κεραίας διπόλων και μίας κατευθυντικής επιφανειακής κεραίας (patch antenna). Η χρήση των συχνοτήτων \acs{ISM} επιτρέπει την εύκολη ραδιοερασιτεχνική πρόσβαση στο δορυφόρο. Η πρώτη (\acs{UHF}) ζώνη εκπέμπει επίσης ένα περιοδικό σήμα \textbf{beacon} (ραδιοφάρος), που περιέχει κρίσιμες πληροφορίες σχετικά με την κατάσταση του \g{δορυφόρου}.
 
 Το υποσύστημα τηλεπικοινωνιών είναι επίσης υπεύθυνο για την ανάλυση ηλεκτρομαγνητικής συμβατότητας (\acs{EMC}), καθώς και για το σχεδιασμό και την κατασκευή του Σταθμού Βάσης. Ο τελευταίος θα αποτελέσει μέρος του \textbf{SatNOGS}\autocite{white_overview_satellite_2018}, ενός παγκόσμιου δικτύου δορυφορικών επίγειων σταθμών που βασίζεται σε ανοικτές τεχνολογίες και ανοικτά δεδομένα.
 
 \subsection{\acf{EPS}}
-Το  \ac{EPS} is the subsystem responsible for the generation, distribution and storage of electrical power of the spacecraft. It is a critical aspect of the spacecraft due to the direct dependence of all subsystems to the high power needs of many CubeSat subsystems, and is theorised to be the most common reason for CubeSat failure.\autocite{langer_reliability_cubesats_2016}
 
 Το \ac{EPS} είναι το υποσύστημα υπεύθυνο για την παραγωγή, κατανομή και αποθήκευση ηλεκτρικής ενέργειας στον δορυφόρο. Είναι ένα κρίσιμο κομμάτι του CubeSat, λόγω της άμεσης εξάρτησης και των σχετικά αυξημένων ενεργειακών αναγκών πολλών υποσυστημάτων του, και θεωρείται πως είναι ο πιο πιθανός λόγος αποτυχίας των CubeSat σε τροχιά. \autocite{langer_reliability_cubesats_2016}
 
@@ -475,7 +474,7 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
 
 Η υποομάδα Trajectory είναι υπεύθυνη για την ανάλυση της τροχιάς του διαστημικού σκάφους, την αποτίμηση των επιπτώσεων της ακτινοβολίας, τη συμμόρφωση του δορυφόρου με τους κανονισμούς για τα διαστημικά σκουπίδια και την εκτίμηση της διάρκειας ζωής του σε τροχιά.
 
-Οι απαιτήσεις του AcubeSAT δεν υπαγορεύουν τη χρήση προωθητήρων, πράγμα που σημαίνει ότι η τροχιά του δορυφόρου καθορίζεται αποκλειστικά από την εκτόξευση και δεν μπορεί να τροποποιηθεί κατά την πτήση. Καθώς πληροφορίες για την εκτόξευση είναι άγνωστες μέχρι κάποιο χρονικό διάστημα πριν από την παράδοση του δορυφόρου, εκτελείται ένα σύνολο αναλύσεων ευαισθησίας για τον προσδιορισμό των επιτρεπόμενων τροχιών. \autocite{MDO,retselis_acubesat_fmea_2020}
+Οι απαιτήσεις του AcubeSAT δεν υπαγορεύουν τη χρήση προωθητήρων, πράγμα που σημαίνει ότι η τροχιά του δορυφόρου καθορίζεται αποκλειστικά από την εκτόξευση και δεν μπορεί να τροποποιηθεί κατά την πτήση. Καθώς πληροφορίες για την εκτόξευση είναι άγνωστες μέχρι κάποιο χρονικό διάστημα πριν από την παράδοση του δορυφόρου, εκτελείται ένα σύνολο αναλύσεων ευαισθησίας για τον προσδιορισμό των επιτρεπόμενων τροχιών. \autocite{MDO,anthopoulos_orbital_analysis_2020}
 \begin{figure}
 	\includegraphics{GmatScreenShot_002}
 	\caption[Επίγειο ίχνος μιας πιθανής τροχιάς του AcubeSAT]{Επίγειο ίχνος μιας πιθανής τροχιάς του AcubeSAT, σχεδιασμένο με χρήση του εργαλείου \acl{GMAT} της NASA}
@@ -642,105 +641,109 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 \section{\ac{FDIR} operating modes}
 \label{sec:fdir_operating_modes}
 
-\chapter{Practical demonstration of \ac{FDIR}}
+\chapter{Πρακτική επίδειξη του \ac{FDIR}}
 
-As a proof of concept for AcubeSAT's \ac{FDIR} implementation, a practical setup to simulate the satellite's behaviour was prepared (\Cref{fig:block}). Key elements of the setup are:
+Ως πείραμα "proof-of-concept" για την υλοποίηση του \ac{FDIR} του AcubeSAT, προετοιμάσαμε μια πρακτική διάταξη για την προσομοίωση της συμπεριφοράς του δορυφόρου (\Cref{fig:block}). Η διάταξη αποτελείται από:
 \begin{compactitem}
-	\item A Cortex-M7 \textbf{microcontroller}, used to simulate a \textbf{satellite subsystem}
-	\item A number of redundant \textbf{sensors} used as the potential failure points
-	\item The accompanying \textbf{software} that includes an implementation of the \ac{ECSS} services and the \ac{SAVOIR} \ac{FDIR} methodology
-	\item A desktop computer, serving as the \textbf{ground station} to provide the necessary commanding and observing capabilities
+	\item Έναν Cortex-M7 \textbf{μικροελεγκτή}, που χρησιμοποιείται για την προσομοίωση ενός \textbf{υποσυστήματος δορυφόρου}
+	\item Έναν αριθμός πλεονάζοντων \textbf{αισθητήρων} θερμοκρασίας, που προσομοιώνουν πιθανά σημεία \textbf{αστοχίας}.
+	\item Το συνοδευτικό \textbf{λογισμικό} που περιλαμβάνει την υλοποίηση των υπηρεσιών \ac{ECSS} και της λογικής \ac{SAVOIR} \ac{FDIR}.
+	\item Έναν υπολογιστή, που χρησιμεύει ως \textbf{σταθμός βάσης} για την παροχή των απαραίτητων δυνατοτήτων ελέγχου και παρατήρησης.
 \end{compactitem}
 
 \begin{figure*}[h]
 	\includegraphics{SystemDescription}
-	\caption{High-level block diagram of the demonstration system}
+	\caption{Μπλοκ διάγραμμα υψηλού επιπέδου της πειραματικής διάταξης}
 	\label{fig:block}
 \end{figure*}
+\section{Περιγραφή Συστήματος}
 
-\section{System Description}
-
-\subsection{Functionality}
+\subsection{Λειτουργικότητα}
 \label{sec:tsvcd}
 
-In order to emulate the most core functions of a spacecraft subsystem, we implemented a system with a single functional requirement:
+Προκειμένου να εξομοιώσουμε τις πιο βασικές λειτουργίες ενός υποσυστήματος διαστημικού σκάφους, υλοποιήσαμε ένα σύστημα με μία μόνο λειτουργική προδιαγραφή:
 \begin{quote}
-	\texttt{RQ-010}: The system shall measure and report the ambient temperature.
+	\texttt{RQ-010}: Το σύστημα πρέπει να μετρά και να μεταδίδει τη θερμοκρασία περιβάλλοντος.
 \end{quote}
 
-In order to justify implementing an \ac{FDIR} approach for this system, we will introduce a reliability requirement:
+Προκειμένου να δικαιολογήσουμε μια υλοποίηση \ac{FDIR} για αυτό το σύστημα, θα εισάγουμε μια προδιαγραφή αξιοπιστίας:
 \begin{quote}
-	\texttt{RQ-020}: No single failure on any measuring component shall lead to loss of system functionality
+	\texttt{RQ-020}: Καμία μεμονωμένη αποτυχία σε κάποιο μετρητικό στοιχείο δεν πρέπει να οδηγήσει σε απώλεια της λειτουργικότητας του συστήματος
 \end{quote}
 
-The detailed design of this simple demonstration system is presented in the following sections, and was architected to match the functionality, interfaces, design and software of the AcubeSAT nanosatellite as much as possible.
+Ο λεπτομερής σχεδιασμός αυτού του απλού συστήματος επίδειξης παρουσιάζεται στις επόμενες ενότητες, και καταστρώθηκε έτσι ώστε να ταιριάζει όσο το δυνατόν περισσότερο με τη λειτουργικότητα, τις διεπαφές, το σχεδιασμό και το λογισμικό του νανοδορυφόρου AcubeSAT.
 
-\subsection{Hardware}
+\subsection{Υλικό}
 
-The centre of the demonstration system is the \ac{MCU} used to simulate the design and functionality of one of AcubeSAT's subsystems (\Cref{sec:obdh}). The selected \ac{MCU} is the Atmel \texttt{ATSAMV71Q21} hosted on the \foothref{https://www.microchip.com/Developmenttools/ProductDetails/ATSAMV71-XULT}{\texttt{ATSAMV71-XULT}} development board. This \ac{MCU} is functionally identical to the one that will be used in orbit, featuring a 32-bit ARM Cortex-M7 core with \SI{2}{\mebi\byte} of flash and \SI{384}{\kibi\byte} of \acs{SRAM} memory, and a maximum clock speed of \SI{300}{\mega\hertz}.
+Το κέντρο του συστήματος επίδειξης είναι ο \textbf{μικροελεγκτής} (\ac{MCU}) που χρησιμοποιείται για την προσομοίωση του σχεδιασμού και της λειτουργικότητας ενός από τα υποσυστήματα του AcubeSAT (\Cref{sec:obdh}). Ο επιλεγμένος μικροελεγκτής είναι ο Atmel \texttt{ATSAMV71Q21} που φιλοξενείται στην αναπτυξιακή πλακέτα \foothref{https://www.microchip.com/Developmenttools/ProductDetails/ATSAMV71-XULT}{\texttt{ATSAMV71-XULT}}. Αυτός ο μικροελεγκτής είναι λειτουργικά πανομοιότυπος με αυτόν που θα χρησιμοποιηθεί στην τροχιά, διαθέτοντας έναν 32-bit πυρήνα ARM Cortex-M7 με μνήμες \SI{2}{\mebi\byte} flash και \SI{384}{\kibi\byte} \acs{SRAM}, και μέγιστη ταχύτητα ρολογιού \SI{300}{\mega\hertz}.
 
-The \ac{MCU} is accompanied by two \textbf{temperature sensors} which are used to simulate subsystem components which are prone to failure. The selected sensor is the Microchip \foothref{https://www.microchip.com/wwwproducts/en/MCP9808}{\texttt{MCP9808}} which offers an accurate and frequent temperature readout over an \ac{I2C} bus. The maximum acquisition interval for the sensor is \SI{250}{\milli\second}.
+Ο μικροελεγκτής συνδέεται με δύο \textbf{αισθητήρες θερμοκρασίας} οι οποίοι χρησιμοποιούνται για την προσομοίωση εξαρτημάτων του υποσυστήματος που είναι επιρρεπή σε βλάβες. Οι επιλεγμένοι αισθητήρες είναι ο ι\foothref{https://www.microchip.com/wwwproducts/en/MCP9808}{\texttt{MCP9808}} της Microchip, οι οποίοι προσφέρουν ακριβή και ταχεία ανάγνωση της θερμοκρασίας μέσω ενός διαύλου \ac{I2C}. Η μέγιστη δυνατή περίοδος δειγματοληψίας για τον αισθητήρα είναι \SI{250}{\milli\second}.
 
 \marginnote{%
-\textbf{Cold redundancy:} Only one component is operating, while the other is not.
+\textbf{Ψυχρός πλεονασμός} (cold redundancy): Μόνο το ένα εξάρτημα λειτουργεί, ενώ τα άλλα όχι.
 
-\textbf{Warm redundancy:} One component is operating fully, and the other is operating with reduced functionality.
+\textbf{Θερμός πλεονασμός} (warm redundancy): Ένα εξάρτημα λειτουργεί πλήρως, ενώ τα άλλα έχουν μειωμένη λειτουργικότητα.
 
-\textbf{Hot redundancy:} Two or more simultaneously active parts operate in parallel. \parencite{SAVOIR-HB-003}
+\textbf{Ενεργός πλεονασμός} (hot redundancy): Δύο ή περισσότερα ταυτόχρονα ενεργά εξαρτήματα λειτουργούν παράλληλα. \parencite{SAVOIR-HB-003}
 }
 
-The two sensors are wired in a \textbf{hot-redundant} configuration, due to their extremely low operating power. The two sensors are connected to different \ac{I2C} buses, so that the failure of one bus will not affect the operation of the other sensor.
+Οι δύο αισθητήρες είναι συνδεδεμένοι σε διάταξη \textbf{ενεργού πλεονασμού}, λόγω της εξαιρετικά χαμηλής ισχύος λειτουργίας τους. Οι δύο αισθητήρες είναι συνδεδεμένοι σε διαφορετικούς διαύλους \ac{I2C}, έτσι ώστε πιθανή βλάβη του ενός διαύλου να μην επηρεάζει τη λειτουργία του άλλου αισθητήρα.
 
-\paragraph{\acs{USB} interface} In order to receive \acl{TM} and transmit \acl{TC} to the demonstrative space segment, a \acs{USB} link with a desktop computer is integrated into the design. This link uses the \acs{UART} peripheral of the microcontroller, which solely transfers \acs{ECSS} messages between the microcontroller and the desktop. These messages include the typical \acs{TM} reports and \acs{TC} requests, but also log messages intended for diagnostic purposes.
+\paragraph{Διεπαφή \acs{USB}} Για τη λήψη \acl{TM} και τη μετάδοση \acl{TC} στο υποσύστημα επίδειξης, ο σχεδιασμός περιλαμβάνει μια σύνδεση \acl{USB} με έναν τυπικό υπολογιστή. Η σύνδεση αυτή χρησιμοποιεί το περιφερειακό \acs{UART} του μικροελεγκτή, το οποίο μεταφέρει αποκλειστικά μηνύματα \acs{ECSS} μεταξύ του μικροελεγκτή και του υπολογιστή. Τα μηνύματα αυτά περιλαμβάνουν τις τυπικές αναφορές \acs{TM} και τα αιτήματα \acs{TC}, αλλά και μηνύματα καταγραφής που προορίζονται για διαγνωστικούς σκοπούς.
 
-As the \acs{UART} protocol does not offer packetisation facilities by default, \ac{COBS} encoding \autocite{cheshire_consistent_overhead_1997} is implemented for all transmitted messages.
+Καθώς το πρωτόκολλο \acs{UART} δεν προσφέρει κάποιο μηχανισμό για διαχωρισμό πακέτων, εφαρμόζουμε κωδικοποίηση \acs{COBS} \autocite{cheshire_consistent_overhead_1997} για όλα τα μεταδιδόμενα μηνύματα.
 
 \begin{figure*}[h]
 	\includegraphics{ElectricalSchematic}
-	\caption[Simplified electrical schematic of the implementation]{Simplified electrical schematic of the implementation. The two sensors are wired via \ac{I2C} with the necessary pull-up resistors. Their power is controlled directly by microcontroller outputs, allowing the user to completely cut the power of the sensors if needed. The \texttt{A} pins of the sensors are arbitrarily set to select the \ac{I2C} address of each device. The same address was used, as the two \ac{I2C} buses are separate. Decoupling capacitors, crystals and other boilerplate components are not shown, as they are already included in the \ac{MCU} development board.}
+%	\caption[Απλοποιημένο σχήματικό της εφαρμογής]{Απλοποιημένο σχηματικό της εφαρμογής. Οι δύο αισθητήρες είναι συνδεδεμένοι μέσω \ac{I2C} με τις απαραίτητες αντιστάσεις ανύψωσης στα \SI{3.3}{\volt}. Η τροφοδοσία τους ελέγχεται απευθείας από τις εξόδους του μικροελεγκτή, επιτρέποντας στο χρήστη να διακόψει εντελώς την τροφοδοσία των αισθητήρων αν χρειαστεί. Οι ακροδέκτες \texttt{A} των αισθητήρων ρυθμίζονται αυθαίρετα ώστε να επιλέγεται η διεύθυνση \ac{I2C} της κάθε συσκευής. Χρησιμοποιήσαμε την ίδια διεύθυνση, καθώς οι δύο δίαυλοι \ac{I2C} είναι πλήρως ανεξάρτητοι. Πυκνωτές αποσύζευξης, κρύσταλλοι και άλλα παθητικά εξαρτήματα δεν φαίνονται, καθώς περιλαμβάνονται ήδη στην έτοιμη αναπτυξιακή πλακέτα.}
 	\label{fig:schematic}
 \end{figure*}
 
-\paragraph{Connections}
-The development board and sensors were laid out and connected directly. The sensor \acp{IC} were soldered on breakout \acp{PCB} which were manufactured based on Jaroslav Sýkora's design.\url{https://www.jsykora.info/2019/06/pcb-panel-\-of-smt-breakout-boards-soic-tssop-msop/}
+\paragraph{Συνδέσεις}
+Η πλακέτα ανάπτυξης και οι αισθητήρες τοποθετήθηκαν και συνδέθηκαν χρησιμοποιώντας ένα breadboard. Τα ολοκληρωμένα κυκλώματα κολλήθηκαν επάνω σε απλές πλακέτες μικρού μεγέθους, που κατασκευάστηκαν με βάση το σχέδιο του Jaroslav Sýkora.\footurl{https://www.jsykora.info/2019/06/pcb-panel-of-smt-breakout-boards-soic-tssop-msop/}
 
-\section{Software}
+\section{Λογισμικό}
 
 \subsection{Flight Segment}
 
-All \ac{FDIR} operations and functionality are developed using the \textbf{C++} language\footnote{The \texttt{C++17} standard has been selected} on the \ac{MCU}. All developments rely on free and open source software which is freely available for download and modification. The \foothref{https://git-scm.com/}{Git} version control is used for all software projects.
-
-The \ac{FDIR} functionality is structured around the \textbf{ECSS-E-ST-70-41C \ac{PUS} implementation created by the AcubeSAT team}\footnote{\url{https://gitlab.com/acubesat/obc/ecss-services}}, which offers a modular implementation of the standard utilising modern C++.
-
-The \ac{MCU} software and business logic are built on \textbf{\foothref{https://www.freertos.org/}{Free\acs{RTOS}}}, a low-footprint real-time operating system targeted towards embedded devices. FreeRTOS provides the capability of safe concurrency, along with support for well-controlled tasks and a number of synchronisation primitives.
-
+Όλες οι λειτουργίες του \ac{FDIR} αναπτύχθηκαν χρησιμοποιώντας τη γλώσσα \textbf{C++}\footnote{Επιλέχθηκε το μοντέρνο πρότυπο \texttt{C++17}. Ολόκληρη η εργασία βασίζεται σε ελεύθερο και ανοικτό λογισμικό το οποίο διατίθεται ελεύθερα για λήψη και τροποποίηση. Όλος ο κώδικας αναπτύχθηκε σε \foothref{https://git-scm.com/}{Git}.}
+	
+	Η λειτουργικότητα του \ac{FDIR} είναι δομημένη γύρω από την υλοποίηση του \textbf{ECSS-E-ST-70-41C \ac{PUS} που γράφτηκε από την ομάδα AcubeSAT}\footnote{\url{https://gitlab.com/acubesat/obc/ecss-services}}, η οποία προσφέρει μια παραμετροποιήσιμη υλοποίηση του προτύπου χρησιμοποιώντας σύγχρονη C++.
+	
+	Το λογισμικό του μικροελεγκτή και η βασική λογική βασίζονται στο \textbf{\foothref{https://www.freertos.org/}{Free\acs{RTOS}}}, ένα λειτουργικό σύστημα πραγματικού χρόνου με χαμηλές απαιτήσεις που απευθύνεται σε ενσωματωμένες συσκευές. Το FreeRTOS παρέχει ανεξάρτητες διεργασίες και δομές που επιτρέπουν τον ασφαλή συγχρονισμού δεδομένων μεταξύ παράλληλων παραγωγών \& καταναλωτών.
 \begin{figure*}[h]
 	\includegraphics{SoftwareFlow}
-	\caption{View of the software components and the data flow between them}
+	\caption{Η ροή δεδομένων μεταξύ των διαφορετικών κομματιών του λογισμικού}
 	\label{sec:softwareflow}
 \end{figure*}
 
-To ensure high reliability and a low resource footprint of the software, the following \textbf{constraints} are enacted in C++ development:
+Για να διασφαλιστεί υψηλή αξιοπιστία και χαμηλή κατανάλωση πόρων, οι ακόλουθοι \textbf{περιορισμοί} λαμβάνονται υπ' όψιν την ανάπτυξη σε C++:
 \begin{compactenum}
-	\item Dynamic memory allocation\footnote{Use of \texttt{malloc}, \texttt{new} etc.} is banned completely from the code.
+	\item Η δυναμική κατανομή μνήμης\footnote{Χρήση των \mintinline{cpp}{malloc}, \mintinline{cpp}{new} κλπ.} απαγορεύεται εντελώς
 	\label{itm:malloc}
-	\item \Cref{itm:malloc} means that standard C++ containers cannot be used. Instead, the \foothref{https://www.etlcpp.com/}{\acf{ETL}} is integrated in the software.
-	\item "Expensive" features such as Run-Time Type Inference, Dynamic Casts or exceptions are also prohibited.
+	\item \Cref{itm:malloc} σημαίνει ότι οι κλασικές δομές δεδομένων της C++\footnote{\mintinline{cpp}{std::vector}, \mintinline{cpp}{std::string}, \mintinline{cpp}{std::map} κλπ.} δεν μπορούν να χρησιμοποιηθούν. Αντίθετα, η βιβλιοθήκη \foothref{https://www.etlcpp.com/}{\acf{ETL}} περιλαμβάνει δομές που αποθηκεύονται σε στατική μνήμη, ή στην στοίβα.
+	\item "Ακριβά" χαρακτηριστικά, όπως το \emph{Run-Time Type Inference}, οι δυναμικές μετατροπές τύπων (dynamic casts) ή οι εξαιρέσεις (exceptions) απαγορεύονται επίσης.
 \end{compactenum}
 
-The \foothref{https://www.microchip.com/en-us/development-tools-tools-and-software/embedded-software-center/mplab-harmony-v3}{MPLAB Harmony} \ac{HAL} and configurator are used to interface with all the \acs{MCU}'s peripherals. \foothref{https://www.jetbrains.com/clion/}{CLion} has been selected as the \acs{IDE}, along with the \foothref{https://cmake.org/}{CMake} build system.
+Η βιβλιοθήκη \ac{HAL} και η σουίτα λογισμικού \foothref{https://www.microchip.com/en-us/development-tools-tools-and-software/embedded-software-center/mplab-harmony-v3}{MPLAB Harmony}  χρησιμοποιούνται για την επικοινωνία με όλα τα ενσωματωμένα περιφερειακά του μικροελεγκτή. Το \foothref{https://www.jetbrains.com/clion/}{CLion} έχει επιλεγεί ως το \acs{IDE}, μαζί με το σύστημα "χτισίματος" κώδικα \foothref{https://cmake.org/}{CMake}.
 
-All software developed in the scope of this thesis is available online, and listed in \Cref{tab:new_software}. The most critical parts of the developed software are expanded in \Cref{sec:source_code}. A summary of used libraries can also be found in \Cref{tab:old_software}.
+Όλο το λογισμικό που αναπτύχθηκε στο πλαίσιο της παρούσας διατριβής είναι διαθέσιμο στο διαδίκτυο και έχει καταγραφεί στο \Cref{tab:new_software}. Τα πιο κρίσιμα μέρη του λογισμικού που αναπτύχθηκε έχουν αναπαραχθεί στο \Cref{sec:source_code}. Μια λίστα των έτοιμων ή τροποποιημένων βιβλιοθηκών που χρησιμοποιήθηκαν μπορεί επίσης να βρεθεί στο \Cref{tab:old_software}.
+
 
 \begin{table*}[h]
 	\centering
-	\caption[][5pt]{List of new software developed for this thesis}
+	\caption[][5pt]{Λίστα του νέου λογισμικού που αναπτύχθηκε για την παρούσα εργασία}
 	\label{tab:new_software}
 	\begin{tabularx}{\textwidth}{@{}lXp{6cm}@{}}
 		\toprule
-		Library name & Description & URL \\ \midrule
-		\textbf{\texttt{fdir-demo}} & Full microcontroller code for the demonstration & \small \url{https://github.com/kongr45gpen/fdir-demo} \\
-		\textbf{\texttt{fdir-demo-yamcs}} & Ground segment software: files and source code for \acs{YAMCS} integration and \acs{MCU} communications & \small \url{https://github.com/kongr45gpen/fdir-demo-yamcs} \\
+		Όνομα & Περιγραφή & URL \\ \midrule
+		\textbf{\texttt{fdir-demo}} & Πλήρης κώδικας για τον μικροελεγκτή  & \small \url{https://github.com/kongr45gpen/fdir-demo} \\
+		\textbf{\texttt{fdir-demo-yamcs}} & Λογισμικό Σταθμού Βάσης: \begin{enumerate}
+			\item Διεπαφή με το \acs{YAMCS}
+			\item Περιγραφή \acs{ECSS} πακέτων, αναγνώσιμη από μηχανή
+			\item Διεπαφή \acs{UART}--\acs{USB} με τον μικροελεγκτή
+			\item Πρόγραμμα εμφάνισης της βάσης δεδομένων \acs{PUS}
+			\end{enumerate}\vspace*{-4ex} & \small \url{https://github.com/kongr45gpen/fdir-demo-yamcs} \\
 		\bottomrule
 	\end{tabularx}
 \end{table*}
@@ -748,20 +751,21 @@ All software developed in the scope of this thesis is available online, and list
 \begin{table*}[h]
 	\centering
 	\vspace{2em}
-	\caption[][5pt]{List of used "off-the-shelf" software libraries}
+	\caption[][5pt]{Λίστα των έτοιμων βιβλιοθηκών που χρησιμοποιήθηκαν}
 	\label{tab:old_software}
 	\begin{tabularx}{\textwidth}{@{}lp{6cm}X@{}}
 		\toprule
-		Library name & Description & Modifications \\ \midrule
-		\href{https://www.freertos.org/}{FreeRTOS} & Real-time operating system for embedded devices & \\
-		\href{https://gitlab.com/acubesat/obc/ecss-services}{\texttt{ecss-services}} & C++ implementation of the ECSS-E-ST-70-41C \acl{PUS} %\autocite{ECSS-E-ST-70-41C} 
-		& \small Missing services were implemented and some interface improvements were made to improve integration with the \acs{MCU}\newline\small\url{https://gitlab.com/kongr45gpen/ecss-services/-/tree/fdir}
+		Όνομα & Περιγραφή & Μεταβολές \\ \midrule
+		\href{https://www.freertos.org/}{FreeRTOS} & Λειτουργικό σύστημα πραγματικού χρόνου & \\
+		\href{https://gitlab.com/acubesat/obc/ecss-services}{\texttt{ecss-services}} & C++ υλοποίηση του προτύπου ECSS-E-ST-70-41C %\autocite{ECSS-E-ST-70-41C} 
+		& \small
+		Προστέθηκαν υλοποιήσεις υπηρεσιών που δεν υπήρχαν, και βελτιώθηκαν συναρτήσεις διεπαφής με τον μικροελεγκτή\newline\small\url{https://gitlab.com/kongr45gpen/ecss-services/-/tree/fdir}
 		 \\
-		 \href{https://www.etlcpp.com/}{\acs{ETL}}  & C++ library (including containers, algorithms and other utilities) for applications with embedded constraints &
+		 \href{https://www.etlcpp.com/}{\acs{ETL}}  & Βιβλιοθήκη C++ (περιλαμβάνει δομές δεδομένων, αλγορίθμους και άλλα εξαρτήματα) για κρίσιμες εφαρμογές με περιορισμένη μνήμη &
 		 \\
- 		\href{https://github.com/yamcs/yamcs}{\acs{YAMCS}}  & Software framework for mission \& spacecraft control & %\autocite{cheshire_consistent_overhead_1997}
+ 		\href{https://github.com/yamcs/yamcs}{\acs{YAMCS}}  & Σουίτα λογισμικού για έλεγχο διαστημικών αποστολών& %\autocite{cheshire_consistent_overhead_1997}
  		\\
-		\href{https://github.com/cmcqueen/cobs-c}{\texttt{cobs-c}}  & Implementation of \ac{COBS} %\autocite{cheshire_consistent_overhead_1997}
+		\href{https://github.com/cmcqueen/cobs-c}{\texttt{cobs-c}}  & Υλοποίηση του πρωτοκόλλου \ac{COBS} %\autocite{cheshire_consistent_overhead_1997}
 		 & \\
 		\bottomrule
 	\end{tabularx}
@@ -888,7 +892,7 @@ The approach acts using the following steps, which are constantly being executed
 	\item In order to recover from the failures, first a restart of the sensor is attempted. If the erroneous values still persist, then the sensor cannot recover from the failure, but is just isolated and disabled instead.
 \end{compactenum}
 
-\clearpage
+%\clearpage
 \paragraph{\acl{HSIA}}
 
 After defining the possible failure modes and logic of the system, we are ready to analyse each entry to provide the correct software inputs to implement the required \ac{FDIR}. More specifically, for each failure, the following must be defined: \autocite[84]{SAVOIR-HB-003}
@@ -992,7 +996,7 @@ The \ac{HSIA} adds the following significant pieces of information to the \ac{FM
 	\vspace{2pt}
 \end{table*}
 
-\clearpage
+%\clearpage
 
 \paragraph{Parameters}
 
@@ -1080,7 +1084,7 @@ All the aforementioned definitions can be easily modified by operators using sin
 	\end{tabular}
 \end{table}
 
-\clearpage
+%\clearpage
 \section{\ac{FDIR} validation}
 
 \subsection{Nominal operation}
@@ -1156,8 +1160,6 @@ The \ac{YAMCS} platform was once again used to generate the wanted commands (\Cr
 	\caption{List of commands in the \acs{YAMCS} interface. These commands can initiate spacecraft actions, enable/disable sensors, or reconfigure the on-board \acs{ECSS} services databases. The list of commands is provided programmatically in \ac{XTCE} format (\Cref{app:xtce}).}
 	\label{fig:yamcs_commands}
 \end{figure}
-
-
 
 
 
