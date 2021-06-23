@@ -8,12 +8,15 @@
 \usepackage{alphabeta}
 \let\textlozenge\undefined
 \usepackage{gfsartemisia-euler}
+\NewDocumentCommand{\g}{m}{\foreignlanguage{greek}{#1}}
+%\usepackage{hyphenation-greek}
+%\input{hyphenation-el.tex}
 
 %%
 % Book metadata
 \title{Design of Fault Detection, Isolation and Recovery in the AcubeSAT nanosatellite\thanks{AcubeSAT}}
 \author[Konstantinos Kanavouras]{Konstantinos Kanavouras}
-\publisher{Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης}
+\publisher{\ensuregreek{Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης}}
 
 \begin{document}
 
@@ -205,87 +208,93 @@ cubesat reliablity \autocite{durou_hierarchical_fault_2002}
 
 Ο νανοδορυφόρος AcubeSAT είναι τεχνικά και οργανωτικά χωρισμένος σε 11 διαφορετικές υποομάδες ή \textbf{υποσυστήματα}, κάθε μία από τις οποίες είναι υπεύθυνη για ένα διαφορετικό τμήμα του δορυφόρου, και αποτελείται από \SIrange{2}{9}{} αφοσιωμένα μέλη.
 
-Στις επόμενες ενότητες παρουσιάζεται μια σύντομη εισαγωγή στη λειτουργία και το σχεδιασμό κάθε υποσυστήματος. Καθώς η διαδικασία σχεδιασμού συστημάτων και \acl{PA} είναι εγγενώς συνδεδεμένη με τη λειτουργία όλων των υποσυστημάτων, αναφέρονται επίσης οι λεπτομέρειες που αφορούν το \acs{FDIR}. Για πιο λεπτομερείς πληροφορίες, ο αναγνώστης ενθαρρύνεται να ανατρέξει στην \foothref{https://acubesat.spacedot.gr/subsystems/}{ιστοσελίδα του AcubeSAT}, ή στα δημοσίως διαθέσιμα \foothref{https://gitlab.com/acubesat/documentation/cdr-public}{\ac{CDR} έγγραφα}.
+Στις επόμενες ενότητες παρουσιάζεται μια σύντομη εισαγωγή στη λειτουργία και το σχεδιασμό κάθε υποσυστήματος. Καθώς η διαδικασία σχεδιασμού συστημάτων και \acl{PA} είναι %\ensuregreek{εγ\-γε\-νώς}
+\g{εγγενώς}
+συνδεδεμένη με τη λειτουργία όλων των υποσυστημάτων, \g{αναφέρονται} επίσης οι λεπτομέρειες που αφορούν το \acs{FDIR}. Για πιο λεπτομερείς πληροφορίες, ο αναγνώστης ενθαρρύνεται να ανατρέξει στην \foothref{https://acubesat.spacedot.gr/subsystems/}{ιστοσελίδα του AcubeSAT}, ή στα δημοσίως διαθέσιμα \foothref{https://gitlab.com/acubesat/documentation/cdr-public}{έγγραφα του \ac{CDR}}.
 
 \subsection{\acf{ADCS}}
 \label{sec:adcs}
 
-The \ac{ADCS} subteam is responsible for controlling the \textbf{attitude} and orientation of the spacecraft in orbit. This is achieved using a series of \ac{COTS} control actuators (one 3-axis magnetorquer board, one 1-axis reaction wheel), sensors for attitude determination (1 gyroscope and 2 magnetometers), and filtering, determination \& control algorithms.\autocite{DDJF_AOCS}
+Η υποομάδα του \ac{ADCS} είναι υπεύθυνη για τον έλεγχο του \textbf{προσανατολισμού} του δορυφόρου σε τροχιά. Αυτό επιτυγχάνεται με τη χρήση μιας σειράς ενεργοποιητών, που προέρχονται έτοιμοι από την αγορά (\ac{COTS}): μία πλακέτα 3 αξόνων και έναν τροχός αντίδρασης 1 άξονα, σε συνδυασμό με αισθητήρες για τον προσδιορισμό της περιστροφής του δορυφόρου (1 γυροσκόπιο και 2 μαγνητόμετρα) και αλγορίθμους φιλτραρίσματος \& ελέγχου. \autocite{DDJF_AOCS,velentzas_design_attitude_2021}
 
-The \ac{ADCS} can operate under different pointing profiles for different attitude needs:
+Το \ac{ADCS} μπορεί να λειτουργήσει με τα εξής διαφορετικά ``προφίλ στόχευσης'' (pointing profiles) για να καλύψει διαφορετικές λειτουργικές ανάγκες:
 \begin{enumerate}
-	\item \textbf{Detumbling}, where the satellite is attempting to minimize its angular acceleration close to 0, to ensure a stable communications link, prevent detachment of parts and allow easier regaining of pointing.
+	\item \textbf{Λειτουργία Σταθεροποίησης} (Detumbling), όπου ο δορυφόρος προσπαθεί να φτάσει τη γωνιακή του ταχύτητα κοντά στο 0, για να εξασφαλίσει μια αξιόπιστη ραδιοζεύξη, να αποτρέψει την αποκόλληση εξαρτημάτων και να επιτρέψει αργότερα την ευκολότερη ανάκτηση του επιθυμητού προσανατολισμού.
 	
-	Detumbling mode is implemented in the simplest possible way, using only one of the 2 redundant magnetometers and a simple control algorithm. It is activated when there is no need to apply any of the specific pointing modes, or if the spacecraft angular rate is too high. In AcubeSAT, system-wide \emph{Safe Mode}, \emph{Commissioning Mode} and \emph{Science Mode} apply detumbling.
+	Η λειτουργία Σταθεροποίησης υλοποιείται με τον απλούστερο δυνατό τρόπο, χρησιμοποιώντας μόνο το ένα από τα 2 μαγνητόμετρα και έναν απλό αλγόριθμο ελέγχου. Ενεργοποιείται όταν δεν υπάρχει ανάγκη εφαρμογής κάποιου άλλου ή όταν η γωνιακή ταχύτητα του νανοδορυφόρου είναι επικίνδυνα υψηλή. Στο AcubeSAT, το προφίλ αυτό εφαρμόζεται στην \emph{Ασφαλή Λειτουργία}, στη \emph{Λειτουργία Εκκίνησης} και στη \emph{Λειτουργία Πειράματος}.
 	
-	\item \textbf{Nadir pointing}, where the satellite points the \(+X\) side towards the Earth. This profile is used during \emph{Nominal Mode} on passes over the \acl{GS}, where the directional patch antenna needs direct visibility.
+	\item \textbf{Στόχευση στο Ναδίρ} (Nadir Pointing), όπου ο δορυφόρος \g{στρέ\-φει} την πλευρά \(+X\) ώστε να κοιτάζει προς τη Γη. Αυτό το προφίλ χρησιμοποιείται κατά τη διάρκεια της \emph{Κανονικής Λειτουργίας} σε περάσματα πάνω από τον Σταθμό Βάσης, όπου η κατευθυντική κεραία χρειάζεται άμεση ορατότητα.
 	
-	\item \textbf{Sun pointing}, where the satellite points two sides to the sun with a \SI{45}{\degree} angle of incident each, in order to maximise solar panel input. This profile is used during \emph{Nominal Mode}, between \ac{GS} passes, in order to ensure a positive power budget.
+	\item \textbf{Στόχευση στον Ήλιο} (Sun Pointing), όπου ο δορυφόρος \g{στρέ\-φει} δύο πλευρές προς τον ήλιο με γωνία πρόσπτωσης \SI{45}{\degree}, προ\-κει\-μέ\-νου να μεγιστοποιηθεί η είσοδος των ηλιακών πάνελ. Αυτό το προφίλ χρησιμοποιείται κατά τη διάρκεια της \emph{Κανονικής Λειτουργίας}, ανάμεσα στα περάσματα από το Σταθμό Βάσης, προκειμένου να εξασφαλιστεί θετικός προϋπολογισμός ισχύος.
 \end{enumerate}
 
 \begin{margintable}
 	\centering
-	\caption[Maximum ADCS error values after stabilisation]{Maximum \ac{ADCS} error values after stabilisation}
+	\caption[Μέγιστες τιμές σφαλμάτων ADCS μετά τη σταθεροποίηση]{Μέγιστες τιμές σφαλμάτων \ac{ADCS} μετά τη σταθεροποίηση}
 	\label{tab:adcsape}
 	\begin{tabular}{@{}ll@{}}
 		\toprule
-		Error                      & Value                    \\ \midrule
-		Absolute Performance Error & \( < \SI{30}{\degree} \) \\
-		Absolute Knowledge Error   & \( < \SI{1}{\degree} \) 
+		Σφάλμα                      & Τιμή                    \\ \midrule
+		Απόλυτη Ακρίβεια Στόχευσης & \( < \SI{30}{\degree} \) \\
+		Απόλυτη Ακρίβεια Γνώσης    & \( < \SI{1}{\degree} \) 
 	\end{tabular}
 \end{margintable}
 
-The performance of the \ac{ADCS} system can be summarised using performance metrics such as the ones presented in \Cref{tab:adcsape}.
+Οι επιδόσεις του \ac{ADCS} μπορούν να αξιολογηθούν με μετρικές όπως αυτές που παρουσιάζονται στον \Cref{tab:adcsape}.
 
 \subsection{\acf{COMMS}}
 
-The communications subsystem is responsible for transmitting data between the Earth and the spacecraft in orbit. The transmitted data is split into 3 different categories\autocite{DDJF_TTC}:
+Το υποσύστημα communications (τηλεπικοινωνιών) είναι υπεύθυνο για τη μετάδοση δεδομένων μεταξύ της Γης και του δορυφόρου σε τροχιά. Τα μεταδιδόμενα δεδομένα χωρίζονται σε 3 διαφορετικές κατηγορίες\autocite{DDJF_TTC}:
 \begin{itemize}
-	\item \textbf{\acf{TC}}: Commands from the Earth to the satellite. They can be used to request information, or to perform specific spacecraft actions.
-	\item \textbf{\acf{TM}}: Information sent from the satellite towards Earth, typically including vital information such as sensor values, system status, timestamps and events.
-	\item \textbf{Science data}: The scientific data generated by the payload. These are the highest-volume data and represent the main scientific output of the mission.
+	\item \textbf{\acf{TC}}: Εντολές από τη Γη προς το δορυφόρο. Μπορούν να χρησιμοποιηθούν για να ζητήσουν πληροφορίες ή για να εκτελέσουν συγκεκριμένες ενέργειες στο CubeSat.
+	\item \textbf{\acf{TM}}: Πληροφορίες που αποστέλλονται από τον δορυφόρο προς τη Γη, που συνήθως περιλαμβάνουν ζωτικές πληροφορίες, όπως τιμές αισθητήρων, κατάσταση συστήματος, τρέχουσα ώρα και συμβάντα.
+	\item \textbf{Επιστημονικά δεδομένα}: Τα επιστημονικά δεδομένα που παράγονται από το ωφέλιμο φορτίο (payload). Αυτά είναι τα δεδομένα με τον μεγαλύτερο όγκο και αντιπροσωπεύουν τα κύρια επιστημονικά αποτελέσματα της αποστολής.
 \end{itemize}
 
-It is important to mention that the satellite orbit only allows for a very short visibility duration every day, increasing the needs for on-board autonomy and the importance of a correctly implemented \acs{FDIR} method.
+Είναι σημαντικό να αναφερθεί ότι η τροχιά του δορυφόρου επιτρέπει μόνο μια πολύ μικρή διάρκεια ορατότητας από τον Σταθμό Βάσης (\acf{GS}) κάθε μέρα, αυξάνοντας τις ανάγκες για αυτονομία επί του σκάφους και τη σημασία μιας σωστά εφαρμοσμένης μεθόδου \acs{FDIR}.
 
 \begin{marginfigure}
 	\includegraphics{satnogs-comms}
-	\caption{The SatNOGS COMMS board}
+	\caption{Η πλακέτα SatNOGS COMMS}
 \end{marginfigure}
 
-The main component of the \acs{COMMS} subsystem is the \textbf{SatNOGS COMMS board} \autocite{surligas_satnogscomms_2021}, an open-source \acs{RF} transceiver developed by the \href{https://libre.space/}{LibreSpace Foundation}, based on \acs{CCSDS} telecommunications standards.
+Το κύριο συστατικό του υποσυστήματος \acs{COMMS} είναι η πλακέτα \textbf{SatNOGS COMMS} \autocite{surligas_satnogscomms_2021}, ένας \acs{RF} πομποδέκτης ανοικτού κώδικα που αναπτύσσεται από την \href{https://libre.space/}{LibreSpace Foundation}, βασισμένη στα τηλεπικοινωνιακά πρότυπα \acs{CCSDS}.
 
-Communication will take place using 2 frequency bands on the \acs{ISM} range, namely \SI{436.5}{\mega\hertz} and \SI{2.425}{\giga\hertz}, supported by a deployable turnstile and a directional patch antenna respectively. The use of \acs{ISM} frequencies allows easy radio-amateur access to the satellite. The first (\acs{UHF}) band also emits a periodic \textbf{beacon}, listing information about satellite status.
+Η επικοινωνία πραγματοποιείται με τη χρήση 2 ζωνών συχνοτήτων στην περιοχή \acs{ISM}, \SI{436.5}{\mega\hertz} και \SI{2.425}{\giga\hertz}, μέσω μίας κεραίας διπόλων και μίας κατευθυντικής επιφανειακής κεραίας (patch antenna). Η χρήση των συχνοτήτων \acs{ISM} επιτρέπει την εύκολη ραδιοερασιτεχνική πρόσβαση στο δορυφόρο. Η πρώτη (\acs{UHF}) ζώνη εκπέμπει επίσης ένα περιοδικό σήμα \textbf{beacon} (ραδιοφάρος), που περιέχει κρίσιμες πληροφορίες σχετικά με την κατάσταση του δορυφόρου.
 
-The communications subsystem is also responsible for the \ac{EMC} analysis and interference mitigation, as well as the design and construction of the satellite \acl{GS}. The \acl{GS} will be part of \textbf{SatNOGS}\autocite{white_overview_satellite_2018}, a global network of satellite ground stations based on open technologies and open data.
+Το υποσύστημα τηλεπικοινωνιών είναι επίσης υπεύθυνο για την ανάλυση ηλεκτρομαγνητικής συμβατότητας (\acs{EMC}), καθώς και για το σχεδιασμό και την κατασκευή του Σταθμού Βάσης. Ο τελευταίος θα αποτελέσει μέρος του \textbf{SatNOGS}\autocite{white_overview_satellite_2018}, ενός παγκόσμιου δικτύου δορυφορικών επίγειων σταθμών που βασίζεται σε ανοικτές τεχνολογίες και ανοικτά δεδομένα.
 
 \subsection{\acf{EPS}}
-The \ac{EPS} is the subsystem responsible for the generation, distribution and storage of electrical power of the spacecraft. It is a critical aspect of the spacecraft due to the direct dependence of all subsystems to the high power needs of many CubeSat subsystems, and is theorised to be the most common reason for CubeSat failure.\autocite{langer_reliability_cubesats_2016}
+Το  \ac{EPS} is the subsystem responsible for the generation, distribution and storage of electrical power of the spacecraft. It is a critical aspect of the spacecraft due to the direct dependence of all subsystems to the high power needs of many CubeSat subsystems, and is theorised to be the most common reason for CubeSat failure.\autocite{langer_reliability_cubesats_2016}
 
-AcubeSAT has opted for a \ac{COTS} subsystem approach for the \ac{EPS}:\autocite{DDJF_SYS}
+Το \ac{EPS} είναι το υποσύστημα υπεύθυνο για την παραγωγή, κατανομή και αποθήκευση ηλεκτρικής ενέργειας στον δορυφόρο. Είναι ένα κρίσιμο κομμάτι του CubeSat, λόγω της άμεσης εξάρτησης και των σχετικά αυξημένων ενεργειακών αναγκών πολλών υποσυστημάτων του, και θεωρείται πως είναι ο πιο πιθανός λόγος αποτυχίας των CubeSat σε τροχιά. \autocite{langer_reliability_cubesats_2016}
+
+Το AcubeSAT έχει επιλέξει έναν συνδυασμό από \ac{COTS} προϊόντα για το \ac{EPS}:\autocite{DDJF_SYS}
 \begin{itemize}
-	\item \textbf{Solar panels} are procured from EnduroSat. Four 3U panels cover the \(X\) and \(Y\) faces of the satellite, and one 1U panel covers the \(-Z\) face.
-	\item The \textbf{\ac{PCDU}} is procured from NanoAvionics and offers 10 switched channels with overcurrent protection over 4 voltage rails, as well as 4 \ac{MPPT} converters.
+	\item Τα \textbf{ηλιακά πάνελ} (solar panels) αγοράζονται από την EnduroSat. 4 πάνελ διάστασης 3U καλύπτουν τις \(X\) και \(Y\) πλευρές, και ένα πάνελ 1U καλύπτει την \(-Z\) πλευρά.
+	\item Η μονάδα \textbf{ελέγχου και διανομής ισχύος} (\ac{PCDU}) αγοράζεται από την NanoAvionics και προσφέρει 10 προστατευμένα κανάλια με 4 διαφορετικές τιμές τάσης, καθώς και 4 μετατροπείς \ac{MPPT}.
 	\item The \textbf{battery pack}, also procured from NanoAvionics, contains 4 18650 Li-Ion cells in a 2S2P\footnote{2 series, 2 parallel} configuration.
+	\item Οι \textbf{μπαταρίες}, επίσης αγορασμένες από τη NanoAvionics, αποτελούνται από 4 στοιχεία ιόντων λιθίου μορφής 18650.
 \end{itemize}
 
 \begin{margintable}
-	\caption{AcubeSAT nominal mode power budget}
+	\caption{Προϋπολογισμός ισχύος AcubeSAT σε κανονική λειτουργία}
 	\label{tab:power_budget}
 	\begin{tabularx}{\linewidth}{@{}lX@{}}
 		\toprule
-		\textbf{Consumer}            & \textbf{Power}            \\ \midrule
+		\textbf{Καταναλωτής}            & \textbf{Ισχύς}            \\ \midrule
 		\acs{ADCS}          & \SI{1.10}{\watt} \\
 		\acs{COMMS}         & \SI{0.85}{\watt} \\
 		\acs{EPS}           & \SI{0.99}{\watt} \\
 		\acs{OBC}           & \SI{0.12}{\watt} \\
 		\acs{SU}            & \SI{0.25}{\watt} \\ \midrule
-		Total               & \SI{3.30}{\watt} \\
-		Orbit Average Power & \SI{4.24}{\watt} \\ \bottomrule
+		Σύνολο               & \SI{3.30}{\watt} \\
+	    Μέση παραγόμενη ισχύς & \SI{4.24}{\watt} \\ \bottomrule
 	\end{tabularx}
 \end{margintable}
 
 \FloatBarrier
+\begin{comment}
 A dynamic approach is taken with regards to power budget calculation:
 \begin{compactenum}
 	\item The in-orbit power generation is calculated for the duration of the mission using the \textbf{STK} software, taking into account satellite orientation, pointing profiles and eclipse, with a \SI{1}{\minute} resolution.
@@ -294,7 +303,10 @@ A dynamic approach is taken with regards to power budget calculation:
 	\item A system-wide 10\% margin is applied to the results
 \end{compactenum}
 
+
 We have created a Python library consolidating the above steps\footurl{https://gitlab.com/acubesat/eps/power-budget} and producing the necessary outputs to prove the adequacy of the design.
+\end{comment}
+
 
 \begin{figure*}[h]
 %	\begin{subfigure}[b]{.45\textwidth}
@@ -306,91 +318,93 @@ We have created a Python library consolidating the above steps\footurl{https://g
 %	\end{subfigure}
 %	\includegraphics[width=.45\textwidth]{/home/kongr45gpen/Pictures/jeka8ara kapoglis.png}
 
-	\caption[Dynamic power budget analysis]{Dynamic power budget analysis. Left: Power consumption \& generation for the orbit. Right: Battery discharge level throughout the mission}
+	\caption[Δυναμική ανάλυση προϋπολογισμού ισχύος]{Δυναμική ανάλυση προϋπολογισμού ισχύος. Αριστερά: Κατανάλωση \& παραγωγή ισχύος στην τροχιά. Δεξιά: Επίπεδο εκφόρτισης μπαταρίας κατά τη διάρκεια της αποστολής}
 \end{figure*}
 
 \subsection{\acf{OBDH}}
 \label{sec:obdh}
 
-The \ac{OBDH} subsystem is responsible for the design of the spacecraft's data interfaces, as well as the design of the \textbf{\acf{OBC}} board, tasked with controlling the basic spacecraft functions.\autocite{DDJF_OBDH}
+Το υποσύστημα \ac{OBDH} είναι υπεύθυνο για το σχεδιασμό των διεπαφών δεδομένων του διαστημικού σκάφους, καθώς και για το σχεδιασμό της πλακέτας \textbf{\acf{OBC}}, η οποία είναι επιφορτισμένη με τον έλεγχο των βασικών λειτουργιών του AcubeSAT. \autocite{DDJF_OBDH}
 
-The \ac{OBC} board contains the main \ac{OBC} logic, and is based around a \foothref{https://www.microchip.com/wwwproducts/en/SAMV71Q21RT}{Microchip SAMV71Q21RT} radiation-tolerant microcontroller and an \acs{MRAM} memory, used to store critical data. The board also hosts the in-house implemented components of the \ac{ADCS} subsystem, as a space-saving measure.
+Η πλακέτα \ac{OBC} περιέχει τα βασικά εργαλεία για την εξασφάλιση της αυτονομίας, και βασίζεται σε έναν ανθεκτικό στην ακτινοβολία μικροελεγκτή \foothref{https://www.microchip.com/wwwproducts/en/SAMV71Q21RT}{Microchip SAMV71Q21RT}, και μια μνήμη \acs{MRAM} που χρησιμοποιείται για την αποθήκευση κρίσιμων δεδομένων. Η πλακέτα φιλοξενεί επίσης τον "εγκέφαλο" του υποσυστήματος \ac{ADCS}, ως μέτρο εξοικονόμησης χώρου.
 
 \begin{marginfigure}
 	\centering
 	\includegraphics[width=.7\textwidth]{SAMV71Q21RT}
-	\caption{The \texttt{SAMV71Q21RT} microcontroller}
+	\caption{Ο μικροελεγκτής \texttt{SAMV71Q21RT}}
 	\label{fig:samv71}
 \end{marginfigure}
 
 AcubeSAT's data interface is using a cold-redundant \ac{CAN} bus to facilitate cross-subsystem communication, selected due to its robustness and reliability. \autocite{bouwmeester_survey_implementation_2017} AcubeSAT boards implement the PC/104 mechanical interface.\autocite{PC104}
 
+Η διεπαφή δεδομένων μεταξύ των υποσυστημάτων του AcubeSAT χρησιμοποιεί ένα \ac{CAN} bus σε \textbf{ψυχρό πλεονασμό} (cold redundancy), το οποίο επιλέχθηκε λόγω της υψηλής αξιοπιστίας του. \autocite{bouwmeester_survey_implementation_2017} Οι πλακέτες του AcubeSAT ικανοποιούν τις μηχανικές απαιτήσεις του προτύπου PC/104. \autocite{PC104}
+
 \subsection{\acf{OBSW}}
 
-The \ac{OBSW} subsystem is responsible for the design and development of the nanosatellite's software. The language chosen to be used in the system's 4 \acp{MCU} is a reduced form of \textbf{C++}, and the code is guarded under a number of standards, static checkers and unit tests.\autocite{DDJF_OBSW} All software runs under the Free\acs{RTOS} operating system.
 
+Το υποσύστημα \ac{OBSW} είναι υπεύθυνο για το σχεδιασμό και την ανάπτυξη του λογισμικού του νανοδορυφόρου. Η γλώσσα που επιλέχθηκε να χρησιμοποιηθεί στους 4 μικροελεγκτές είναι μια περιορισμένη μορφή της \textbf{C++}, και ο κώδικας ελέγχεται από μια σειρά προτύπων, στατικών αναλυτών και unit tests.\autocite{DDJF_OBSW} Όλο το λογισμικό εκτελείται επάνω στο λειτουργικό σύστημα πραγματικού χρόνου Free\acs{RTOS}.
 
 
 \subsection{\acf{OPS}}
 
-The operations subsystem is responsible for the devising the operational modes \& procedures of the spacecraft, and ensuring the functionality, commandability and observability of the satellite before and during its mission.
+Το υποσύστημα Operations είναι υπεύθυνο για το σχεδιασμό των λειτουργιών \& διαδικασιών του διαστημικού σκάφους και για τη διασφάλιση της λειτουργικότητας, της δυνατότητας ελέγχου και της παρατηρησιμότητας του δορυφόρου πριν και κατά τη διάρκεια της τροχιάς του.
 
-During flight, AcubeSAT can remain within one of the following \textbf{system modes}:\autocite{MDO}
+Κατά τη διάρκεια της αποστολής, το AcubeSAT μπορεί να βρίσκεται σε μία από τις ακόλουθες\textbf{λειτουργίες συστήματος}:\autocite{MDO}
 \begin{itemize}
-	\item \textbf{Launch/Off mode}: During this mode, the satellite is turned completely off, and no subsystems are energised. This is used to represent the state of the spacecraft inside the deployer, where no electronics are allowed to be energised,\autocite[req. 3.3.3]{CDS13} and the CubeSat is in a completely dormant state.
+	\item \textbf{Λειτουργία Εκτόξευσης} (Launch/Off mode): Ο δορυφόρος είναι πλήρως απενεργοποιημένος και κανένα υποσύστημα δεν λαβάνει ισχύ. Αυτή η λειτουργία αναπαριστά την κατάσταση του διαστημικού σκάφους μέσα στον "deployer", όπου δεν επιτρέπεται η ενεργοποίηση κανενός ηλεκτρονικού στοιχείου,\autocite[req. 3.3.3]{CDS13} και το CubeSat πρέπει να βρίσκεται σε πλήρη αδράνεια.
 	
-	\item \textbf{Commissioning mode}: This mode is initiated as soon as the CubeSat exits the deployer, meaning that launch is complete. It contains the initial startup actions of the spacecraft, including detumbling and antenna deployment. No science takes place during commissioning mode.
+	\item \textbf{Λειτουργία Εκκίνησης} (Commissioning mode): Αυτή η λειτουργία ξεκινάει μόλις ο CubeSat εξέλθει από τον deployer, δηλαδή όταν ολοκληρωθεί η εκτόξευση. Περιλαμβάνει τις αρχικές ενέργειες εκκίνησης του διαστημικού σκάφους, συμπεριλαμβανομένης της εκτύλιξης της κεραίας, και της μείωσης της γωνιακής ταχύτητας. Σε αυτήν τη λειτουργία δεν παράγονται επιστημονικά δεδομένα.
 	
-	\item \textbf{Nominal mode}: This mode represents the state where the CubeSat will spend most of the time on. Apart from the necessary autonomy functions and battery charging, the CubeSat will also downlink telemetry and science data. No science takes place during nominal mode, except for health checks commanded from the ground. Nominal mode is also the only mode where the satellite performs nadir or sun pointing (\Cref{sec:adcs}).
+	\item \textbf{Κανονική Λειτουργία} (Nominal mode): Εδώ θα βρίσκεται ο δορυφόρος τον περισσότερο χρόνο. Εκτός από τις απαραίτητες λειτουργίες αυτονομίας και τη φόρτιση της μπαταρίας, το CubeSat θα μεταδίδει επίσης τηλεμετρία και επιστημονικά δεδομένα. Εω δεν πραγματοποιείται καμία επιστημονική εργασία, εκτός από τυχόν ελέγχους υγείας. Η κανονική λειτουργία είναι επίσης η μόνη λειτουργία κατά την οποία ο δορυφόρος εκτελεί στόχευση στον ήλιο ή στο ναδίρ (\Cref{sec:adcs}).
 	
-	\item \textbf{Science mode}: This is where the main experiment takes place and payload data are generated. This mode includes operation of the fluidic system, control of the microfluidic chip, reinvigoration of the cells, and periodic acquisition of pictures using the miniaturised microscope.
+	\item \textbf{Επιστημονική Λειτουργία} (Science mode): Εδώ πραγματοποιείται το κύριο πείραμα και παράγονται τα επιστημονικά δεδομένα. Αυτή η λειτουργία περιλαμβάνει τη δράση του υδραυλικού συστήματος, τη λειτουργία του τσιπ μικρορευστομηχανικής, την καλλιέργεια των κυττάρων και την περιοδική λήψη εικόνων με τη χρήση του μικροσκοπίου.
 	
-	AcubeSAT has split science mode into \textbf{3 distinct occurrences}, termed sub-experiments \(\alpha\), \(\beta\) and \(\gamma\), lasting 72 hours each, and taking place at different points of the mission to investigate the time-dependence of the observed results.
+	Το AcubeSAT έχει χωρίσει την επιστημονική λειτουργία σε \textbf{3 διαφορετικές φάσεις}, που ονομάζονται υπο-πειράματα \(\alpha\), \(\beta\) και \(\gamma\), διαρκούν 72 ώρες το καθένα και εκτελούνται σε διαφορετικά χρονικά σημεία της αποστολήςμ ώστε να διερευνηθεί η χρονική εξάρτηση των παρατηρούμενων αποτελεσμάτων.
 	
-	\item \textbf{Safe mode}: It is common for spacecraft systems to include a \emph{safe mode},\autocite[385]{aguirre_introduction_space_2013} where the spacecraft switches off all non-essential systems and function, in order to respond to major malfunctions that cannot be corrected by autonomous procedures. Safe mode is intended as a well-defined and well-tested mode which is easy to maintain and reduces risk of any malfunction.
+	\item \textbf{Ασφαλής Λειτουργία} (Safe mode): Συνηθίζεται τα διαστημικά συστήματα να περιλαμβάνουν μια \emph{ασφαλή λειτουργία},\autocite[385]{aguirre_introduction_space_2013} όπου το διαστημικό σκάφος απενεργοποιεί όλα τα μη απαραίτητα συστήματα και διαδικασίες, προκειμένου να ανταποκριθεί σε σημαντικές δυσλειτουργίες που δεν μπορούν να διορθωθούν αυτομάτως. Η ασφαλής λειτουργία προορίζεται ως μια καλά καθορισμένη και καλά δοκιμασμένη λειτουργία, η οποία είναι εύκολη στη συντήρηση και μειώνει τον κίνδυνο οποιασδήποτε καταστροφικής βλάβης.
 	
-	On AcubeSAT, spacecraft functionality is significantly reduced, and the attitude profile includes pointing only. However, \ac{UHF} communication and beacon transmission are still active for observability purposes.
+	Στον AcubeSAT, η λειτουργικότητα του διαστημικού σκάφους είναι σημαντικά μειωμένη και το προφίλ στόχευσης προσπαθεί να πετύχει μόνο σταθεροποίηση. Ωστόσο, η επικοινωνία \ac{UHF} και η μετάδοση του περιοδικού beacon εξακολουθούν να είναι ενεργές για λόγους παρατηρησιμότητας.
 \end{itemize}
 
 \begin{table*}[h]
 	\centering
-	\caption{Overview of AcubeSAT functionality on different modes}
+	\caption{Σύνοψη της λειτουργικότητας του AcubeSAT σε διαφορετικές Λειτουργίες Συστήματος}
 	\label{tab:acubesatmodes}
 	\begin{tabular}{@{}llllll@{}}
 		\toprule
-		Function    & Launch & Commissioning  & Nominal                 & Science        & Safe             \\ \midrule
-		\acs{ADCS}  & \color{off} Off    & Detumbling     & \color{on} Pointing                & Detumbling     & Detumbling       \\
-		\acs{COMMS} & \color{off} Off    & \acs{UHF} only & \color{on} \acs{UHF} and S-Band    & \acs{UHF} only & \acs{UHF} only   \\
+		Υποσύστημα    & Εκτόξευση & Εκκίνηση & Κανονική                 & Επιστημονική        & Ασφαλής             \\ \midrule
+		\acs{ADCS}  & \color{off} Off    & Σταθεροποίηση     & \color{on} Στόχευση                & Σταθεροποίηση     & Σταθεροποίηση       \\
+		\acs{COMMS} & \color{off} Off    & \acs{UHF} μόνο & \color{on} \acs{UHF} και S-Band    & \acs{UHF} μόνο & \acs{UHF} μόνο   \\
 		\acs{EPS}   & \color{off} Off    & \color{on} On             & \color{on} On                      & \color{on} On             & \color{on} On               \\
 		\acs{OBC}   & \color{off} Off    & \color{on} On             & \color{on} On                      & \color{on} On             & \color{on} On               \\
-		\acs{SU}    & \color{off} Off    & \color{off} Off            & Maintenance \& data only & \color{on} On             & Maintenance only \\ \bottomrule
+		\acs{SU}    & \color{off} Off    & \color{off} Off            & Συντήρηση \& δεδομένα & \color{on} On             & Συντήρηση \\ \bottomrule
 	\end{tabular}
 	\vspace{1em}
 \end{table*}
 
 
-Each mode is associated with a \textbf{functional flow} diagram, showing a high-level description of the spacecraft operation during this mode.\autocite{acubesat_functional_2021}
+Κάθε λειτουργία συνδέεται με ένα διάγραμμα \textbf{λειτουργικής ροής}, το οποίο δείχνει μια υψηλού επιπέδου περιγραφή των διαδικασιών που εκτελούνται κατά τη διάρκειά της.\autocite{acubesat_functional_2021}
 
 \begin{figure}
 	\centering
 	\includegraphics[width=.6\textwidth]{AcubeSAT_System_Modes}
-	\caption[][3cm]{All transitions between system modes}
+	\caption[][3cm]{Όλες οι μεταβάσεις μεταξύ των Λειτουργιών Συστήματος}
 	\label{fig:transitions}
 \end{figure}
 
 
 \subsection{Structural}
 
-The Structural subsystem has taken over:
+Το υποσύστημα Structural έχει αναλάβει:
 \begin{itemize}
-	\item The analysis and configuration of the \ac{COTS} 3-unit structure (\Cref{fig:structure}) housing all the CubeSat's components. Vibration analyses are especially important, as they serve to investigate whether the CubeSat can withstand the launcher's loads.
-	\item The complete design, manufacturing and assembly of the \textbf{payload container} and its unibody, hosting the scientific experiment of the mission (\Cref{fig:container}).
+	\item Την ανάλυση και η διαμόρφωση του \ac{COTS} σκελετού 3U (\Cref{fig:structure}) που στεγάζει όλα τα εξαρτήματα του CubeSat και είναι κατασκευασμένος από αλουμίνιο. Οι αναλύσεις δονήσεων είναι ιδιαίτερα σημαντικές, καθώς διερευνούν κατά πόσο ο CubeSat μπορεί να αντέξει τα μηχανικά φορτία κατά την εκτόξευση.
+	\item Τον πλήρη σχεδιασμό, κατασκευή και συναρμολόγηση του \textbf{δοχείου πειράματος} και του ενσωματωμένου σε αυτό πλαστικού "unibody" (\Cref{fig:container}).
 \end{itemize}
 
 \begin{marginfigure}
 	\centering
 	\includegraphics[width=.5\textwidth]{structure}
-	\caption{The CubeSat's 3U \acs{COTS} structure}
+	\caption{Ο \acs{COTS} σκελετός του CubeSat}
 	\label{fig:structure}
 \end{marginfigure}
 
@@ -400,80 +414,85 @@ The \acl{SYE} subteam serves as the technical authority for the satellite. It is
 
 Additionally, the \ac{SYE} team is responsible for some specific technical developments that do not belong in any of the other subsystems, such as \ac{RAMS}, \ac{FMEA}, harnessing and the \acl{MAIV} plan.
 
+Η υποομάδα του \acl{SYE} λειτουργεί ως τεχνική αρχή του δορυφόρου. Είναι υπεύθυνη για το συντονισμό των εργασιών και της επικοινωνίας μεταξύ των υποσυστημάτων, τη συμμόρφωση με τα πρότυπα και τις τεχνικές προδιαγραφές, καθώς και τον εντοπισμό \& την επίλυση όλων των ζητημάτων που προκύπτουν από τον πολύπλοκο σχεδιασμό ενός δορυφορικού συστήματος.
+
+Επιπλέον, η ομάδα \ac{SYE} είναι υπεύθυνη για ορισμένα τεχνικά κομμάτια που δεν ανήκουν σε κανένα από τα άλλα υποσυστήματα, όπως την ανάλυση αξιοπιστίας (\acs{RAMS}), την ανάλυση αποτυχιών \& αποτελεσμάτων τους (\ac{FMEA}), την καλωδίωση και το πλάνο κατασκευής \& δοκιμών (\acs{MAIV}).
+
 \subsection{\acf{SU}}
 
-The \acl{SU} subteam is responsible for the conceptualisation and implementation of the mission's scientific payload, namely the high-throughput study of the effects of \ac{LEO} environments on yeast cells.
+Η υποομάδα \acl{SU} είναι υπεύθυνη για τη σχεδίαση και την υλοποίηση του επιστημονικού φορτίου της αποστολής, δηλαδή τη μελέτη της επιδράσεων του περιβάλλοντος Χαμηλής Γήινης Τροχιάς (\ac{LEO}) σε ζυμομύκητες.
 
-The payload is composed of the following functional parts:\autocite{DDJF_PL}
+Το επιστημονικό φορτίο αποτελείται από τα ακόλουθα λειτουργικά μέρη: \autocite{DDJF_PL}
 \begin{compactitem}
-	\item The \textbf{payload container}, an almost 2U aluminum structure, pressurised at standard atmospheric pressure, and designed to host all the payload instrumentation. The container also accomodates a unibody which mechanically supports all \ac{SU} components.
-	\item A \textbf{microfluidic chip} based on \ac{PDMS}, hosting 384 chambers capable of probing 190 distinct strains of \emph{Saccharomyces Cerevisiae} for each subexperiment.
-	\item A \textbf{fluidic system} composed from 2 pumps, 8 latching solenoid valves, 6 non-latching solenoid valves, and 3 fluid medium containers
+	\item Το \textbf{δοχείο πειράματος}, μια δομή αλουμινίου μεγέθους σχεδόν 2U, σε τυπική ατμοσφαιρική πίεση και σχεδιασμένη να φιλοξενεί όλα τα όργανα του πειράματος. Το δοχείο φιλοξενεί επίσης ένα μονόσωμα (\textbf{"unibody"}) που στηρίζει μηχανικά όλα τα εξαρτήματα.
+	\item Ένα \textbf{τσιπ μικρορευστομηχανικής} (microfluidic chip) βασισμένο σε \ac{PDMS}, που φιλοξενεί 384 θαλάμους ικανούς να εξετάσουν 190 διαφορετικά στελέχη των μυκητών \emph{Saccharomyces Cerevisiae} για κάθε υποπείραμα.
+	\item Ένα \textbf{fluidic system} που αποτελείται από 2 αντλίες, 14 ηλεκτρομαγνητικές βαλβίδες και 3 σακούλες υγρών.
 	\begin{marginfigure}
 		\includegraphics{chipFluor}
-		\caption[Example mission image output]{Example mission image output (\parencite{DDJF_PL})}
+		\caption[Παράδειγμα παραγόμενης εικόνας]{Παράδειγμα παραγόμενης εικόνας (\parencite{DDJF_PL})}
 		\label{fig:chip_fluor}
 	\end{marginfigure}
-	\item An \textbf{imaging system} operating as a microscope, containing a camera and a series of lights, filters and a lens
-	\item A number of \textbf{heaters} to control component operational temperatures
-	\item A number of redundant \textbf{sensors} for environmental measurements
-	\item A \ac{PCB} containing the microcontroller and rest of the control components of the payload
+	\item Ένα \textbf{οπτικό σύστημα} που λειτουργεί ως μικροσκόπιο, το οποίο περιέχει μια κάμερα και μια σειρά από λαμπτήρες, φίλτρα και ένα φακό
+	\item Έναν αριθμός \textbf{θερμαντικών σωμάτων} για τον αυστηρό έλεγχο των θερμοκρασιών λειτουργίας των εξαρτημάτων
+	\item Έναν αριθμός πλεοναζόντων \textbf{αισθητήρων} για περιβαλλοντικές μετρήσεις
+	\item Μία πλακέτα που περιέχει τον μικροελεγκτή και τα υπόλοιπα εξαρτήματα ελέγχου
 \end{compactitem}
 
 \begin{marginfigure}
 	\centering
 	\includegraphics[width=.9\textwidth]{Glass_Payload}
-	\caption{Transparent view of the payload container and its internals}
+	\caption{Διαφανής προβολή του δοχείου πειράματος και του εσωτερικού του}
 	\label{fig:container}
 \end{marginfigure}
 
-There is a number of constraints that the payload imposes on \ac{FDIR} design:
+Το πείραμα επιβάλλει κάποιους περιορισμούς στο σχεδιασμό του \ac{FDIR}:
 \begin{enumerate}
-	\item \textbf{Interruption} of one of the three 72-hour subexperiments during execution may mean complete loss of the subexperiment. The impact of such an event depends on the duration and timepoint of its occurence. In any case, adequate observability will allow the ground-control experiment to mimic the in-orbit conditions as much as possible.
-	\item \textbf{Freezing} of liquids inside the chip and fluidic tubes may lead to permanent damage on the setup. As such, heater operation may be required even during safe mode, after the first sub-experiment has been performed and liquid has flown into the system. This characteristics imposes further restrictions on the minimum availability of the system, depending on the thermal conditions.
+	\item \textbf{Διακοπή} \g{ενός από τα τρία 72ωρα υποπειράματα κατά τη διάρκεια της εκτέλεσης μπορεί να σημαίνει πλήρη απώλεια του υποπειράματος. Ο αντίκτυπος ενός τέτοιου γεγονότος εξαρτάται από τη διάρκεια και τη χρονική στιγμή της εμφάνισής του. Σε κάθε περίπτωση, επαρκής παρατηρησιμότητα θα επιτρέψει στο επίγειο πείραμα να μιμηθεί όσο το δυνατόν περισσότερο τις συνθήκες εντός τροχιάς.}
+	\item \textbf{Το πάγωμα} των υγρών στο εσωτερικό του τσιπ και των σωλήνων μπορεί να οδηγήσει σε μόνιμη βλάβη της διάταξης. Ως εκ τούτου, μπορεί να απαιτηθεί η ενεργή θέρμανση ακόμη και κατά τη διάρκεια της ασφαλούς λειτουργίας, μετά την εκτέλεση του πρώτου υπο-πειράματος και την εισροή υγρού στο σύστημα. Αυτά τα χαρακτηριστικά επιβάλλουν περαιτέρω περιορισμούς στην ελάχιστη διαθεσιμότητα του συστήματος, ανάλογα με τις περιβαλλοντικές συνθήκες.
 \end{enumerate}
 
 \begin{figure*}
 	\centering
-	\caption[The microfluidic chip and its separation into 3 subexperiments and 1 test line]{The microfluidic chip and its separation into 3 subexperiments and 1 test line. The fluid inlets are shown on the left side of the chip, while the outlets are on the right. \emph{Green:} flow layer. \emph{Blue:} control layer.}
+	\caption[Το τσιπ μικρορευστομηχανικής και ο διαχωρισμός του σε 3 επιμέρους υποπειράματα και 1 γραμμή δοκιμής]{Το τσιπ μικρορευστομηχανικής και ο διαχωρισμός του σε 3 επιμέρους υποπειράματα και 1 γραμμή δοκιμής. Οι είσοδοι των υγρών φαίνονται στην αριστερή πλευρά του τσιπ, ενώ οι έξοδοι στα δεξιά. \emph{Πράσινο:} στρώμα ροής. \emph{Μπλε:} στρώμα ελέγχου.}
 	\label{fig:chip}
 	\includegraphics{final_chip.pdf}
 	\begin{tikzpicture}[overlay]
-	\draw[very thick,dashed,solarized-base01] (5,10.9) rectangle (-7,11.5) node[below right] {Test line};
-	\draw[very thick,dashed,solarized-green] (5,7.85) rectangle (-7,10.8) node[below right] {Subexperiment $\alpha$};
-	\draw[very thick,dashed,solarized-blue] (5,4.95) rectangle (-7,7.8) node[below right] {Subexperiment $\beta$};
-	\draw[very thick,dashed,solarized-red] (5,2) rectangle (-7,4.9) node[below right] {Subexperiment $\gamma$};
+	\draw[very thick,dashed,solarized-base01] (5,10.9) rectangle (-7,11.5) node[below right] {Δοκιμαστική};
+	\draw[very thick,dashed,solarized-green] (5,7.85) rectangle (-7,10.8) node[below right] {Υποπείραμα $\alpha$};
+	\draw[very thick,dashed,solarized-blue] (5,4.95) rectangle (-7,7.8) node[below right] {Υποπείραμα $\beta$};
+	\draw[very thick,dashed,solarized-red] (5,2) rectangle (-7,4.9) node[below right] {Υποπείραμα $\gamma$};
 	\end{tikzpicture}
 \end{figure*}
 
 \subsection{Thermal}
 
-The Thermal subteam is responsible for the thermal analysis of the satellite, where the solar and earth albedo conditions are combined with the components' heat dissipation to determine the worst-case temperatures experienced by the satellite in hot and cold conditions.
 
-The results of thermal analysis typically lead to implementation of passive or active thermal control methods. Notably, in AcubeSAT, 3 electronically-controlled heaters are used for the batteries, \acs{PDMS} chip and valves.
+Η υποομάδα Thermal είναι υπεύθυνη για τη θερμική ανάλυση του δορυφόρου, όπου η εισερχόμενη ηλιακή ακτινοβολία συνδυάζεται με την απαγωγή θερμότητας των υποσυστημάτων, με σκοπό τον προσδιορισμό των χειρότερων θερμοκρασιών που αντιμετωπίζει ο δορυφόρος, σε θερμές και ψυχρές συνθήκες.
+
+Τα αποτελέσματα της θερμικής ανάλυσης οδηγούν συνήθως στην εφαρμογή παθητικών ή ενεργητικών μεθόδων θερμικού ελέγχου. Ειδικότερα στο AcubeSAT, χρησιμοποιούνται 3 ηλεκτρονικά ελεγχόμενα θερμαντικά σώματα για τις μπαταρίες, το πειραματικό τσιπ και τις βαλβίδες.
 
 \subsection{Trajectory}
 
-The Trajectory subteam is responsible for the analysis of the spacecraft's orbit, the calculation of radiation effects, the satellite's compliance to space debris regulations, and the estimation of its orbital lifetime.
+Η υποομάδα Trajectory είναι υπεύθυνη για την ανάλυση της τροχιάς του διαστημικού σκάφους, την αποτίμηση των επιπτώσεων της ακτινοβολίας, τη συμμόρφωση του δορυφόρου με τους κανονισμούς για τα διαστημικά σκουπίδια και την εκτίμηση της διάρκειας ζωής του σε τροχιά.
 
-AcubeSAT's requirements do not dictate use of thrusters, meaning that the satellite's orbit will be determined solely by the launcher, and cannot be altered in flight. As the selected launcher opportunity is unknown until some time before satellite delivery, a number of sensitivity analyses are executed to determine the allowed orbits.
-
+Οι απαιτήσεις του AcubeSAT δεν υπαγορεύουν τη χρήση προωθητήρων, πράγμα που σημαίνει ότι η τροχιά του δορυφόρου καθορίζεται αποκλειστικά από την εκτόξευση και δεν μπορεί να τροποποιηθεί κατά την πτήση. Καθώς πληροφορίες για την εκτόξευση είναι άγνωστες μέχρι κάποιο χρονικό διάστημα πριν από την παράδοση του δορυφόρου, εκτελείται ένα σύνολο αναλύσεων ευαισθησίας για τον προσδιορισμό των επιτρεπόμενων τροχιών. \autocite{MDO,retselis_acubesat_fmea_2020}
 \begin{figure}
 	\includegraphics{GmatScreenShot_002}
-	\caption[Ground track of an example AcubeSAT orbit, generated using NASA's GMAT]{Ground track of an example AcubeSAT orbit, generated using NASA's \acl{GMAT}}
+	\caption[Επίγειο ίχνος μιας πιθανής τροχιάς του AcubeSAT]{Επίγειο ίχνος μιας πιθανής τροχιάς του AcubeSAT, σχεδιασμένο με χρήση του εργαλείου \acl{GMAT} της NASA}
 	\label{fig:gmat}
 \end{figure}
 
 % Maybe add some info about the sensitivity results and LTAN value?
+% No
 
-\section{Tools used}
+\section{Χρησιμοποιούμενα εργαλεία}
 \draft{Here we write a small paragraph about OCDT and other MBSE tools and utilities used by AcubeSAT or developed in-house...}
 
-\chapter{The SAVOIR \ac{FDIR} concept}
+\chapter{Η φιλοσοφία \ac{FDIR} του SAVOIR}
 
-\section{The \acs{ECSS} \acl{PUS}}
+\section{Το Πρότυπο Αξιοποίησης Πακέτων \acs{ECSS}}
 
-\subsection{The \acs{ECSS} services}
+\subsection{Οι Υπηρεσίες \acs{ECSS}}
 
 \begin{figure}
 	\includegraphics{ECSS-rq}
@@ -486,124 +505,124 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 \begin{compactitem}
 	\item \textbf{\texttt{ST[01]}: Request verification}
 	
-	Provides acknowledgement or failure reports for executed commands. This service essentially informs the operators about the status of \ac{TC} sent to the spacecraft, and reports any occurred errors during parsing or execution.
+	Παρέχει αναφορές επιβεβαίωσης ή αποτυχίας για εκτελούμενες εντολές. Αυτή η υπηρεσία ουσιαστικά ενημερώνει τους χειριστές για την κατάσταση των \ac{TC} που αποστέλλονται στο διαστημικό σκάφος και αναφέρει τυχόν σφάλματα που συνέβησαν κατά την εκτέλεση.
 	
 	\item \textbf{\texttt{ST[02]}: Device access}
 	
-	Allows toggling, controlling and reconfiguring any on-board peripherals that do not support the \ac{PUS} paradigm, but rely on simpler protocols to communicate.
+	Επιτρέπει την ενεργοποίηση, τον έλεγο και τη ρύθμιση των περιφερειακών συσκευών που δεν υποστηρίζουν το πρότυπο \ac{PUS}, αλλά βασίζονται σε απλούστερα πρωτόκολλα επικοινωνίας.
 	
 	\item \textbf{\texttt{ST[03]}: Housekeeping}
-	
-	Produces periodic reports containing values of on-board parameters. This service essentially composes the periodic \acs{RF} \textbf{beacon} of the satellite, by storing and transmitting parameter values without any prior \acs{TC} request.
-	
-	\item \textbf{\texttt{ST[04]}: Parameter statistics reporting}
-	
-	Allows reporting statistics (min, max, mean, standard deviation) for specific parameters over specified intervals. This is a memory-efficient alternative to the \texttt{ST[03]} housekeeping service.
-	
-	\item \textbf{\texttt{ST[05]}: Event reporting}
-	
-	Generates reports when notable occurrences take place on-board, such as:
-	\begin{compactitem}
-		\item Autonomous on-board actions
-		\item Detected failures or anomalies
-		\item Predefined steps during an operation
-	\end{compactitem}
-	
-	\item \textbf{\texttt{ST[06]}: Memory management}
-	
-	Allows writing and reading directly from an on-board memory unit. This can be useful for debugging and investigative purposes, fetching mission data, or uploading new software to the spacecraft avionics. The service also provides for downlinking and uplinking files in a file system.
-	
-	\item \textbf{\texttt{ST[07]}: Task management} \emph{(deprecated)}
-	
-	Allows stopping, suspending or resuming software tasks in case of contingency. This service has been removed from the standard and is only mentioned as a reference.
-	
-	\item \textbf{\texttt{ST[08]}: Function management}
-	
-	Provides the capability of running predefined actions that can receive further parameters. These actions can correspond to payload, platform, or any other functionality.
-	
-	\item \textbf{\texttt{ST[09]}: Time management}
-	
-	Allows periodic reporting of the current absolute spacecraft time for observability and correlation purposes.
-	
-	\item \textbf{\texttt{ST[10]}: Time packet} \emph{(deprecated)}
-	
-	Used in the past for time packet generation. This service has been removed from the standard and is only mentioned as a reference.
-	
-	\item \textbf{\texttt{ST[11]}: Time-based scheduling}
-	
-	Allows the operators to \textbf{"time-tag"} telecommands for execution at future timestamps, instead of immediately.
-	
-	\item \textbf{\texttt{ST[12]}: On-board monitoring}
-	
-	This service allows checking parameter values to ensure that they remain within configurable limits. Whenever a violation occurs, an \texttt{ST[05]} can be optionally generated for further processing.
-	
-	\item \textbf{\texttt{ST[13]}: Large packet transfer}
-	
-	Provides a method of message segmentation, for message payloads that are too large to fit within the maximum allowed length for \ac{TC} or \ac{TM}.
-	
-	\item \textbf{\texttt{ST[14]}: Real-time forwarding control}
-	
-	This service is responsible of controlling which types of generated reports are immediately transmitted to the \acl{GS}.
-	
-	\item \textbf{\texttt{ST[15]}: On-board storage and retrieval}
-	
-	This service allows storing generated report on-board, as well as their commanded mass retrieval when the spacecraft has \acl{GS} visibility.
-	
-	\item \textbf{\texttt{ST[16]}: On-board traffic management} \emph{(deprecated)}
-	
-	Allows monitoring the status and load of an on-board data bus and provides commands for resolution of errors. This service has been removed from the standard and is only mentioned as a reference.
-	
-	\item \textbf{\texttt{ST[17]}: Test}
-	
-	This service allows performing on-board connection and "are-you-alive" checks.
-	
-	\item \textbf{\texttt{ST[18]}: On-board operations procedure}
-	
-	Allows loading, controlling (start, suspend, resume, abort) and configuring On-Board Control Procedures, which are sequences of commands written in an application-specific language.
-	
-	\item \textbf{\texttt{ST[19]}: Event-action}
-	
-	Provides the operators with the capability of autonomously executing \acp{TC} when an \texttt{ST[05]} event is triggered.
-	
-	\item \textbf{\texttt{ST[20]}: On-board parameter management}
-	
-	Provides the capability of reading and setting on-board parameters. Parameters are some of the most important entities defined in the \acs{PUS}, and can represent:
-	\begin{itemize}
-		\item Read-write configuration variables for the system or lower-level components
-		\item Read-only sensor and other telemetry values
-		\item \ac{FDIR} results and diagnostics
-	\end{itemize}
-	
-	\item \textbf{\texttt{ST[21]}: Request sequencing}
-	
-	Allows operators to load series of \acp{TC} to be executed in a sequential order.
-	
-	\item \textbf{\texttt{ST[22]}: Position-based scheduling}
-	
-	Provides the capability of executing \acp{TC} when the spacecraft reaches a specific point in its orbit.
-	
-	\item \textbf{\texttt{ST[23]}: File management}
-	
-	Provides the capability of managing on-board file systems, with functions such as \emph{copy}, \emph{move}, \emph{delete}, or \emph{create directory}.
+		
+		Παράγει περιοδικές αναφορές που περιέχουν τιμές παραμέτρων. Η υπηρεσία αυτή ουσιαστικά συνθέτει τους περιοδικούς ραδιοφάρους (\textbf{\acs{RF} beacons}) του δορυφόρου, χωρίς προηγούμενο ερέθισμα.
+		
+		\item \textbf{\texttt{ST[04]}: Parameter statistics reporting}
+		
+		Επιτρέπει την αναφορά στατιστικών στοιχείων (ελάχιστο, μέγιστο, μέσος όρος, τυπική απόκλιση) για συγκεκριμένες παραμέτρους σε καθορισμένα χρονικά διαστήματα.
+		
+		\item \textbf{\texttt{ST[05]}: Event reporting}
+		
+		Δημιουργεί αναφορές όταν λαμβάνουν χώρα αξιοσημείωτα συμβάντα επί του σκάφους, όπως:
+		\begin{compactitem}
+			\item Αυτόνομες ενέργειες
+			\item Ανιχνευμένες βλάβες ή ανωμαλίες
+			\item Προκαθορισμένα βήματα μιας διαδικασίας
+		\end{compactitem}
+		
+		\item \textbf{\texttt{ST[06]}: Memory management}
+		
+		Επιτρέπει την απευθείας ανάγνωση και εγγραφή σε μονάδες μνήμης. Αυτό μπορεί να είναι χρήσιμο για σκοπούς αποσφαλμάτωσης, ανάκτησης δεδομένων της αποστολής, ή φόρτωσης εντελώς νέου λογισμικού. Η υπηρεσία παρέχει επίσης τη δυνατότητα κατεβάσματος και ανεβάσματος αρχείων σε ένα σύστημα αρχείων (filesystem).
+		
+		\item \textbf{\texttt{ST[07]}: Task management} \emph{(καταργημένο)}
+		
+		Επιτρέπει τη διακοπή, την αναστολή ή την επανάληψη εργασιών λογισμικού σε περίπτωση έκτακτης ανάγκης. Η υπηρεσία αυτή έχει αφαιρεθεί από το πρότυπο και παρατίθεται για ιστορικούς λόγους.
+		
+		\item \textbf{\texttt{ST[08]}: Function management}
+		
+		Παρέχει τη δυνατότητα εκτέλεσης προκαθορισμένων ενεργειών που μπορούν να λάβουν περαιτέρω παραμέτρους. Οι ενέργειες αυτές μπορεί να αντιστοιχούν σε πειραματικές διαδικασίες, γενικότερες λειτουργίες ή οτιδήποτε άλλο.
+		
+		\item \textbf{\texttt{ST[09]}: Time management}
+		
+		Επιτρέπει την περιοδική αναφορά της τιμής του ρολογιού του CubeSat, για σκοπούς παρατηρησιμότητας και συσχέτισης.
+		
+		\item \textbf{\texttt{ST[10]}: Time packet} \emph{(καταργημένο)}
+		
+		Χρησιμοποιήθηκε στο παρελθόν για την παροχή πληροφοριών ρολογιού. Η υπηρεσία αυτή έχει αφαιρεθεί από το πρότυπο και παρατίθεται για ιστορικούς λόγους.
+		
+		\item \textbf{\texttt{ST[11]}: Time-based scheduling}
+		
+		Επιτρέπει στους χειριστές να προγραμματίζουν (\textbf{"time-tag"}) τηλεεντολές για εκτέλεση σε μελλοντικές χρονικές στιγμές, αντί για αμέσως.
+		
+		\item \textbf{\texttt{ST[12]}: On-board monitoring}
+		
+		Αυτή η υπηρεσία επιτρέπει τον έλεγχο των τιμών των παραμέτρων για να διασφαλιστεί ότι παραμένουν εντός ρυθμιζόμενων ορίων. Κάθε φορά που τα όρια παραβιάζονται, δημιουργείται ένα συμβάν (\texttt{ST[05]}) για περαιτέρω επεξεργασία.
+		
+		\item \textbf{\texttt{ST[13]}: Large packet transfer}
+		
+		Παρέχει μια μέθοδο τμηματοποίησης (segmentation) μηνυμάτων, για συμβολοσειρές που είναι πολύ μεγάλες για να χωρέσουν στο μέγιστο επιτρεπόμενο μήκος για \ac{TC} ή \ac{TM}.
+		
+		\item \textbf{\texttt{ST[14]}: Real-time forwarding control}
+		
+		Αυτή η υπηρεσία είναι υπεύθυνη για τον έλεγχο της παραγόμενης τηλεμετρίας που εκπέμπεται άμεσα προς το Σταθμό Βάσης.
+		
+		\item \textbf{\texttt{ST[15]}: On-board storage and retrieval}
+		
+		Η υπηρεσία αυτή επιτρέπει την αποθήκευση των παραγόμενων αναφορών, καθώς και την ανάκτησή τους όταν ο δορυφόρος περνάει επάνω από το Σταθμό Βάσης.
+		
+		\item \textbf{\texttt{ST[16]}: On-board traffic management} \emph{(deprecated)}
+		
+		Επιτρέπει την παρακολούθηση της κατάστασης και του φόρτου ενός διαύλου δεδομένων. Η υπηρεσία αυτή έχει αφαιρεθεί από το πρότυπο και παρατίθεται για ιστορικούς λόγους.
+		
+		\item \textbf{\texttt{ST[17]}: Test}
+		
+		Η υπηρεσία αυτή παρέχει απλές εντολές για ελέγχους υγείας του δορυφόρου.
+		
+		\item \textbf{\texttt{ST[18]}: On-board operations procedure}
+		
+		Επιτρέπει τη φόρτωση, τον έλεγχο (εκκίνηση, αναστολή, συνέχιση, διακοπή) και τη ρύθμιση των "operations procedures", οι οποίες είναι ακολουθίες εντολών γραμμένες σε κάποια ερμηνευμένει γλώσσα προγραμματισμού.
+		
+		\item \textbf{\texttt{ST[19]}: Event-action}
+		
+		Παρέχει τη δυνατότητα αυτόνομης εκτέλεσης \acp{TC} όταν λαμβάνει χώρα ένα συμβάν \texttt{ST[05]}.
+		
+		\item \textbf{\texttt{ST[20]}: On-board parameter management}
+		
+		Παρέχει τη δυνατότητα ανάγνωσης και αλλαγής τιμών των παραμέτρων του δορυφόρου. Οι παράμετροι είναι μερικές από τις πιο σημαντικές οντότητες που ορίζονται στο \acs{PUS} και μπορούν να αντιπροσωπεύουν:
+		\begin{itemize}
+			\item Βασικές ρυθμίσεις του συστήματος ή άλλων στοιχείων
+			\item Μετρήσεις αισθητήρων και άλλες τιμές τηλεμετρίας
+			\item Αποτελέσματα και διαγνωστικά του \ac{FDIR}
+		\end{itemize}
+		
+		\item \textbf{\texttt{ST[21]}: Request sequencing}
+		
+		Επιτρέπει στους χειριστές να φορτώνουν σειρές \acp{TC} για να εκτελεστούν με διαδοχική σειρά.
+		
+		\item \textbf{\texttt{ST[22]}: Position-based scheduling}
+		
+		Παρέχει τη δυνατότητα εκτέλεσης \acp{TC} όταν το σκάφος φτάσει σε ένα συγκεκριμένο σημείο της τροχιάς του.
+		
+		\item \textbf{\texttt{ST[23]}: File management}
+		
+		Επιτρέπει την εκτέλεση διαχειριστικών εντολών σε τυχόν συστήματα αρχείων στον δορυφόρο, όπως \emph{αντιγραφή}, \emph{μετακίνηση}, \emph{διαγραφή}, ή \emph{κλείδωμα}.
 \end{compactitem}
 
-\section{The SAVOIR standard}
+\section{Το πρότυπο SAVOIR}
 
 \begin{figure*}[h]
 	\includegraphics{../cdr/04 FMEA/media/FDIRpus}
 	\caption{blablabla}
 \end{figure*}
 
-\chapter{\ac{FDIR} in AcubeSAT}
+\chapter{\ac{FDIR} στο AcubeSAT}
 
-\section{\ac{FDIR} principles}
+\section{Βασικές αρχές του \ac{FDIR}}
 
 \draft{\begin{itemize}
 		\item The 7 AcubeSAT FDIR principles
 		\item SAVOIR FDIR requirements and compliance
 \end{itemize}}
 
-\section{Investigation on different architectures}
+\section{Μελέτη διαφορετικών αρχιτεκτονικών}
 
 \begin{figure}
 	\centering
