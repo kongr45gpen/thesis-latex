@@ -344,13 +344,28 @@ nodes near coords={\pgfmathprintnumber\pgfplotspointmeta\%}
 
 Το AcubeSAT έχει μέγεθος 3 κυβικών μονάδων (\textbf{3U}), διαστάσεις \SI[product-units = single]{10 x 10 x 34.05}{\centi\metre} και μάζα \SI{4.26}{\kilogram}, και περιλαμβάνει το \emph{ωφέλιμο φορτίο} του πειράματος, που καλύπτει 2U, και τα υπόλοιπα υποστηρικτικά υποσυστήματα (platform) στο υπόλοιπο 1U.
 
-\begin{figure}
+Το πρότζεκτ είναι ανοιχτού κώδικα, με το λογισμικό και τις κατασκευές που έχει ετοιμάσει οι ομάδα να βρίσκονται στο διαδίκτυο για ελεύθερη χρήση από το κοινό. \footurl{https://gitlab.com/acubesat/} Για περισσότερες πληροφορίες σχετικά με το λεπτομερή σχεδιασμό του δορυφόρου, ο αναγνώστης καλείται να ανατρέξει στα δημοσίως διαθέσιμα έγγραφα του \acf{CDR}\footurl{https://gitlab.com/acubesat/documentation/cdr-public}.
+
+\section{Η αποστολή}
+
+
+Η κύρια αποστολή του AcubeSAT είναι η μελέτη ευκαρυωτικών κυττάρων σε Χαμηλή Γήινη Τροχιά, και πιο συγκεκριμένα η εκτίμηση των αποτελεσμάτων της \emph{ακτινοβολίας} και \emph{μικροβαρύτητας} σε 190 διαφορετικά στελέχη του ζυμομύκητα \emph{Saccharomyces Cerevisiae}. Τα προηγούμενα επιτυγχάνονται με μία πρωτότυπη διάταξη "lab-on-a-chip", η οποία στο κέντρο της έχει ένα τσιπ \textbf{μικρορευστομηχανικής} (\Cref{fig:microfluidic_chip}) \parencite{volpetti_microfluidic_biodisplay_2017} που επιτρέπει την εξέταση της ρύθμισης της μοριακής συμπεριφοράς των κυττάρων σε πρωτοφανή κλίμακα.
+
+Τα αποτελέσματα του πειράματος μεταφέρονται στη Γη σε μορφή φωτογραφιών, όπου συγκρίνονται με ένα όμοιο επίγειο πείραμα.
+
+
+
+\begin{figure}[th]
+	\centering
 	\includegraphics[width=.7\textwidth]{cubesat_exploded}
 	\caption{Προβολή του εσωτερικού του AcubeSAT, όπου φαίνονται τα διαφορετικά υποσυστήματα και η πειραματική διάταξη}
 \end{figure}
 
-\section{Η αποστολή}
-\draft{Here we write the history of the project and a description of the mission and the satellite...}
+\begin{marginfigure}
+	\includegraphics{microfluidic_chip}
+	\caption{Δοκιμαστικό μοντέλο του τσιπ μικρορευστομηχανικής}
+	\label{fig:microfluidic_chip}
+\end{marginfigure}
 
 \section{Υποσυστήματα}
 
@@ -633,7 +648,15 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
 % No
 
 \section{Χρησιμοποιούμενα εργαλεία}
-\draft{Here we write a small paragraph about OCDT and other MBSE tools and utilities used by AcubeSAT or developed in-house...}
+
+Ως ένα περίπλοκο πρότζεκτ, το AcubeSAT χρησιμοποιεί ένα σύνολο βοηθητικών εργαλειών, έτοιμων ή κατασκευασμένων στην ομάδα, για την εκπλήρωση των τεχνικών και οργανωτικών εργασιών του. Ενδεικτικά παραθέτουμε τα:
+\begin{compactitem}
+	\item \foothref{https://gitlab.com/acubesat}{GitLab}, για διαμοιρασμό κώδικα αλλά και οργάνωση εργασιών \& καθηκόντων
+	\item \foothref{https://ocdt.esa.int/}{Open Concurrent Design Tool}, μία πλατφόρμα για διαμοιρασμό τεχνικών δεδομένων και τιμών για τα εξαρτήματα του δορυφόρου
+	\item  \foothref{https://www.latex-project.org/}{\LaTeX} και \foothref{https://www.overleaf.com/}{Overleaf}, για συγγραφή της τεχνικής βιβλιογραφίας και τεκμηρίωσης
+	\item \foothref{https://acubesat.spacedot.gr/requirements-tree}{Requirements Tree}, μία διαδραστική προβολή των τεχνικών προδιαγραφών του δορυφόρου
+	\item \foothref{https://gitlab.com/acubesat/utilities/mattermost-documentation-bot}{Documentation List}, πλατφόρμα για καταλογοποίηση και πλοήγηση στα έγγραφα που έχει παράξει η ομάδα
+\end{compactitem}
 
 \chapter{Η φιλοσοφία \ac{FDIR} του SAVOIR}
 \label{cap:savoir}
