@@ -64,7 +64,7 @@
 
 			\vspace{6ex}
 
-			\large \textit{Η διπλωματική εργασία κατατίθεται για \\ την εκπλήρωση των υποχρεώσεων για λήψη διπλώματος}\\[0.3cm] % University requirement text
+			\large \textit{Η διπλωματική εργασία κατατίθεται για την \\ εκπλήρωση των υποχρεώσεων για λήψη διπλώματος}\\[0.3cm] % University requirement text
 			\textit{στην}\\[0.4cm]
 			\href{https://www.eng.auth.gr/en/home.html}{Πολυτεχνική Σχολή}
 			\\
@@ -706,7 +706,7 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 
 \subsection{Flight Segment}
 
-Όλες οι λειτουργίες του \ac{FDIR} αναπτύχθηκαν χρησιμοποιώντας τη γλώσσα \textbf{C++}\footnote{Επιλέχθηκε το μοντέρνο πρότυπο \texttt{C++17}. Ολόκληρη η εργασία βασίζεται σε ελεύθερο και ανοικτό λογισμικό το οποίο διατίθεται ελεύθερα για λήψη και τροποποίηση. Όλος ο κώδικας αναπτύχθηκε σε \foothref{https://git-scm.com/}{Git}.}
+Όλες οι λειτουργίες του \ac{FDIR} αναπτύχθηκαν χρησιμοποιώντας τη γλώσσα \textbf{C++}\footnote{Επιλέχθηκε το μοντέρνο πρότυπο \texttt{C++17}. Ολόκληρη η εργασία βασίζεται σε ελεύθερο και ανοικτό λογισμικό το οποίο διατίθεται ελεύθερα για λήψη και τροποποίηση. Όλος ο κώδικας αναπτύχθηκε σε \href{https://git-scm.com/}{Git}.}
 	
 	Η λειτουργικότητα του \ac{FDIR} είναι δομημένη γύρω από την υλοποίηση του \textbf{ECSS-E-ST-70-41C \ac{PUS} που γράφτηκε από την ομάδα AcubeSAT}\footnote{\url{https://gitlab.com/acubesat/obc/ecss-services}}, η οποία προσφέρει μια παραμετροποιήσιμη υλοποίηση του προτύπου χρησιμοποιώντας σύγχρονη C++.
 	
@@ -742,8 +742,8 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 			\item Διεπαφή με το \acs{YAMCS}
 			\item Περιγραφή \acs{ECSS} πακέτων, αναγνώσιμη από μηχανή
 			\item Διεπαφή \acs{UART}--\acs{USB} με τον μικροελεγκτή
-			\item Πρόγραμμα εμφάνισης της βάσης δεδομένων \acs{PUS}
-			\end{enumerate}\vspace*{-4ex} & \small \url{https://github.com/kongr45gpen/fdir-demo-yamcs} \\
+			\item Πρόγραμμα εμφάνισης της βάσης δεδομένων \acs{PUS}\vspace*{-2ex}
+			\end{enumerate} & \small \url{https://github.com/kongr45gpen/fdir-demo-yamcs} \\
 		\bottomrule
 	\end{tabularx}
 \end{table*}
@@ -776,34 +776,37 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 %\subsection{Ground Segment}
 
 \subsection{\ac{I2C} Failure Detection}
+\label{sec:howcani2cfail}
 
 It is of interest to investigate how the hardware \ac{I2C} peripheral provided by the microcontroller can be used to monitor the symptoms of bus failure.
 
+Έχει ενδιαφέρον να μελετήσουμε πώς το περιφερειακό \ac{I2C} του μικροελεγκτή μπορεί να χρησιμοποιηθεί για τον εντοπισμό διαφόρων ειδών σφαλμάτων στο \ac{I2C}:
+
 \begin{enumerate}
-	\item \textbf{Microcontroller peripheral errors}
+	\item \textbf{Σφάλματα περιφερειακού}
 	
-	\marginnote{To ensure detection of peripheral errors, it is important to make sure that the error status of the peripheral is not discarded after every operation. Interrupts and the \href{https://en.cppreference.com/w/cpp/language/attributes/nodiscard}{\mintinline{cpp}{[[nodiscard]]}} C++ feature are used to ensure that all errors are caught.}
-	The microcontroller's \ac{I2C} peripheral is capable of generating an error whenever \emph{the communicating peripheral does not set the "acknowledge" bit}. Failure to set this bit might be a result of disconnection of the clock or data lines, failure of the bus, or non-operation of the peripheral itself.
+	\marginnote{Για να εξασφαλιστεί ο εντοπισμός των σφαλμάτων του περιφερειακού, είναι σημαντικό να βεβαιωθούμε ότι η κατάσταση σφάλματος του περιφερειακού αναγιγνώσκεται μετά από κάθε επικοινωνία. Τα interrupts του μικροελεγκτή και η εντολή \href{https://en.cppreference.com/w/cpp/language/attributes/nodiscard}{\mintinline{cpp}{[[nodiscard]]}} της C++ συνδυάζονται για να διασφαλιστεί ότι όλα τα σφάλματα του υλικού λαμβάνονται υπ' όψιν.}
+	Το περιφερειακό \ac{I2C} του μικροελεγκτή είναι ικανό να παράγει σφάλμα κάθε φορά που \emph{το συνδεδεμένο περιφερειακό δεν θέτει το bit "acknowledge"}. Η αποτυχία να θέσει αυτό το bit μπορεί να είναι αποτέλεσμα αποσύνδεσης των γραμμών ρολογιού (\acs{SCL}) ή δεδομένων (\acs{SDA}), βλάβης του διαύλου ή κακής λειτουργίας του ίδιου του περιφερειακού.
 	
-	\item \textbf{Response timeout}
+	\item \textbf{Χρονικό περιθώριο απάντησης}
 	
-	For some adverse \ac{I2C} bus conditions, such as incorrectly chosen pull-up resistor values or large amounts of capacitive load, \ac{I2C} signal integrity may be lost (\Cref{subfig:i2c_clean}). This error is not detected by the microcontroller's peripheral directly, but can be diagnosed by adding a timeout to the sensor's data readouts.
+	Σε ορισμένες δυσμενείς για το \ac{I2C} ηλεκτρικές συνθήκες, που μπορεί να προκληθούν από λανθασμένα επιλεγμένες τιμές αντίστασης pull-up ή μεγάλο χωρητικό φορτίο, η ακεραιότητα του σήματος \ac{I2C} μπορεί να χαθεί (\Cref{subfig:i2c_clean}). Αυτό το σφάλμα δεν ανιχνεύεται άμεσα από το περιφερειακό του μικροελεγκτή, αλλά μπορεί να διαγνωστεί με την προσθήκη ενός χρονικού ορίου (timeout) στις αναγνώσεις δεδομένων του αισθητήρα.
 	
 	\item \textbf{Chip ID}
 	
 	\begin{margintable}
 		\centering
-		\caption{Read-only registers for the MCP9808}
+		\caption{Μη εγγράψιμοι καταχωρητές του MCP9808}
 		\label{tab:mcp9808readonly}
 		\begin{tabularx}{\linewidth}{@{}lXl@{}}
 			\toprule
-			Address & Register Name & Value \\ \midrule
+			Διεύθυνση & Καταχωρητής & Τιμή \\ \midrule
 			\texttt{0x06} & Manufacturer ID & \texttt{0x0054} \\
 			\texttt{0x07} & Device ID & \texttt{0x0400} \\ \bottomrule
 		\end{tabularx}
 	\end{margintable}
-	
-	It is possible that the sensor suffers a severe fault but is still able to respond to \ac{I2C} commands or set the \emph{acknowledge} bit. For this reason, a more rigid check of the sensor's status is performed before each temperature read: the \emph{permanently-set} registers of the peripheral contain values which, under nominal conditions, are hard-coded and will not change, barring hardware failure. If any value other than the expected one is return, the peripheral or the bus are assumed to have a fault.
+
+	Είναι πιθανό ο αισθητήρας να υποστεί σοβαρή βλάβη, αλλά να είναι ακόμα σε θέση να ανταποκριθεί στις εντολές \ac{I2C} ή να θέσει το bit \emph{acknowledge}. Για τον λόγο αυτό, πριν από κάθε ανάγνωση της θερμοκρασίας, πραγματοποιείται ένας πιο αυστηρός έλεγχος της κατάστασης του αισθητήρα: οι \emph{μόνιμοι} καταχωρητές του περιφερειακού περιέχουν τιμές οι οποίες, υπό κανονικές συνθήκες, δεν μπορούν να αλλάξουν εκτός αν υπάρξει βλάβη υλικού. Εάν επιστραφεί οποιαδήποτε τιμή διαφορετική από την αναμενόμενη, θεωρείται ότι το περιφερειακό ή ο δίαυλος έχει εμφανίσει σφάλμα.
 \end{enumerate}
 
 \begin{figure}[h]
@@ -819,289 +822,292 @@ It is of interest to investigate how the hardware \ac{I2C} peripheral provided b
 
 \FloatBarrier
 
-\subsection{Mission Control}
+\subsection{Έλεγχος Αποστολής}
 
-The ground segment desktop computer needs to parse received packets and send commands, as well as display information about the sensor measurements, \ac{FDIR} status and health of the connected flight system.
+Ο υπολογιστής του επίγειου τμήματος πρέπει να αναλύει τα λαμβανόμενα πακέτα και να στέλνει εντολές, καθώς και να εμφανίζει πληροφορίες σχετικά με τις μετρήσεις των αισθητήρων, την κατάσταση του \ac{FDIR}, και την υγεία του συνδεδεμένου συστήματος πτήσης.
 
-The \acs{YAMCS} \autocite{sela_yamcs_lightweight_2012} framework was selected to cover the aforementioned needs, and has been tailored to provide the capabilities needed for this demonstration.
+Η σουίτα λογισμικού \acs{YAMCS} \autocite{sela_yamcs_lightweight_2012} επιλέχθηκε για να καλύψει τις παραπάνω ανάγκες, και προσαρμόστηκε ώστε να παρέχει τις δυνατότητες που απαιτούνται για την παρούσα επίδειξη.
 
-The \ac{ECSS} protocol\autocite{ECSS-E-ST-70-41C} is not supported by \acs{YAMCS} by default. However, the necessary commands have been integrated into the system using the supported \ac{XTCE} specification.\autocite{simon_xtce_standard_2004} The source code of the integration can be found in \Cref{app:xtce}.
+Το πρωτόκολλο \ac{ECSS} \autocite{ECSS-E-ST-70-41C} δεν υποστηρίζεται εγγενώς από το \acs{YAMCS}. Ωστόσο, οι απαραίτητες εντολές έχουν τοποθετηθεί στο σύστημα μέσω αρχείων μορφής \ac{XTCE}.\autocite{simon_xtce_standard_2004} Ο πηγαίος κώδικας της ενσωμάτωσης μπορεί να βρεθεί στο \Cref{app:xtce}.
 
 \begin{figure}[h]
 	\includegraphics{screenshots/yamcs_replay}
-	\caption{\acs{YAMCS} parameter and archive views}
+	\caption{Προβολές παραμέτρων και αρχείου στο \acs{YAMCS}}
 \end{figure}
 
-\subsection{\acs{PUS} database}
+\subsection{Βάση δεδομένων \acs{PUS}}
 
-In 
+Σε
 
 
-\section{\ac{FDIR} setup}
+\section{Στήσιμο \ac{FDIR}}
 
-The purpose of the test setup is to observe the response of the system to any failure of the two "vulnerable" temperature sensors. For this purpose, we will attempt to simulate every failure mode of each sensor, and design an \ac{FDIR} implementation that anticipates all those failures.
+Ο σκοπός της πειραματικής διάταξης είναι να παρατηρηθεί η απόκριση του συστήματος σε τυχόν αποτυχία των δύο "ευπρόσβλητων" αισθητήρων θερμοκρασίας. Για το σκοπό αυτό, θα προσπαθήσουμε να προσομοιώσουμε κάθε τρόπο αποτυχίας κάθε αισθητήρα, και να σχεδιάσουμε μια υλοποίηση \ac{FDIR} που να προβλέπει όλες αυτές τις αστοχίες.
 
-\marginnote{Double failures are not investigated in the scope of this document, as they are mostly considered only for launchers and manned missions \parencite{SAVOIR-HB-003}.}
-As a required input for the \ac{FDIR} detailed design, a \ac{FMEA} analysis needs to be prepared for the system. All \ac{FMEA} performed follows the requirements of the ECSS-Q-ST-30-02C standard.\autocite{ECSS-Q-ST-30-02C} The analysis is based on the \ac{FMEA} performed for the AcubeSAT nanosatellite,\autocite{retselis_acubesat_fmea_2020} and can be seen in \Cref{tab:fmea} for the reduced system. All expected failure modes for the two sensors are investigated, as well as a failure mode for the entire system that can be detected by correctly-operating sensors. Each of those failure modes will be later verified by injecting software or hardware modifications.
+\marginnote{Οι διπλές αποτυχίες δεν διερευνώνται στο πεδίο εφαρμογής του παρόντος εγγράφου, καθώς εξετάζονται κυρίως μόνο για συστήματα εκτόξευσης και επανδρωμένες αποστολές \parencite{SAVOIR-HB-003}.}
+Το πρώτο βήμα για το λεπτομερή σχεδιασμό του \ac{FDIR} είναι η προετοιμασία της \textbf{ανάλυσης FMEA} για το σύστημα. Όλες οι \ac{FMEA} που εκτελούνται ακολουθούν τις απαιτήσεις του προτύπου ECSS-Q-ST-30-02C.\autocite{ECSS-Q-ST-30-02C} Η ανάλυση βασίζεται στην \ac{FMEA} που πραγματοποιήθηκε για τον νανοδορυφόρο AcubeSAT,\autocite{retselis_acubesat_fmea_2020} και παρατίθεται στο \Cref{tab:fmea} για την πειραματική διάταξη. Διερευνώνται όλες οι αναμενόμενες αποτυχίες για τους δύο αισθητήρες, καθώς και μία αποτυχία για ολόκληρο το σύστημα που μπορεί να ανιχνευθεί από τους αισθητήρες που λειτουργούν σωστά. Κάθε ένας από αυτούς τους τρόπους αποτυχίας θα επαληθευτεί αργότερα με την εισαγωγή τροποποιήσεων λογισμικού ή υλικού.
 
 \begin{table*}[h]
 	\centering
-	\caption[][10pt]{\acs{FMEA} on demonstration system}
+	\caption[][10pt]{\acs{FMEA} στο σύστημα επίδειξης}
 	\label{tab:fmea}
 	\begin{adjustbox}{width=1.05\textwidth,center}
 	\begin{tabular}{@{}lL{4cm}L{2cm}L{1cm}L{4cm}L{2cm}L{4cm}L{1.5cm}L{3cm}@{}}
 		\toprule
-		\multicolumn{1}{l}{ID}                            & Failure Mode                     & Failure Cause(s)     & Mission Phase     & Failure effects: Local                                    & Failure effects: End effects & Failure Detection/Observable symptoms                                               & Severity level & Compensating provisions             \\ \midrule
-		\multicolumn{9}{l}{Temperature sensor MCP9808 \#1}                                                                                                                                                                                                                                                                                                                                                               \\ \midrule
-		\textbf{\texttt{F-010}}                                      & Temporary loss of function       & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-020}}                                      & Permanent loss of function       & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-030}}                                      & Short Circuit between power pins & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Current-limiting resistor           \\
-		\textbf{\texttt{F-040}}                                      & Temporary Value Shift            & Intrinsic, Radiation & All & Incorrect temperature readings                            & None                         & Temperature difference between 2 redundant sensors bigger than a safety value  & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-050}}                                      & Permanent Value Shift            & Intrinsic, Radiation & All & Incorrect temperature readings                            & None                         & Temperature difference between 2 redundant sensors bigger than a safety value  & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-060}}                                      & \acs{I2C} bus pin output stuck         & Intrinsic, Radiation & All & Inability to communicate with both sensors & None                         & No communication via \acs{I2C} for all temperature sensors                                & 4              & Sensors wired on separate \acs{I2C} buses \\
+		\multicolumn{1}{l}{ID}                            & Τρόπος Αποτυχίας                     & Αίτιο Αποτυχίας     & Φάση αποστολής     & Συνέπειες αποτυχίας: Τοπικές                                    & Συνέπειες αποτυχίας: Τελικές & Εντοπισμός Αποτυχίας/Παρατηρήσιμα Συμπτώματα                                               & Επίπεδο σο\-βα\-ρό\-τη\-τας & Προβλέψεις αντιστάθμισης             \\ \midrule
+		\multicolumn{9}{l}{Αισθητήρας θερμοκρασίας MCP9808 \#1}                                                                                                                                                                                                                                                                                                                                                               \\ \midrule
+		\textbf{\texttt{F-010}}                                      & Προσωρινή απώλεια λειτουργικότητας       & Τυχαίο, Ακτινοβολία & Όλες & Δεν λαμβάνονται μετρήσεις από τον αισθητήρα               & Καμία                         & Καμία επικοινωνία μέσω \acs{I2C}                                                            & 4              & Πλεονασμός με 2 συνολικά αισθητήρες   \\
+		\textbf{\texttt{F-020}}                                      & Μόνιμη απώλεια λειτουργικότητας       & Τυχαίο, Ακτινοβολία & Όλες & Δεν λαμβάνονται μετρήσεις από τον αισθητήρα               & Καμία                         & Καμία επικοινωνία μέσω \acs{I2C}                                                            & 4              & Πλεονασμός με 2 συνολικά αισθητήρες   \\
+		\textbf{\texttt{F-030}}                                      & Βραχυκύκλωμα ακροδεκτών ισχύος & Τυχαίο, Ακτινοβολία & Όλες & Δεν λαμβάνονται μετρήσεις από τον αισθητήρα               & Καμία                         & Καμία επικοινωνία μέσω \acs{I2C}                                                            & 4              & Αντίσταση περιορισμού ρεύματος           \\
+		\textbf{\texttt{F-040}}                                      & Προσωρινή αλλαγή τιμής            & Τυχαίο, Ακτινοβολία & Όλες & Λανθασμένες θερμοκρασιακές μετρήσεις & Καμία                         & Μεγάλη διαφορά θερμοκρασίας μεταξύ 2 αισθητήρων  & 4              & Πλεονασμός με 2 συνολικά αισθητήρες   \\
+		\textbf{\texttt{F-050}}                                      & Μόνιμη αλλαγή τιμής            & Τυχαίο, Ακτινοβολία & Όλες & Λανθασμνες θερμοκρασιακς μετρσεις & Καμία                         & Μεγάλη διαφορά θερμοκρασίας μεταξύ 2 αισθητήρων  & 4              & Πλεονασμός με 2 συνολικά αισθητήρες   \\
+		\textbf{\texttt{F-060}}                                      & Κολλημένος ακροδέκτης εξόδου \acs{I2C}         & Τυχαίο, Ακτινοβολία & Όλες & Αδυναμία επικοινωνίας και με τους 2 αισθητήρες & Καμία                         & Καμία επικοινωνία μέσω \acs{I2C} για όλους τους αισθητήρες & 4              & Αισθητήρες συνδεδεμένοι σε διαφορετικούς διαύλους \acs{I2C} \\
 		\midrule
-		\multicolumn{9}{l}{Temperature sensor MCP9808 \#2}                        \\ \midrule
-		\textbf{\texttt{F-070}}                                      & Temporary loss of function       & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-080}}                                      & Permanent loss of function       & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-090}}                                      & Short Circuit between power pins & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Current-limiting resistor           \\
-		\textbf{\texttt{F-100}}                                      & Temporary Value Shift            & Intrinsic, Radiation & All & Incorrect temperature readings                            & None                         & Temperature difference between 2 redundant sensors bigger than a safety value & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-110}}                                      & Permanent Value Shift            & Intrinsic, Radiation & All & Incorrect temperature readings                            & None                         & Temperature difference between 2 redundant sensors bigger than a safety value  & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-120}}                                      & \acs{I2C} bus pin output stuck         & Intrinsic, Radiation & All & Inability to communicate with both sensors & None                         & No communication via \acs{I2C} for all temperature sensors                                & 4              & Sensors wired on separate \acs{I2C} buses \\ \midrule
-		\multicolumn{9}{l}{Subsystem}                        \\ \midrule
-		\textbf{\texttt{F-130}}                                      & Overheating       & Short circuit, Environmental & All & Vulnerable component failure             & Loss of subsystem functionality           & Measured temperature outside expected range  & 3              & Thermal analysis with uncertainty margins, overcurrent protection   \\
+		\multicolumn{9}{l}{Αισθητήρας θερμοκρασίας MCP9808 \#2}                        \\ \midrule
+			\textbf{\texttt{F-070}}                                      & Προσωρινή απώλεια λειτουργικότητας       & Τυχαίο, Ακτινοβολία & Όλες & Δεν λαμβάνονται μετρήσεις από τον αισθητήρα               & Καμία                         & Καμία επικοινωνία μέσω \acs{I2C}                                                            & 4              & Πλεονασμός με 2 συνολικά αισθητήρες   \\
+	\textbf{\texttt{F-080}}                                      & Μόνιμη απώλεια λειτουργικότητας       & Τυχαίο, Ακτινοβολία & Όλες & Δεν λαμβάνονται μετρήσεις από τον αισθητήρα               & Καμία                         & Καμία επικοινωνία μέσω \acs{I2C}                                                            & 4              & Πλεονασμός με 2 συνολικά αισθητήρες   \\
+	\textbf{\texttt{F-090}}                                      & Βραχυκύκλωμα ακροδεκτών ισχύος & Τυχαίο, Ακτινοβολία & Όλες & Δεν λαμβάνονται μετρήσεις από τον αισθητήρα               & Καμία                         & Καμία επικοινωνία μέσω \acs{I2C}                                                            & 4              & Αντίσταση περιορισμού ρεύματος           \\
+	\textbf{\texttt{F-100}}                                      & Προσωρινή αλλαγή τιμής            & Τυχαίο, Ακτινοβολία & Όλες & Λανθασμένες θερμοκρασιακές μετρήσεις & Καμία                         & Μεγάλη διαφορά θερμοκρασίας μεταξύ 2 αισθητήρων  & 4              & Πλεονασμός με 2 συνολικά αισθητήρες   \\
+	\textbf{\texttt{F-110}}                                      & Μόνιμη αλλαγή τιμής            & Τυχαίο, Ακτινοβολία & Όλες & Λανθασμνες θερμοκρασιακς μετρσεις & Καμία                         & Μεγάλη διαφορά θερμοκρασίας μεταξύ 2 αισθητήρων  & 4              & Πλεονασμός με 2 συνολικά αισθητήρες   \\
+	\textbf{\texttt{F-120}}                                      & Κολλημένος ακροδέκτης εξόδου \acs{I2C}         & Τυχαίο, Ακτινοβολία & Όλες & Αδυναμία επικοινωνίας και με τους 2 αισθητήρες & Καμία                         & Καμία επικοινωνία μέσω \acs{I2C} για όλους τους αισθητήρες & 4              & Αισθητήρες συνδεδεμένοι σε διαφορετικούς διαύλους \acs{I2C} \\ \midrule
+		\multicolumn{9}{l}{Υποσύστημα}                        \\ \midrule
+		\textbf{\texttt{F-130}}                                      & Υπερθέρμανση       & Βραχυκύκλωμα, περιβάλλον & Όλες & Αποτυχία ευάλωτων εξαρτημάτων & Απώλεια λειτουργικότητας υποσυστήματος & Μετρημένη θερμοκρασία εκτός του αναμενόμενου εύρους  & 3              & Θερμική ανάλυση με περιθώριο ασφαλείας, προστασία υπερέντασης  \\
 		\bottomrule
 	\end{tabular}
 	\end{adjustbox}
 \end{table*}
 
-\subsection{\ac{FDIR} detailed design}
+\subsection{Λεπτομερής σχεδιασμός \ac{FDIR}}
 
 \begin{figure*}[ht]
 	\includegraphics{TempSensorFDIR}
-	\caption[Overview of the temperature sensor FDIR process]{Overview of the temperature sensor \ac{FDIR} process. For every process executed and failure detected, corresponding telemetry is generated as well.}
+	\caption[Επισκόπηση της διαδικασίας FDIR του αισθητήρα θερμοκρασίας]{Σύνοψη της διαδικασίας \ac{FDIR} του αισθητήρα θερμοκρασίας. Για κάθε διεργασία που εκτελείται και για κάθε σφάλμα που εντοπίζεται, παράγεται και η αντίστοιχη τηλεμετρία.}
 	\label{fig:fdirtemp}
 \end{figure*}
 
-The \ac{FDIR} of the sensors follows the hierarchical process described in \Cref{sec:fdir_operating_modes}, which is shown in \Cref{fig:fdirtemp} as tailored for the sensors.
+Το \ac{FDIR} των αισθητήρων ακουλουθεί την ιεραρχική διαδικασία που περιγράφεται στο \Cref{sec:fdir_operating_modes}, που εμφανίζεται στο \Cref{fig:fdirtemp} όπως έχει προσαρμοστεί για τους αισθητήρες.
 
-The approach acts using the following steps, which are constantly being executed in the background:
-\marginnote{For this demonstration, we will not investigate failures of the microcontroller itself and its internals. Refer to \parencite{retselis_acubesat_fmea_2020} for AcubeSAT's \acs{FMEA} and \acs{HSIA} on the microcontrollers.}
+Η προσέγγιση ακολουθά τα παρακάτω βήματα, τα οποία εκτελούνται διαρκώς στο υπόβαθρο:
+\marginnote{Για αυτήν την επίδειξη, δεν θα ερευνήσουμε αποτυχίες των εσωτερικών στοιχείων του μικροελεγκτή. Δείτε στο \parencite{retselis_acubesat_fmea_2020} για το πλήρες \acs{FMEA} και \acs{HSIA} σοτυς μικροελεγκτές.}
+
+
 \begin{compactenum}
-	\item The \ac{I2C} bus health status is monitored. Any failure or lack of communication indicates a failure in the sensor's electronics.
-	\item The temperature output of the sensors is monitored. Any values which are outside the bounds of the physically possible thermal conditions are considered to indicate sensor or communication failures. Any values outside the operational limits of the subsystem's electronics are considered to indicate overheating and lead to a subsystem restart.
-	\item In order to recover from the failures, first a restart of the sensor is attempted. If the erroneous values still persist, then the sensor cannot recover from the failure, but is just isolated and disabled instead.
+	\item Παρακολουθείται η κατάσταση υγείας του διαύλου \ac{I2C} (\Cref{sec:howcani2cfail}). Οποιαδήποτε αποτυχία ή έλλειψη επικοινωνίας υποδεικνύει βλάβη στα ηλεκτρονικά του αισθητήρα.
+	\item Παρακολουθείται η έξοδος θερμοκρασίας των αισθητήρων. Τυχόν τιμές που βρίσκονται εκτός των ορίων των φυσικώς δυνατών θερμικών συνθηκών θεωρούνται ότι υποδηλώνουν βλάβες του αισθητήρα ή της επικοινωνίας. Τυχόν τιμές εκτός των ορίων λειτουργίας των ηλεκτρονικών του υποσυστήματος θεωρούνται ότι υποδηλώνουν υπερθέρμανση και οδηγούν σε επανεκκίνηση του υποσυστήματος.
+	\item Για να διορθωθούν οι αποτυχίες, επιχειρείται πρώτα επανεκκίνηση (power-cycle) του αισθητήρα. Εάν οι τιμές εξακολουθούν να είναι εσφαλμένες, τότε θεωρείται πως ο αισθητήρας δεν μπορεί να ανακάμψει από την βλάβη, και απλώς απομονώνεται και απενεργοποιείται.
 \end{compactenum}
 
 %\clearpage
 \paragraph{\acl{HSIA}}
 
-After defining the possible failure modes and logic of the system, we are ready to analyse each entry to provide the correct software inputs to implement the required \ac{FDIR}. More specifically, for each failure, the following must be defined: \autocite[84]{SAVOIR-HB-003}
+Αφού έχουμε καθορίσει τους πιθανούς τρόπους αποτυχίας και τη λογική λειτουργίας του συστήματος, είμαστε έτοιμοι να αναλύσουμε κάθε πιθανή αποτυχία για να ορίσουμε τις αναμενόμενες εισόδους λογισμικού για το \ac{FDIR}. Πιο συγκεκριμένα, για κάθε αποτυχία πρέπει να οριστούν τα εξής: \autocite[84]{SAVOIR-HB-003}
 \begin{compactitem}
-	\item Parameters to be monitored for detection
-	\item Value ranges to be used to warn that a parameter is exceeding a specified range
-	\item Isolation and reconfiguration actions to prevent failure propagation and, if possible, bring the system to a well operating state
+	\item \textbf{Παράμετροι προς παρακολούθηση} για εντοπισμό
+	\item \textbf{Εύρη τιμών} για να διαχωρίσουν τις καταστάσεις ύπαρξης ή μη κάποιας αποτυχίας
+	\item Ενέργειες απομόνωσης και ανάκαμψης για την αποτροπή της διάδοσης της αποτυχίας και, εάν είναι δυνατόν, για την επαναφορά του συστήματος σε κανονική λειτουργία.
 \end{compactitem}
 
-The above information is listed in the \acf{HSIA} table, which links each failure (identified in the \acl{FMEA}) to the corresponding low-level software parameters (\Cref{tab:hsia}).
+Οι παραπάνω πληροφορίες παρατίθενται στον λεγόμενο πίνακα \acf{HSIA}, ο οποίος συνδέει κάθε αποτυχία (που προσδιορίζεται στο \acl{FMEA}) με τις αντίστοιχες παραμέτρους λογισμικού χαμηλού επιπέδου (\Cref{tab:hsia}).
 
-For the purposes of this demonstration, we will consider that all \ac{FMEA} items can lead to \emph{feared events}, i.e. that \ac{FDIR} will anticipate all identified possible failures.
+Για τους σκοπούς αυτής της επίδειξης, θα θεωρήσουμε ότι όλα τα στοιχεία \ac{FMEA} μπορούν να οδηγήσουν σε \emph{πιθανά γεγονότα} (feared events), δηλαδή ότι το \ac{FDIR} θα καλύπτει όλες τις αναγνωρισμένες πιθανές αποτυχίες.
 
-The \ac{HSIA} adds the following significant pieces of information to the \ac{FMEA}:\autocite{ECSS-Q-ST-30-02C}
+Πιο συγκεκριμένα, το \ac{HSIA} προσθέτει τις ακόλουθες σημαντικές πληροφορίες στο \ac{FMEA}:\autocite{ECSS-Q-ST-30-02C}
 \begin{itemize}
-	\item The \textbf{monitored parameters} and the \textbf{conditions} that trigger the recovery action.
+	\item \textbf{Παρατηρούμενες παράμετροι} και \textbf{συνθήκες} που πυροδοτούν την ενέργεια ανάκτησης.
 	
-	These are listed here in terms of \ac{PUS} parameters which can be easily identified and compared by software. This list is then linked to the corresponding \emph{\texttt{ST[12]} on-board monitoring} service definitions, listed in \Cref{tab:demo_monitoring}.
+	Αυτές παρατίθενται εδώ σε όρους παραμέτρων \ac{PUS} που μπορούν εύκολα να διαβαστούν και να συγκριθούν από το λογισμικό. Αυτός ο κατάλογος συνδέεται στη συνέχεια με τους αντίστοιχους ορισμούς της υπηρεσίας \emph{\texttt{ST[12]} on-board monitoring}, που παρατίθενται στον \Cref{tab:demo_monitoring}.
 	
-	It is important to note that no single out-of-bounds value can trigger a recovery action. This is recommended in order to prevent transient errors or temporary communication protocol issues from triggering an unnecessary response which might disable a well-functioning component.
+	Είναι σημαντικό να σημειωθεί ότι καμία μεμονωμένη εκτός ορίων τιμή δεν θα πρέπει να προκαλέσει ενέργεια ανάκτησης. Αυτό γίνεται ώστε πρόσκαιρα σφάλματα ή προσωρινά προβλήματα επικοινωνίας να μην μπορούν να οδηγήσουν σε κάποια άσκοπη ενεργοποίηση του \ac{FDIR}, που θα μπορούσε να απενεργοποιήσει ένα καλά λειτουργικό εξάρτημα.
 	
-	\marginnote{\textbf{Temporary failure}: Caused by events such as bit flips, noise or transients, and can be corrected without intervention, or with a simple restart/power-cycle.\par\textbf{Permament failure}: A failure (typically in hardware, e.g. due to latchups or short-circuits) that cannot be corrected autonomously.}
-	The distinction between \emph{temporary} and \emph{permanent} failures is made by \textbf{counting the number of consecutive failures}. Before a permanent action to disable a sensor is enacted, at least 5 attempts to communicate must have failed.
+	\marginnote{\textbf{Προσωρινή αποτυχία}: Προκαλείται από γεγονότα όπως bit flips, θόρυβο ή μεταβατικά φαινόμενα και μπορεί να διορθωθεί χωρίς παρέμβαση ή με μια απλή επανεκκίνηση/κύκλο τροφοδοσίας.\par\textbf{Διαρκής αποτυχία}: Μια αποτυχία (συνήθως στο υλικό, π.χ. λόγω \acsp{SEL} ή βραχυκυκλωμάτων) που δεν μπορεί να διορθωθεί αυτόνομα.}
+	Η διάκριση μεταξύ \emph{προσωρινών} και \emph{μόνιμων} αποτυχιών γίνεται με \textbf{μετρώντας τον αριθμό των διαδοχικών αποτυχιών}. Προτού απενεργοποιηθεί μόνιμα ένας αισθητήρας, πρέπει ενδεικτικά να έχουν αποτύχει τουλάχιστον 5 προσπάθειες επικοινωνίας.
 	
-	The use of 2 hot-redundant sensor also allows us to investigate the difference between the two temperatures to deduce the health of the produced data. If the absolute difference between the 2 values is too high, assuming the sensors are placed close enough together, an error condition is assumed. However, as triple modular redundancy was not implemented for this system, it is not possible to deduce which sensor has failed.
+	Η χρήση 2 αισθητήρων που λειτουργούν σε ενεργό πλεονασμό επιτρέπει επίσης τη διερεύνηση της διαφοράς μεταξύ των δύο θερμοκρασιών για την εξαγωγή συμπερασμάτων σχετικά με την υγεία των παραγόμενων δεδομένων. Εάν η απόλυτη διαφορά μεταξύ των 2 τιμών είναι πολύ υψηλή, υποθέτοντας ότι οι αισθητήρες βρίσκονται αρκετά κοντά μεταξύ τους, θεωρείται ότι υπάρχει κατάσταση σφάλματος. Ωστόσο, καθώς ο αριθμός των αισθητήρων είναι ζυγός, δεν είναι δυνατόν να συμπεράνουμε ποιος αισθητήρας έχει αποτύχει.
 	
-	\item The \textbf{failure recovery and isolation actions}.
+	\item \textbf{Δράσεις αποκατάστασης και απομόνωσης βλάβης}.
 	
-	These are listed in terms of \ac{PUS} events (\emph{\texttt{ST[05]} event reporting}) and event-actions (\emph{\texttt{ST[19]} eventaction}), which are linked to \Cref{tab:demo_eventaction}.
+	Αυτές απαριθμούνται σε όρους γεγονότων \ac{PUS} (\emph{\texttt{ST[05]} event reporting}) και ενεργειών (\emph{\texttt{ST[19]} eventaction}), καταγεγραμμένες στον \Cref{tab:demo_eventaction}.
 	
-	The selected recovery actions match the approach shown in \Cref{fig:fdirtemp}. Additionally, when it is not known which sensor has failed, a fail-safe approach of restarting or disabling both sensors is used.
+	Οι επιλεγμένες ενέργειες αποκατάστασης αντιστοιχούν στην προσέγγιση του \Cref{fig:fdirtemp}. Επιπλέον, όταν δεν είναι γνωστό ποιος αισθητήρας έχει αποτύχει, χρησιμοποιείται μια ασφαλής προσέγγιση επανεκκίνησης ή απενεργοποίησης και των δύο αισθητήρων.
 \end{itemize}
 
 \begin{table*}
 	\centering
-	\caption{HSIA table}
+	\caption{Πίνακας HSIA}
 	\label{tab:hsia}
 	\begin{tabular}{@{}lL{4cm}L{4cm}L{1cm}L{1cm}L{3.5cm}@{}}
 		\toprule
-		ID & Failure Mode & Monitored Parameters & Monitoring ID & Event ID & Failure Recovery Action \\ \midrule
-		\multicolumn{6}{l}{Temperature sensor MCP9808 \#1} \\ \midrule
+		ID & Τρόπος Αποτυχίας & Παρατηρούμενες Παράμετροι & ST[12] ID & ST[05] ID & Ενέργεια αποκατάστασης \\ \midrule
+		\multicolumn{6}{l}{Αισθητήρας θερμοκρασίας MCP9808 \#1} \\ \midrule
 		
 		
 		
-		\textbf{\texttt{F-010}} & Temporary loss of function & \(\texttt{T1\_Status} = \texttt{TIMEOUT}\) \newline for 2 times & 0 & 0 & Power-cycle sensor 1 \\
-		\textbf{\texttt{F-020}} & Permanent loss of function & \(\texttt{T1\_Status} = \texttt{TIMEOUT}\) \newline for 5 times & 2 & 2 & Ignore sensor 1 values \\
-		\textbf{\texttt{F-030}} & Short Circuit between power pins & \(\texttt{T1\_Status} = \texttt{TIMEOUT}\) \newline for 5 times & 2 & 2 & Ignore sensor 1 values \\[5ex]
-		\textbf{\texttt{F-040}} & Temporary Value Shift & 
+		\textbf{\texttt{F-010}} & Προσωρινή απώλεια λειτουργικότητας & \(\texttt{T1\_Status} = \texttt{TIMEOUT}\) \newline 2 φορές & 0 & 0 & Επανεκκίνηση αισθητήρα 1 \\
+		\textbf{\texttt{F-020}} & Μόνιμη απώλεια λειτουργικότητας & \(\texttt{T1\_Status} = \texttt{TIMEOUT}\) \newline 5 φορές & 2 & 2 & Αγνόηση αισθητήρα 1 \\
+		\textbf{\texttt{F-030}} & Βραχυκύκλωμα ακροδεκτών ισχύος & \(\texttt{T1\_Status} = \texttt{TIMEOUT}\) \newline 5 φορές & 2 & 2 & Αγνόηση αισθητήρα 1 \\[5ex]
+		\textbf{\texttt{F-040}} & Προσωρινή αλλαγή τιμής & 
 		\(
 		\begin{cases}
-			\left|\Delta T\right| & > \SI{20}{\celsius} \text{ or} \\
-			T_1 &> \SI{100}{\celsius} \text{ or} \\
+			\left|\Delta T\right| & > \SI{20}{\celsius} \text{ ή} \\
+			T_1 &> \SI{100}{\celsius} \text{ ή} \\
 			T_1 &< \SI{-40}{\celsius}
 		\end{cases}
-		\) \newline for 2 times
-		 & 4, 6 & 0, 4 & Power-cycle sensor 1 \\
-		\textbf{\texttt{F-050}} & Permanent Value Shift & \(
+		\) \newline 2 φορές
+		 & 4, 6 & 0, 4 & Επανεκκίνηση αισθητήρα 1 \\
+		\textbf{\texttt{F-050}} & Μόνιμη αλλαγή τιμής & \(
 		\begin{cases}
-		\left|\Delta T\right| & > \SI{20}{\celsius} \text{ or} \\
-		T_1 &> \SI{100}{\celsius} \text{ or} \\
+		\left|\Delta T\right| & > \SI{20}{\celsius} \text{ ή} \\
+		T_1 &> \SI{100}{\celsius} \text{ ή} \\
 		T_1 &< \SI{-40}{\celsius}
 		\end{cases}
-		\) \newline for 5 times & 7, 9 & 2, 5 & Ignore sensor 1 values \\[9ex]
-		\textbf{\texttt{F-060}} & \acs{I2C} bus pin output stuck & \(\texttt{T1\_Status} = \texttt{TIMEOUT}\) \newline for 5 times & 2 & 2 & Ignore sensor 1 values \\ \midrule
+		\) \newline 5 φορές & 7, 9 & 2, 5 & Αγνόηση αισθητήρα 1 \\[9ex]
+		\textbf{\texttt{F-060}} & Κολλημένος ακροδέκτης εξόδου \acs{I2C} & \(\texttt{T1\_Status} = \texttt{TIMEOUT}\) \newline 5 φορές & 2 & 2 & Αγνόηση αισθητήρα 1 \\ \midrule
 		
 		
 		
-		\multicolumn{6}{l}{Temperature sensor MCP9808 \#2} \\ \midrule
+		\multicolumn{6}{l}{Αισθητήρας θερμοκρασίας MCP9808 \#2} \\ \midrule
 		
 		
 		
-		\textbf{\texttt{F-070}} & Temporary loss of function & \(\texttt{T2\_Status} = \texttt{TIMEOUT}\) \newline for 2 times & 1 & 1 & Power-cycle sensor 2 \\
-		\textbf{\texttt{F-080}} & Permanent loss of function & \(\texttt{T2\_Status} = \texttt{TIMEOUT}\) \newline for 5 times & 3 & 3 & Ignore sensor 2 values \\
-		\textbf{\texttt{F-090}} & Short Circuit between power pins & \(\texttt{T2\_Status} = \texttt{TIMEOUT}\) \newline for 5 times & 3 & 3 & Ignore sensor 2 values \\[5ex]
-		\textbf{\texttt{F-100}} & Temporary Value Shift & 
+		\textbf{\texttt{F-070}} & Προσωρινή απώλεια λειτουργικότητας & \(\texttt{T2\_Status} = \texttt{TIMEOUT}\) \newline 2 φορές & 1 & 1 & Επανεκκίνησ αισθητήρα 2 \\
+		\textbf{\texttt{F-080}} & Μόνιμη απώλεια λειτουργικότητας & \(\texttt{T2\_Status} = \texttt{TIMEOUT}\) \newline 5 φορές & 3 & 3 & Αγνόηση αισθητήρα 2 \\
+		\textbf{\texttt{F-090}} & Βραχυκύκλωμα ακροδεκτών ισχύος & \(\texttt{T2\_Status} = \texttt{TIMEOUT}\) \newline 5 φορές & 3 & 3 & Αγνόηση αισθητήρα 2 \\[5ex]
+		\textbf{\texttt{F-100}} & Προσωρινή αλλαγή τιμής & 
 		\(
 		\begin{cases}
-		\left|\Delta T\right| & > \SI{20}{\celsius} \text{ or} \\
-		T_2 &> \SI{100}{\celsius} \text{ or} \\
+		\left|\Delta T\right| & > \SI{20}{\celsius} \text{ ή} \\
+		T_2 &> \SI{100}{\celsius} \text{ ή} \\
 		T_2 &< \SI{-40}{\celsius}
 		\end{cases}
-		\) \newline for 2 times
-		& 5, 6 & 1, 4 & Power-cycle sensor 2 \\
-		\textbf{\texttt{F-110}} & Permanent Value Shift & \(
+		\) \newline 2 φορές
+		& 5, 6 & 1, 4 & Επανεκκίνηση αισθητήρα 2 \\
+		\textbf{\texttt{F-110}} & Μόνιμη αλλαγή τιμής & \(
 		\begin{cases}
-		\left|\Delta T\right| & > \SI{20}{\celsius} \text{ or} \\
-		T_2 &> \SI{100}{\celsius} \text{ or} \\
+		\left|\Delta T\right| & > \SI{20}{\celsius} \text{ ή} \\
+		T_2 &> \SI{100}{\celsius} \text{ ή} \\
 		T_2 &< \SI{-40}{\celsius}
 		\end{cases}
-		\) \newline for 5 times & 8, 9 & 3, 5 & Ignore sensor 2 values \\[9ex]
-		\textbf{\texttt{F-120}} & \acs{I2C} bus pin output stuck & \(\texttt{T2\_Status} = \texttt{TIMEOUT}\) \newline for 5 times & 3 & 3 & Ignore sensor 2 values \\ \midrule
+		\) \newline 5 φορές & 8, 9 & 3, 5 & Αγνόηση αισθητήρα 2 \\[9ex]
+		\textbf{\texttt{F-120}} & Κολλημένος ακροδέκτης εξόδου \acs{I2C} & \(\texttt{T2\_Status} = \texttt{TIMEOUT}\) \newline 5 φορές & 3 & 3 & Αγνόηση αισθητήρα 2 \\ \midrule
 		
 		
 		
-		\multicolumn{6}{l}{Subsystem} \\ \midrule
+		\multicolumn{6}{l}{Υποσύστημα} \\ \midrule
 		
 		
 		
-		\textbf{\texttt{F-130}} & Overheating & \(T_1 > \SI{40}{\celsius}\) or \(T_2 > \SI{40}{\celsius}\) & 10, 11 & 6 & Restart subsystem \\ \bottomrule
+		\textbf{\texttt{F-130}} & Υπερθέρμανση & \(T_1 > \SI{40}{\celsius}\) or \(T_2 > \SI{40}{\celsius}\) & 10, 11 & 6 & Επανεκκίνηση υποσυστήματος \\ \bottomrule
 	\end{tabular}
 	\vspace{2pt}
 \end{table*}
 
 %\clearpage
 
-\paragraph{Parameters}
+\paragraph{Παράμετροι}
 
-After investigating the \acl{HSIA}, we can list the scalar parameters for the \emph{\texttt{ST[20]} parameter management} service\autocite{ECSS-E-ST-70-41C} (\Cref{tab:demo_params}).
+Μετά την ολοκλήρωση της \acl{HSIA}, είμαστε έτοιμοι να ορίσουμε τις αριθμητικές παραμέτρους της υπηρεσίας \emph{\texttt{ST[20]} on-board parameter management} \autocite{ECSS-E-ST-70-41C} (\Cref{tab:demo_params}).
 
-Beyond the actual temperature values, we have included the \textbf{difference} (\(\Delta\)) between the two temperatures, since the \acs{PUS} standard does not provide ways to perform arithmetic calculations without hard-coded software. Additionally, the status of each sensor peripheral is included, which is an enumerated value.\footnote{One of \texttt{NOMINAL}, \texttt{TIMEOUT} or \texttt{DISABLED}} 
+Πέρα από τις εξόδους των αισθητήρων, έχουμε συμπεριλάβει τη \textbf{διαφορά} (\(\Delta\)) μεταξύ των δύο θερμοκρασιών, καθώς το πρότυπο \acs{PUS} δεν παρέχει τρόπους για την εκτέλεση αριθμητικών υπολογισμών. Επιπλέον, περιλαμβάνεται η κατάσταση λειτουργίας του κάθε αισθητήρα, η οποία είναι μια απαριθμημένη (enumerated) τιμή.\footnote{Η τιμή μπορεί να είναι μία από τις \texttt{NOMINAL} (ο αισθητήρας λειτουργεί κανονικά), \texttt{TIMEOUT} (έχει εντοπιστεί κάποιο σφάλμα) ή \texttt{DISABLED} (ο αισθητήρας είναι ρητά απενεργοποιημένος)} 
 
-These parameters are telemetered to the ground segment and displayed to the user periodically, via the \emph{\texttt{ST[03]} housekeeping} \ac{PUS} service. However, during flight, the ground segment will not have constant access, since the satellite will not be visible from ground stations throughout its entire orbit.
+Αυτές οι παράμετροι τηλεμετρώνται στον σταθμό βάσης και εμφανίζονται στο χρήστη περιοδικά, μέσω της υπηρεσίας \emph{\texttt{ST[03]} housekeeping} \ac{PUS} και των ραδιοφάρων που αυτή εκπέμπτη. Ωστόσο, όταν το CubeSat βρίσκεται στο διάστημα, ο σταθμός βάσης δεν θα έχει συνεχή πρόσβαση σε αυτά τα δεδομένα, καθώς ο δορυφόρος δεν θα είναι ορατός από τους επίγειους σταθμούς καθ' όλη τη διάρκεια της τροχιάς του.
 
 \begin{table}[h]
 	\centering
-	\caption[List of \texttt{ST[20]} parameters]{List of \texttt{ST[20]} parameters\\R: Read-only\\RW: Read-write}
+	\caption[Λίστα παραμέτρων \texttt{ST[20]}]{Λίστα παραμέτρων \texttt{ST[20]}\\R: Μόνο ανάγνωση\\RW: Ανάγνωση και εγγραφή}
 	\label{tab:demo_params}
-	\begin{tabularx}{\textwidth}{@{}rlllX@{}}
+	\begin{tabularx}{\textwidth}{@{}rXlll@{}}
 		\toprule
-		Param. ID & Parameter              & Units & Type & Type \\ \midrule
-		0            & Temperature 1          & \si{\celsius}      & \texttt{float} & R     \\
-		1            & Temperature 2          & \si{\celsius}      & \texttt{float} & R    \\
-		2            & \(\Delta\) Temperature & \si{\celsius}      & \texttt{float} & R    \\
-		3            & Temperature 1 Status         &       & Enumerated   & RW  \\
-		4            & Temperature 2 Status         &       & Enumerated   & RW  \\
-		5			 & Temperature 1+2 Status       &		& Enumerated   & R  \\ \bottomrule
+		ID & Παράμετρος              & Μέτρηση & Τύπος & Εγγραφή \\ \midrule
+		0            & Θερμοκρασία 1          & \si{\celsius}      & \texttt{float} & R     \\
+		1            & Θερμοκρασία 2          & \si{\celsius}      & \texttt{float} & R    \\
+		2            & \(\Delta\) Θερμοκρασίας & \si{\celsius}      & \texttt{float} & R    \\
+		3            & Κατάσταση Θερμοκρασία 1         &       & Απαρίθμηση   & RW  \\
+		4            & Κατάσταση Θερμοκρασία 2         &       & Απαρίθμηση   & RW  \\
+		5			 & Κατάσταση Θερμοκρασία 1+2       &		& Απαρίθμηση   & R  \\ \bottomrule
 	\end{tabularx}
 \end{table}
 
-\paragraph{On-board monitoring definitions}
+\paragraph{Ορισμοί παρακολούθησης}
 
-After defining the parameters, the monitoring definitions that establish the acceptable and actionable ranges for each parameter should be outlined. These are then managed by the \emph{\texttt{ST[12]} on-board monitoring} \ac{PUS} service.
+Μετά τον ορισμό των παραμέτρων, θα πρέπει να περιγραφούν οι ορισμοί παρακολούθησης που καθορίζουν τα αποδεκτά και μη εύρη τιμών για κάθε παράμετρο. Η διαχείριση αυτών γίνεται από την υπηρεσία \emph{\texttt{ST[12]} on-board monitoring} του \ac{PUS}.
 
-The \emph{check validity conditions} are important to mention in this case, as they use the three \emph{Status} parameters to prevent executing checks for disabled peripherals. As such, sensors that are not providing values due to hardware issues, \ac{FDIR} actions or operator intervention, will not be able to trigger \ac{FDIR} actions.
+Οι \emph{συνθήκες εγκυρότητας ελέγχου} είναι σημαντικό να αναφερθούν σε αυτή την περίπτωση, καθώς χρησιμοποιούν τις τρεις παραμέτρους \emph{Κατάστασης} του \Cref{tab:demo_params} για να αποτρέψουν την εκτέλεση ελέγχων σε απενεργοποιημένα περιφερειακά. Ως εκ τούτου, οι αισθητήρες που δεν παρέχουν τιμές λόγω προβλημάτων υλικού, ενεργειών \ac{FDIR} ή κάποιας ρητής τηλεεντολής από το Σταθμό Βάσης, δεν θα μπορούν να ενεργοποιήσουν ενέργειες \ac{FDIR}.
 
 \begin{table*}[h]
 	\centering
-	\caption[List of \texttt{ST[12]} monitoring definitions][5pt]{List of \texttt{ST[12]} monitoring definitions. \(t\) and \(\Delta\) are used as placeholders for parameter values.}
+	\caption[Λίστα ορισμών παρακολούθησης της υπηρεσίας \texttt{ST[12]}][5pt]{Λίστα ορισμών παρακολούθησης της υπηρεσίας \texttt{ST[12]}. Τα σύμβολα \(t\) και \(\Delta\) αναπαριστούν τις εκάστοτε τιμές των παραμέτρων.}
 	\label{tab:demo_monitoring}
 	\begin{adjustbox}{width=\textwidth}
-	\begin{tabular}{@{}L{1cm}L{2.5cm}L{2.8cm}L{2cm}L{2cm}L{2cm}ll@{}}
+	\begin{tabular}{@{}L{1cm}L{3.2cm}L{3.6cm}L{1.5cm}L{1.5cm}L{1.2cm}ll@{}}
 		\toprule
-		&  & \multicolumn{2}{c}{Check validity condition} &  &  & \multicolumn{2}{c}{Check} \\ \cmidrule(lr){3-4} \cmidrule(l){7-8} 
-		Definition ID & Monitored Parameter & Validity Parameter & Expected Value & Monitoring Interval & Repetition Number & Check Type & Criteria \\ \midrule
-		0 & Temp. 1 Status &  &  & \SI{500}{\milli\second} & 2 & Expected Value & \(\neq\) \texttt{TIMEOUT} \\
-		1 & Temp. 2 Status &  &  & \SI{500}{\milli\second} & 2 & Expected Value & \(\neq\) \texttt{TIMEOUT} \\
-		2 & Temp. 1 Status &  &  & \SI{500}{\milli\second} & 5 & Expected Value & \(\neq\) \texttt{TIMEOUT} \\
-		3 & Temp. 2 Status &  &  & \SI{500}{\milli\second} & 5 & Expected Value & \(\neq\) \texttt{TIMEOUT} \\
+		&  & \multicolumn{2}{c}{Συνθήκες εγκυρότητας ελέγχου} &  &  & \multicolumn{2}{c}{Έλεγχος} \\ \cmidrule(lr){3-4} \cmidrule(l){7-8} 
+		ID & Παρακολουθούμενη παράμετρος & Παράμετρος εγκυρότητας & Αναμενόμενη τιμή & Περίοδος & Αρ. μετρήσεων & Είδος & Κριτήριο \\ \midrule
+		0 & Κατάσταση Θερμ. 1 &  &  & \SI{500}{\milli\second} & 2 & Ισότητα & \(\neq\) \texttt{TIMEOUT} \\
+		1 & Κατάσταση Θερμ. 2 &  &  & \SI{500}{\milli\second} & 2 & Ισότητα & \(\neq\) \texttt{TIMEOUT} \\
+		2 & Κατάσταση Θερμ. 1 &  &  & \SI{500}{\milli\second} & 5 & Ισότητα & \(\neq\) \texttt{TIMEOUT} \\
+		3 & Κατάσταση Θερμ. 2 &  &  & \SI{500}{\milli\second} & 5 & Ισότητα & \(\neq\) \texttt{TIMEOUT} \\
 		\midrule
-		4 & Temperature 1 & Temp. 1 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 2 & Range & \( -\SI{40}{\celsius} < t < \SI{100}{\celsius} \) \\
-		5 & Temperature 2 & Temp. 2 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 2 & Range & \( -\SI{40}{\celsius} < t < \SI{100}{\celsius} \) \\
-		6 & \(\Delta\) Temperature & Temp. 1+2 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 2 & Range & \( -\SI{20}{\celsius} < \Delta < \SI{20}{\celsius} \) \\
+		4 & Θερμοκρασία 1 & Κατάσταση Θερμ. 1 & \texttt{NOMINAL} & \SI{500}{\milli\second} & 2 & Εύρος & \( -\SI{40}{\celsius} < t < \SI{100}{\celsius} \) \\
+		5 & Θερμοκρασία 2 & Κατάσταση Θερμ. 2 & \texttt{NOMINAL} & \SI{500}{\milli\second} & 2 & Εύρος & \( -\SI{40}{\celsius} < t < \SI{100}{\celsius} \) \\
+		6 & \(\Delta\) Θερμοκρασία & Κατάσταση Θερμ. 1+2 & \texttt{NOMINAL} & \SI{500}{\milli\second} & 2 & Εύρος & \( -\SI{20}{\celsius} < \Delta < \SI{20}{\celsius} \) \\
 		\midrule
-		7 & Temperature 1 & Temp. 1 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Range & \( -\SI{40}{\celsius} < t < \SI{100}{\celsius} \) \\
-		8 & Temperature 2 & Temp. 2 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Range & \( -\SI{40}{\celsius} < t < \SI{100}{\celsius} \) \\
-		9 & \(\Delta\) Temperature & Temp. 1+2 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Range & \( -\SI{20}{\celsius} < \Delta < \SI{20}{\celsius} \) \\
+		7 & Θερμοκρασία 1 & Κατάσταση Θερμ. 1 & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Εύρος & \( -\SI{40}{\celsius} < t < \SI{100}{\celsius} \) \\
+		8 & Θερμοκρασία 2 & Κατάσταση Θερμ. 2 & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Εύρος & \( -\SI{40}{\celsius} < t < \SI{100}{\celsius} \) \\
+		9 & \(\Delta\) Θερμοκρασία & Κατάσταση Θερμ. 1+2 & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Εύρος & \( -\SI{20}{\celsius} < \Delta < \SI{20}{\celsius} \) \\
 		\midrule
-		10 & Temperature 1 & Temp. 1 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Range & \( t < \SI{50}{\celsius} \) \\
-		11 & Temperature 2 & Temp. 2 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Range & \( t < \SI{50}{\celsius} \) \\ \bottomrule
+		10 & Θερμοκρασία 1 & Κατάσταση Θερμ. 1 & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Εύρος & \( t < \SI{50}{\celsius} \) \\
+		11 & Θερμοκρασία 2 & Κατάσταση Θερμ. 2 & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Εύρος & \( t < \SI{50}{\celsius} \) \\ \bottomrule
 	\end{tabular}
 	\end{adjustbox}
 \end{table*}
 
+\FloatBarrier
+
 \paragraph{Event-action definitions}
 
-The final part of the puzzle are the event-action definitions, which can be seen on \Cref{tab:demo_eventaction} and combine:
+Το τελευταίο κομμάτι του παζλ είναι οι ορισμοί των γεγονότων-αντιδράσεων (event-actions), που μπορούν να φανούν στον \Cref{tab:demo_eventaction} και συνδυάζουν:
 \begin{itemize}
-	\item \ac{PUS} events (\texttt{ST[05]} service) which are automatically generated when an on-board monitoring definition goes out of limits
-	\item \ac{PUS} event-action definitions (\texttt{ST[19]} service), which link every occurrence of an event to a stored \ac{TC} that is immediately executed.
-	They define the \acs{FDIR} recovery actions.
+	\item \ac{PUS} γεγονότα (υπηρεσία \texttt{ST[05]}), τα οποία εκπέμπονται αυτόματα όταν ένας ορισμός παρακολούθησης ξεπερνά τα όριά του
+	\item \ac{PUS} ορισμοί γεγονότων-αντιδράσεων (υπηρεσία \texttt{ST[19]}), οι οποίοι συνδέουν κάθε εμφάνιση ενός γεγονότος με μία αποθηκευμένη τηλεεντολή που εκτελείται αμέσως και αναπαριστά τις διαδικασίες ανάκτησης του \acs{FDIR}.
 \end{itemize}
 
-All the aforementioned definitions can be easily modified by operators using single commands that affect the on-board stored \ac{PUS} database.
+Όλοι αυτοί οι ορισμοί μπορούν εύκολα να τροποποιηθούν από τους χειριστές με τη χρήση μεμονωμένων τηλεεντολών, οι οποίες επιδρούν επάνω στην βάση δεδομένων του διαστημικού εξοπλισμού.
 
 \begin{table}[h]
 	\centering
-	\caption{List of \texttt{ST[19]} event-action definitions}
+	\caption{Λίστα ορισμών γεγονότων-αντιδράσεων της υπηρεσίας \texttt{ST[19]}}
 	\label{tab:demo_eventaction}
-	\begin{tabular}{@{}lL{2cm}L{7cm}@{}}
+	\begin{tabularx}{\textwidth}{@{}L{2cm}L{2cm}X@{}}
 		\toprule
-		Event ID & Monitoring Definitions & Action \\ \midrule
-		0 & 0, 4 & Restart sensor 1 \\
-		1 & 1, 5 & Restart sensor 2 \\
-		2 & 2, 7 & Set sensor 1 status \( = \) \texttt{DISABLED} \\
-		3 & 3, 8 & Set sensor 2 status \( = \) \texttt{DISABLED} \\
-		4 & 6 & Restart all sensors \\
-		5 & 9 & Set all sensors status \( = \) \texttt{DISABLED} \\
-		6 & 10, 11 & Restart system \\ \bottomrule
-	\end{tabular}
+		ID γεγονότος & Ορισμός Παρακολούθησης & Αντίδραση \\ \midrule
+		0 & 0, 4 & Επανεκκίνηση αισθητήρα 1 \\
+		1 & 1, 5 & Επανεκκίνηση αισθητήρα 2 \\
+		2 & 2, 7 & Κατάσταση αισθητήρα 1 \( = \) \texttt{DISABLED} \\
+		3 & 3, 8 & Κατάσταση αισθητήρα 2 \( = \) \texttt{DISABLED} \\
+		4 & 6 & Επανεκκίνηση αισθητήρων 1 + 2 \\
+		5 & 9 & Κατάσταση αισθητήρων 1 + 2 \( = \) \texttt{DISABLED} \\
+		6 & 10, 11 & Επανεκκίνηση συστήματος \\ \bottomrule
+	\end{tabularx}
 \end{table}
 
 %\clearpage
-\section{\ac{FDIR} validation}
+\section{Επικύρωση \ac{FDIR}}
 
-\subsection{Nominal operation}
+\subsection{Κανονική λειτουργία}
 
-During nominal operation, no failures are simulated. The system is connected to power and outputs \ac{ECSS} telemetry (\Cref{fig:yamcshousekeeping}), which includes parameter values parsed by (\Cref{fig:yamcsparameter}). Additionally, a log file is kept for diagnostic purposes (\Cref{fig:lognominal}). The system is compliant with its requirements (\Cref{sec:tsvcd}) and can transmit the temperature to the ground station as expected.
+Στην κανονική λειτουργία, δεν προσομοιώνεται καμία βλάβη. Το σύστημα είναι ενεργοποιημένο και παράγει τηλεμετρία που υπακούει στα πρότυπα \ac{ECSS} (\Cref{fig:yamcshousekeeping}), η οποία περιλαμβάνει τιμές παραμέτρων που αναλύονται από το \acs{YAMCS} (\Cref{fig:yamcsparameter}). Επιπλέον, διατηρείται ένα αρχείο καταγραφής για διαγνωστικούς σκοπούς (\Cref{fig:lognominal}). Το σύστημα συμμορφώνεται με τις ορισμένες απαιτήσεις (\Cref{sec:tsvcd}) και μπορεί να μεταδώσει τη θερμοκρασία στον Σταθμο Βάσης, όπως είναι αναμενόμενο.
 
 \begin{figure}
 	\centering
 	\includegraphics{media/screenshots/yamcs_housekeeping}
-	\caption{View of housekeeping packets generated by the \acs{MCU} in \acs{YAMCS}}
+	\caption{Περιοδικοί ραδιοφάροι που παράγονται από τον μικροελεγκτή, όπως φαίνονται στο \acs{YAMCS}}
 	\label{fig:yamcshousekeeping}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics{media/screenshots/yamcs_parameter}
-	\caption{View of one temperature parameter in \acs{YAMCS}}
+	\caption{Εξέλιξη μιας παραμέτρου θερμοκρασίας στο χρόνο, όπως φαίνεται στο \acs{YAMCS}}
 	\label{fig:yamcsparameter}
 \end{figure}
 
@@ -1118,52 +1124,52 @@ During nominal operation, no failures are simulated. The system is connected to 
 910301  [debug  ] T1 = 27.90
 910401  [debug  ] T1 = 28.08
 \end{cminted}
-\caption[Log output during nominal operation]{Log output during nominal operation. The first number is the \ac{MCU} tick counter in milliseconds since boot.}
+\caption[Έξοδος καταγραφής σε κανονική λειτουργία]{Έξοδος καταγραφής σε κανονική λειτουργία. Ο πρώτος αριθμός δηλώνει τους χτύπους ρολογιού του μικροελεγκτή, που μετρώνται σε χιλιοστά του δευτερολέπτου από την εκκίνηση.}
 \label{fig:lognominal}
 \end{figure}
 
-\subsection{Simulation of failures}
+\subsection{Προσομοίωση αστοχιών}
 
-The following methods were used to simulate each failure:
+Για την προσομοίωση κάθε αποτυχίας χρησιμοποιήθηκαν οι ακόλουθες μέθοδοι:
 \begin{itemize}
-	\item For component communication failures, each sensor was just physically disconnected from the system.
-	\item For small changes in temperature, a hot air gun or other hot air source was pointed towards each sensor. Care was taken to not exceed the rated temperatures of the affected components.
-	\item For changes in temperature which were impractical to simulate, the failure was injected in software, by manually modifying the variable.
+	\item Για τις αποτυχίες επικοινωνίας μεταξύ εξαρτημάτων, κάθε αισθητήρας απλά αποσυνδέθηκε φυσικά από το σύστημα.
+	\item Για μικρές αλλαγές στη θερμοκρασία, ένα πιστόλι θερμού αέρα ή άλλη πηγή θερμότητας στρεφόταν προς κάθε αισθητήρα, με κατάλληλη φροντίδα ώστε να μη ξεπεραστούν τα λειτουργικά όρια των εξαρτημάτων.
+	\item Για μεταβολές της θερμοκρασίας που δεν ήταν πρακτικά δυνατό να προσομοιωθούν, η βλάβη εισήχθη στο λογισμικό, τροποποιώντας χειροκίνητα τις αντίστοιχες μεταβλητές.
 	
-	The two buttons present on the development board were used as a simple interface to "inject" extreme temperature values.
+	Τα δύο κουμπιά που υπάρχουν στην αναπτυξιακή πλακέτα χρησιμοποιήθηκαν ένα απλό μέσο για την "εισαγωγή" ακραίων τιμών θερμοκρασίας.
 \end{itemize}
 
-\subsection{Real-time modification of \ac{FDIR}}
+\subsection{Τροποποίηση του \acs{FDIR} σε πραγματικό χρόνο}
 
-The power of \acs{SAVOIR}'s \ac{FDIR} approach lies in the fact that the entire \ac{FDIR} concept can be safely modified via \ac{TC} without requiring any modifications or reuploads of the spacecraft's software. The application of the \acs{ECSS} services paradigm allows customising all on-board \ac{FDIR} functions and associated services using predefined \ac{TC} structures. In this section, \acs{ECSS} commands will be executed to demonstrate these capabilities and their control from the Ground Station.
+Η δύναμη της προσέγγισης \ac{FDIR} του \acs{SAVOIR} έγκειται στο ότι ολόκληρη η δομή \ac{FDIR} μπορεί να τροποποιηθεί με ασφάλεια μέσω τηλεεντολών, χωρίς να απαιτούνται τροποποιήσεις ή επαναφορτώσεις του κώδικα και του λογισμικού. Η εφαρµογή του μοντέλου υπηρεσιών \acs{ECSS} επιτρέπει την προσαρµογή όλων των υπηρεσιών και λειτουργιών \ac{FDIR}, χρησιµοποιώντας προκαθορισµένες δοµές τηλεεντολών. Σε αυτή την ενότητα, θα εκτελεστούν εντολές \acs{ECSS} για την επίδειξη αυτών των δυνατοτήτων και του ελέγχου τους από τον σταθμό βάσης.
 
-The level of reconfigurability possible is defined by requirements listed in \parencite{ECSS-E-ST-70-11C,SAVOIR-HB-003}. The tailored version used for our experiments is listed in \Cref{tab:fdir-recon-rq}.
+Γενικότερα, το επίπεδο της δυνατότητας αναδιαμόρφωσης που παρέχει το σύστημα καθορίζεται από τις απαιτήσεις που παρατίθενται στα \cite{ECSS-E-ST-70-11C,SAVOIR-HB-003}. Η προσαρμοσμένη έκδοση που χρησιμοποιήθηκε για τα πειράματά μας παρατίθεται στο \Cref{tab:fdir-recon-rq}.
 
 \begin{table*}[h]
 	\centering
-	\caption{\ac{FDIR} reconfigurability requirements}
+	\caption{Απαιτήσεις αναδιαμόρφωσης \ac{FDIR} στην πειραματική διάταξη}
 	\label{tab:fdir-recon-rq}
 	\begin{tabularx}{\textwidth}{@{}lXlL{4cm}@{}}
 		\toprule
- 		\# & Requirement & Service & Details \\ \midrule
-		\texttt{RC-010} & The reporting of FDIR activities shall contain all information for failure analysis (e.g. time of occurrence, parameter out‐of‐limit, switching performed). & ST[12] on-board monitoring & Via periodic \emph{check transition reports} \\
-		\texttt{RC-020} & The capability shall be provided to enable and to disable any on‐board FDIR function by telecommand. & ST[12] on-board monitoring & Via \emph{enable}/\emph{disable} \emph{parameter monitoring definitions} commands  \\
-		\texttt{RC-030} & The capability shall be provided to add and delete parameters from the on‐board monitoring list. & ST[12] on-board monitoring & Via \emph{add}/\emph{delete} \emph{parameter monitoring definitions} commands  \\
-		\texttt{RC-040} & The capability shall be provided to modify the failure recovery actions associated with each on-board monitoring definition. & ST[19] event-action & Via \emph{add}, \emph{delete}, \emph{enable} and \emph{disable} \emph{event-action definitions} commands \\ \bottomrule
+		\# & Απαίτηση & Υπηρεσία & Λεπτομέρειες \\ \midrule
+		\texttt{RC-010} & Οι αναφορές FDIR πρέπει να περιέχουν όλες τις πληροφορίες για την ανάλυση αποτυχιών (π.χ. ώρα εμφάνισης, παράμετροι εκτός ορίων, πραγματοποιημένες μεταγωγές). & ST[12] on-board monitoring & Μέσω περιοδικών \emph{αναφορών μεταγωγής} \\
+		\texttt{RC-020} & Πρέπει να παρέχεται η δυνατότητα ενεργοποίησης και απενεργοποίησης οποιασδήποτε λειτουργίας FDIR μέσω τηλεεντολών. & ST[12] on-board monitoring & Με εντολές \emph{enable}/\emph{disable} \emph{parameter monitoring definitions} \\\
+		\texttt{RC-030} & Πρέπει να παρέχεται η δυνατότητα προσθήκης και διαγραφής παραμέτρων από τον κατάλογο παρακολούθησης. & ST[12] on-board monitoring & Με εντολές \emph{add}/\emph{delete} \emph{parameter monitoring definitions} \\
+		\texttt{RC-040} & Πρέπει να παρέχεται η δυνατότητα τροποποίησης των ενεργειών αποκατάστασης βλάβης που συνδέονται με κάθε ορισμό παρακολούθησης. & ST[19] event-action & Με εντολές \emph{add}, \emph{delete}, \emph{enable} και \emph{disable} \emph{event-action definitions} \\ \bottomrule
 	\end{tabularx}
 \end{table*}
 
-The \ac{YAMCS} platform was once again used to generate the wanted commands (\Cref{fig:yamcs_commands}).
+Η πλατφόρμα \ac{YAMCS} χρησιμοποιήθηκε ξανά για τη δημιουργία των επιθυμητών εντολών (\Cref{fig:yamcs_commands}).
 
 \begin{figure}[h]
 	\includegraphics{screenshots/yamcs_commands.png}
-	\caption{List of commands in the \acs{YAMCS} interface. These commands can initiate spacecraft actions, enable/disable sensors, or reconfigure the on-board \acs{ECSS} services databases. The list of commands is provided programmatically in \ac{XTCE} format (\Cref{app:xtce}).}
+	\caption[Λίστα τηλεεντολών στο περιβάλλον του \acs{YAMCS}]{Λίστα τηλεεντολών στο περιβάλλον του \acs{YAMCS}. Αυτές οι εντολές μπορούν να εκκινήσουν διαδικασίες στον δορυφόρο, να ενεργοποιήσουν/απενεργοποιήσουν αισθητήρες, ή να αλλάξουν τις ρυθμίσεις των εξαρτημάτων του δορυφόρου. Η λίστα αυτών των εντολών παρέχεται στο \acs{YAMCS} μέσω των αρχείων \ac{XTCE} (\Cref{app:xtce}).}
 	\label{fig:yamcs_commands}
 \end{figure}
 
 
 
-\chapter{Conclusions and Future Work}
+\chapter{Συμπεράσματα και Μελλοντική Εργασία}
 
 % Suggestions for standard:
 % hard to play with parameters
@@ -1171,7 +1177,7 @@ The \ac{YAMCS} platform was once again used to generate the wanted commands (\Cr
 % derived parameters (e.g. Δ between sensors)
 % event-action definition ID
 
-\section{Future work}
+\section{Μελλοντική εργασία}
 
 %\backmatter
 \appendix
