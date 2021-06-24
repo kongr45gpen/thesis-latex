@@ -230,18 +230,102 @@ Space is not a welcoming environment; while the aerospace engineering community 
 
 \section{Σκοπός και Συνεισφορά της Εργασίας}
 
+\begin{marginfigure}
+	\centering
+	\begin{tikzpicture}[every node/.style={scale=0.8}]
+	\pie[
+	sum=auto,after number=,radius={1},text=pin,rotate=0,scale font,color={MaterialGreen400, MaterialBlue, MaterialAmber, MaterialRed, MaterialYellow, MaterialGrey}
+	]{131/Πλήρης επιτυχία,
+		144/Σε εξέλιξη,
+		61/Πρώιμη αποτυχία,
+		120/Μη λειτουργία,
+		37/{Απώλεια εκτόξευσης},
+		204/Άγνωστο
+	}
+	
+	\end{tikzpicture}
+	\caption{Κατάσταση αποστολών CubeSat από το 2000 \parencite{swartwout_cubesat_mission_2019}}
+	\label{fig:cubesat_status}
+\end{marginfigure}
+
+\begin{marginfigure}
+	\centering
+	\begin{tikzpicture}[every node/.style={scale=0.8}]
+	\pie[
+	sum=auto,after number=,radius={1},text=pin,rotate=0,scale font,color={MaterialGreen400, MaterialBlue, MaterialAmber, MaterialRed, MaterialYellow, MaterialGrey}
+	]{38/Πλήρης επιτυχία,
+		54/Σε εξέλιξη,
+		34/Πρώιμη αποτυχία,
+		88/Μη λειτουργία,
+		17/{Απώλεια εκτόξευσης},
+		58/Άγνωστο
+	}
+	
+	\end{tikzpicture}
+	\caption[Κατάσταση αποστολών CubeSat από ανεξάρτητους κατασκευαστές]{Κατάσταση αποστολών CubeSat από ανεξάρτητους κατασκευαστές ("hobbyists": πανεπιστήμια και άλλα ερευνητικά/εκπαιδευτικά πρότζεκτ) \parencite{cubesat_database}}
+	\label{fig:cubesat_status_hobbyist}
+\end{marginfigure}
+
+Η παρούσα εργασία αφορά τη βελτίωση της \textbf{αξιοπιστίας} των νανοδορυφόρων και συστημάτων CubeSat. Αν και η πλειοψηφία των κλασικών δορυφόρων που έχουν εκτοξευτεί είχαν, έστω μερικώς, επιτυχημένες αποστολές \parencite{kattakuri_failures_spacecraft_2019,jacklin_smallsatellite_mission_2019}, το 39.6\% των εκτοξευμένων CubeSats έχουν αποτύχει να ολοκληρώσουν την αποστολή τους, ή δεν έχουν λειτουργήσει σε τροχιά. Το ποσοστό αποτυχίας αυξάνεται στο 57.0\% αν εστιάσουμε σε φορείς (όπως Πανεπιστήμια) που εκτοξεύουν τα πρώτα τους CubeSat, και δεν διαθέτουν το διαστημικό υπόβαθρο των μεγάλων κατασκευαστών και των εμπορικών δορυφόρων.
+
+Οι λόγοι της υψηλής αποτυχίας των CubeSat σχετίζονται κυρίως με το συμπιεσμένο πρόγραμμα κατασκευής, το οποίο οδηγεί σε σφάλματα και προβλήματα που δεν εντοπίζονται κατά τη διάρκεια του σχεδιασμού. Πηγές βλαβών όπως περιβαλλοντική φθορά (θερμικοί κύκλοι, ακτινοβολία), έλλειψη περιθωρίων ασφαλείας στην ισχύ και τις τηλεπικοινωνίες, και προβλήματα λογισμικού, συνδυάζονται με τη γενικότερη έλλειψη εμπειρίας και αυστηρών διαδικασιών των νέων κατασκευαστών, για να μειώσουν το βαθμό αξιοπιστίας των νανοδορυφόρων. \parencite{swartwout_cubesat_mission_2019,langer_reliability_estimation_2017}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\begin{axis}  
+[  
+ybar,  
+enlargelimits=0.15,  
+ylabel={Αποτυχημένοι δορυφόροι}, % the ylabel must precede a # symbol.  
+xlabel={Υποσύστημα Αποτυχίας},  
+symbolic x coords={ADCS, COMMS, Deployment, EPS, Payload, Thermal, OBDH, Launch, Unknown}, % these are the specification of coordinates on the x-axis.  
+xticklabels={ADCS, COMMS, Deployment, EPS, Payload, Thermal, OBDH, Εκτόξευση, Άγνωστο},
+xtick=data,  
+nodes near coords, % this command is used to mention the y-axis points on the top of the particular bar.  
+nodes near coords align={vertical},  
+ymajorgrids={true},
+width=11cm,
+height=6cm,
+x tick label style={rotate=45,anchor=east},
+nodes near coords={\pgfmathprintnumber\pgfplotspointmeta\%} 
+]  
+\addplot coordinates {(ADCS, 16) (COMMS, 13) (Deployment, 10) (EPS, 9) (Payload, 8) (Thermal, 6) (OBDH, 2) (Launch, 2) (Unknown, 34) };  
+
+\end{axis}  
+\end{tikzpicture}  
+\caption[Κύριοι λόγοι αποτυχίας αποστολών CubeSat]{Κύριοι λόγοι αποτυχίας αποστολών CubeSat (\(n=50\)) \parencite{bouwmeester_survey_implementation_2017}}
+\label{fig:whyfail}
+\end{figure}
+
+Η προσέγγιση που ακολουθείται για την αύξηση της αξιοπιστίας των CubeSat περιλαμβάνει:
+\begin{compactitem}
+	\item Μείωση του αριθμού πιθανών βλαβών από την φάση του σχεδιασμού, με συμπερίληψη ζητημάτων αξιοπιστίας στις πρώιμες φάσεις του πρότζεκτ
+	\item Δομημένα εργαλεία εκτίμησης και βελτίωσης της αξιοπιστίας, όπως \textbf{\acf{FMEA}} και \textbf{\acf{FDIR}} \autocite{faure_lean_satellites_2017,menchinelli_reliability_engineering_2018}
+	\item Προσαρμογή και υιοθέτηση ανοιχτών προτύπων διαστημικής τεχνολογίας για το σχεδιασμό, την κατασκευή και την επαλήθευση \autocite{scholz_handbook_free_2021}
+\end{compactitem}
+
+Η παρούσα εργασία σκοπεύει να εμπλουτίσει την εργαλειοθήκη των κατασκευαστών CubeSat αναλύοντας μία δομημένη προσέγγιση \ac{FDIR} που βασίζεται στα \textbf{ευρωπαϊκά πρότυπα \acs{ECSS}}, και στην εργασία της πρωτοβουλίας \textbf{\acs{SAVOIR}}\footurl{https://savoir.estec.esa.int/} της ευρωπαϊκής διαστημικής βιομηχανίας. Στις επόμενες σελίδες, θα αναλυθεί πως οι ιδέες αυτές μπορούν να προσαρμοστούν σε μία αποστολή CubeSat μικρού βεληνεκούς ώστε:
+\begin{itemize}
+	\item Να χρησιμοποιηθεί ένας δομημένος τρόπος για να ερευνηθούν οι πιθανές αποτυχίες ενός δορυφόρου, και τρόποι αντιμετώπισής τους
+	\item Να προετοιμαστεί λογισμικό που θα μπορεί να ανταποκριθεί και να διαχειριστεί με ασφάλεια το σύνολο των κρίσιμων αποτυχιών σε τροχιά
+	\item Να αναπτυχθεί μία \textbf{παραμετροποιήσιμη} αρχιτεκτονική, που θα επιτρέπει τους χειριστές να μεταβάλλουν εύκολα τη συμπεριφορά του συστήματος \acs{FDIR} και να το προσαρμόσουν σε διαφορετικά δεδομένα
+\end{itemize}
+
+Το προτεινόμενο σύστημα \acs{FDIR} στοχεύει στην αύξηση της σιγουριάς κατά την κατασκευή, αλλά και στη γρήγορη ενσωμάτωση νέων δεδομένων που προκύπτουν κατά τις δοκιμές και την εκτόξευση.
+
+Πέρα από τη θεωρητική ανάλυση, περίληψη και σχολιασμό των προτύπων, η εργασία εστιάζει στην εφαρμογή της προαναφερθείσας δομής \acs{FDIR} στο νανοδορυφόρο \emph{AcubeSAT}, και περιλαμβάνει μία πειραματική υλοποίηση της σουίτας \acs{FDIR} σε υλικό \& λογισμικό.
+
+% maybe some other inspiring stuff here? idk
+
 \section{Διάρθωση και Δομή}
 
+Η εργασία ξεκινάει με την περίληψη της αποστολής AcubeSAT, που αποτελεί την κύρια αφορμή και πλαίσιο συγγραφής της (\Cref{cap:acubesat}). Συνεχίζει με μία ανάλυση των κύριων προτύπων και της φιλοσοφίας \acs{FDIR}, με εστίαση στα κομμάτια που αφορούν τους κατασκευαστές CubeSat και τις ερευνητικές ή εκπαιδευτικές αποστολές (\Cref{cap:savoir}). Το επόμενο κομμάτι εξετάζει την εφαρμογή των προηγούμενων προτύπων στο σχεδιασμό του AcubeSAT, και σε μερικές σχεδιαστικές αποφάσεις και λεπτομέρειες υλοποίησης του \acs{FDIR} στο νανοδορυφόρο.
 
-\section{Εισαγωγή στην Αεροδιαστημική Δυναμική}
-
-\section{Νανοδορυφόροι \& CubeSat}
-
-\section{Αξιοπιστία CubeSat}
-
-\acf{FDIR}
+Η τελευταία ενότητα περιλαμβάνει την πρακτική επίδειξη του προτεινόμενου \acs{FDIR} σε ένα απλό δοκιμαστικό σύστημα δύο αισθητήρων. Το σύστημα αναπτύσσεται έτσι ώστε να μπορεί να εντοπίσει και να ανακάμψει από όλες τις προβλεπόμενες πιθανές αποτυχίες, χρησιμοποιώντας τις πλήρεις βιβλιοθήκες που καλύπτουν τα πρότυπα \acs{ECSS} και \acs{FDIR}. Μετά από την ανάπτυξη του συστήματος, γίνεται πλήρης δοκιμή της απόκρισής του στις αποτυχίες. Το σύστημα είναι διαμορφωμένο έτσι ώστε να εξομοιώσει το σύστημα του δορυφόρου, συμπεριλαμβανομένου του συστήματος μικροελεγκτή αλλά και του Σταθμού Βάσης.
 
 \chapter{Η αποστολή AcubeSAT}
+\label{cap:acubesat}
 
 \section{Η αποστολή}
 \draft{Here we write the history of the project and a description of the mission and the satellite...}
@@ -530,6 +614,7 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
 \draft{Here we write a small paragraph about OCDT and other MBSE tools and utilities used by AcubeSAT or developed in-house...}
 
 \chapter{Η φιλοσοφία \ac{FDIR} του SAVOIR}
+\label{cap:savoir}
 
 \section{Το Πρότυπο Αξιοποίησης Πακέτων \acs{ECSS}}
 
@@ -655,6 +740,7 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 \end{figure*}
 
 \chapter{\ac{FDIR} στο AcubeSAT}
+\label{cap:acufdir}
 
 \section{Βασικές αρχές του \ac{FDIR}}
 
@@ -684,6 +770,7 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 \label{sec:fdir_operating_modes}
 
 \chapter{Πρακτική επίδειξη του \ac{FDIR}}
+\label{cap:practical}
 
 Ως πείραμα "proof-of-concept" για την υλοποίηση του \ac{FDIR} του AcubeSAT, προετοιμάσαμε μια πρακτική διάταξη για την προσομοίωση της συμπεριφοράς του δορυφόρου (\Cref{fig:block}). Η διάταξη αποτελείται από:
 \begin{compactitem}
@@ -1212,6 +1299,7 @@ It is of interest to investigate how the hardware \ac{I2C} peripheral provided b
 
 
 \chapter{Συμπεράσματα και Μελλοντική Εργασία}
+\label{cap:conclusion}
 
 % Suggestions for standard:
 % hard to play with parameters
