@@ -1249,7 +1249,17 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
 
 \subsection{Βάση δεδομένων \acs{PUS}}
 
-Σε
+Η σουίτα \acs{YAMCS} δεν διαθέτει έτοιμη υποστήριξη και συγχρονισμό με τη βάση δεδομένων \acs{PUS} του δορυφόρου. Αυτό σημαίνει πως δεν υπάρχει έτομος εύκολος τρόπος για εποπτική προβολή των \emph{γεγονότων}, \emph{παραμέτρων}, ορισμών \emph{παρακολούθησης} και ορισμών \emph{γεγονότος-αντίδρασης}.
+
+\begin{figure*}[h]
+	\includegraphics{screenshots/pus_viewer}
+	\caption[Η διεπαφή "PUS database viewer"]{Η διεπαφή "\acs{PUS} database viewer". Αριστερά βρίσκεται η λίστα ορισμών παρακολούθησης, πάνω δεξιά η λίστα μεταβάσεων, και κάτω δεξιά η λίστα ορισμών γεγονότος-αντίδρασης.}
+	\label{fig:pusviewer}
+\end{figure*}
+
+Για να διευκολυνθεί η γρήγορη προβολή της διαδικασίας του \acs{FDIR}, υλοποιήσαμε μία online διεπαφή που δείχνει τα παραπάνω (\Cref{fig:pusviewer}). Η διεπαφή ενημερώνεται σε πραγματικό χρόνο μέσω του \acs{YAMCS} \acs{HTTP} \acs{API} και προβάλλει τους ορισμούς αλλά και την κατάσταση του \acs{FDIR}.
+
+Η εφαρμογή γράφτηκε σε HTML και Javascript, και το γραφικό περιβάλλον της βασίζεται στη βιβλιοθήκη Material Design Lite.\footurl{https://getmdl.io/} Βρίσκεται στο αποθετήριο \foothref{https://github.com/kongr45gpen/fdir-demo-yamcs/tree/master/ecss-interface}{\texttt{fdir-demo-yamcs}}, μαζί με τα υπόλοιπα κομμάτια του σταθμού βάσης της επίδειξης.
 
 
 \section{Στήσιμο \ac{FDIR}}
