@@ -17,6 +17,17 @@
 }
 \makeatother
 
+% Transitions
+\AtBeginDocument{
+\colorlet{invalid}{MaterialAmber900}
+\colorlet{unexpected}{MaterialRed900}
+}
+
+\def\ok{\texttt{OK}}
+\def\unexpected{\textcolor{unexpected}{\texttt{Unexpected\_Value}}}
+\def\invalid{\textcolor{invalid}{\texttt{Invalid}}}
+\def\ar{ \( \rightarrow \) }
+
 \makeatletter
 
 \makeatother

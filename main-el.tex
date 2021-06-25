@@ -660,7 +660,7 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
 	\item \foothref{https://gitlab.com/acubesat/utilities/mattermost-documentation-bot}{Documentation List}, πλατφόρμα για καταλογοποίηση και πλοήγηση στα έγγραφα που έχει παράξει η ομάδα
 \end{compactitem}
 
-\chapter{Η φιλοσοφία \ac{FDIR} του SAVOIR}
+\chapter{Η φιλοσοφία \acs{FDIR} του SAVOIR}
 \label{cap:savoir}
 
 Στην παρούσα ενότητα θα εξετάσουμε συνοπτικά τον συνδυασμό δύο φιλοσοφιών που χρησιμοποιούνται από ευρωπαϊκούς φορείς με δράση στο χώρο του διαστήματος. Η πρώτη φιλοσοφία συνδέεται με το \textbf{πρότυπο \texttt{ECSS-E-ST-70-41C}} \autocite{ECSS-E-ST-70-41C} του οργανισμού \acf{ECSS}, το οποίο ορίζει το βασικό σύνολο τηλεμετρίας (\acs{TM}) και τηλεεντολών (\acs{TC}) που χρειάζεται η πλατφόρμα ενός δορυφόρου για να ελεγθεί από τον σταθμό βάσης.
@@ -861,7 +861,7 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
 \end{compactitem}
 
 
-\chapter{\ac{FDIR} στο AcubeSAT}
+\chapter{\acs{FDIR} στο AcubeSAT}
 \label{cap:acufdir}
 
 Στο παρακάτω κεφάλαιο γίνεται ανάλυση περίπτωσης (case study) για την εφαρμογή των παραπάνω (\Cref{cap:savoir}) στην αποστολή του AcubeSAT (\Cref{cap:acubesat}). Πιο συγκεκριμένα, μελετώνται οι σχεδιαστικές αποφάσεις που λήφθηκαν, τα κομμάτια των προτύπων που εφαρμόστηκαν, και οι συγκεκριμένες ενέργειες που εξαρτώνται από την αποστολή. \parencite{FMEA}
@@ -1053,7 +1053,7 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
 
 Η επαλήθευση του \acs{FDIR} είναι το τελευταίο κομμάτι της διαδικασίας, και περιλαμβάνει έλεγχο της κάθε επίφοβης αποτυχίας, μέσω προσομοίωσης με υλικό ή λογισμικό.
 
-\chapter{Πρακτική επίδειξη του \ac{FDIR}}
+\chapter{Πρακτική επίδειξη του \acs{FDIR}}
 \label{cap:practical}
 
 Ως πείραμα "proof-of-concept" για την υλοποίηση του \ac{FDIR} του AcubeSAT, προετοιμάσαμε μια πρακτική διάταξη για την προσομοίωση της συμπεριφοράς του δορυφόρου (\Cref{fig:block}). Η διάταξη αποτελείται από:
@@ -1654,7 +1654,7 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
 	
 	\texttt{Invalid}: Η συνθήκη εγκυρότητας του ελέγχου είναι ψευδής. Ο έλεγχος δεν πραγματοποιείται.
 }
-Στο συγκεκριμένο παράδειγμα, παρατηρούμε ότι και οι 12 καταχωρημένοι έλεγχοι μεταβαίνουν από την κατάσταση \texttt{Unchecked} στην κατάσταση \texttt{OK}. Αυτό συμβαίνει καθώς, με την εκκίνηση του συστήματος, όλοι οι ορισμοί παρακολούθησης βρίσκονται στην αρχική κατάσταση \texttt{Unchecked}, που δηλώνει πως δεν έχουν πραγματοποιηθεί ποτέ. Μετά από την πάροδο της περιόδου μετρήσεων \emph{επί} του αριθμού επαναλήψεων του κάθε ορισμού, η μεταβλητή θεωρείται πως έχει τιμή εντός ορίων, και ο ορισμός είναι \texttt{OK}.
+Στο συγκεκριμένο παράδειγμα, παρατηρούμε ότι και οι 12 \g{καταχωρημένοι} έλεγχοι μεταβαίνουν από την κατάσταση \texttt{Unchecked} στην κατάσταση \texttt{OK}. Αυτό συμβαίνει καθώς, με την εκκίνηση του συστήματος, όλοι οι ορισμοί παρακολούθησης βρίσκονται στην αρχική κατάσταση \texttt{Unchecked}, που δηλώνει πως δεν έχουν πραγματοποιηθεί ποτέ. Μετά από την πάροδο της περιόδου μετρήσεων \emph{επί} του αριθμού επαναλήψεων του κάθε ορισμού, η μεταβλητή θεωρείται πως έχει τιμή εντός ορίων, και ο ορισμός είναι \texttt{OK}.
 
 Ο διαφορετικός χρόνος μετάβασης του κάθε ορισμού οφείλεται στον διαφορετικό \textbf{αριθμό επαναλήψεων}. Για να καταχωρηθεί η μετάβαση, πρέπει η μεταβλητή να έχει μετρηθεί όσες φορές δηλώνει αυτός ο αριθμός, που ορίζεται από τους χειριστές.
 
@@ -1671,6 +1671,16 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
 	\caption[Λίστα ορισμών γεγονότος-αντίδρασης]{Λίστα ορισμών γεγονότος-αντίδρασης στην εκκίνηση, χωρίς καμία αποτυχία. Τα δεδομένα αυτά λαμβάνονται ως τηλεμετρία από τον μικροελεγκτή και αντιστοιχούν ακριβώς στις τιμές του \Cref{tab:demo_eventaction}.}
 	\label{fig:pus_eventaction}
 \end{figure}
+
+Ακόμα, κατά την εκκίνηση, δημιουργείται ένα \textbf{γεγονός} της υπηρεσίας \emph{\texttt{ST[05]} event reporting} που ανακοινώνει την εκκίνηση του μικροελεγκτή (\Cref{fig:yamcsmcustart}).
+
+\begin{figure}[h]
+	\centering
+	\caption{Το γεγονός έναρξης του μικροελεγκτή, μέσα από το \acs{YAMCS}}
+	\label{fig:yamcsmcustart}
+	\includegraphics{media/screenshots/yamcs_mcustart}
+\end{figure}
+
 
 \FloatBarrier
 \subsection{Προσομοίωση αστοχιών}
@@ -1711,6 +1721,101 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
 	\end{tabularx}
 	\vspace{2pt}
 \end{table*}
+
+\FloatBarrier
+
+\paragraph{\texttt{F-010}: Προσωρινή απώλεια λειτουργικότητας}
+Η πρώτη αποτυχία που θα προσομοιώσουμε θα είναι η απώλεια λειτουργίας του διαύλου \acs{I2C} ή του περιφερειακού. Η προσομοίωση γίνεται στο υλικό μέσω της \emph{προσωρινής αποσύνδεσης καλωδίου}
+
+\subparagraph{Διαδικασία} \draft{διόρθωση εσοχής}
+\begin{compactenum}
+	\item Αποσυνδέουμε το καλώδιο \acs{SDA} ή \acs{SCL} από το breadboard
+	\item Μετά από 2 δευτερόλεπτα, επανασυνδέουμε το καλώδιο, ώστε να αναπαραστήσουμε μία προσωρινή (και όχι μόνιμη) βλάβη
+\end{compactenum}
+
+\subparagraph{Αποτελέσματα}
+Για αυτήν την αποτυχία, θα παρουσιαστούν με λεπτομέρεια όλες οι διαδικασίες που συμβαίνουν στο υπόβαθρο και πώς φαίνονται σε έναν χειριστή. Στις επόμενες αναλύσεις, τα αποτελέσματα αυτά θα παρουσιαστούν μόνο συνοπτικά, χρησιμοποιώντας το εργαλείο του πίνακα μεταβάσεων.
+
+Προτού μελετήσουμε τα αποτελέσματα της αποτυχίας και του \acs{FDIR}, θα κοιτάξουμε τις παραμέτρους και τις τιμές αυτών.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics{screenshots/yamcs_parameters}
+	\caption{Θερμοκρασιακές παράμετροι \acs{YAMCS} σε κανονική λειτουργία}
+	\label{fig:yamcsparametersnominal}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics{screenshots/yamcs_f010_parameters}
+	\caption{Θερμοκρασιακές παράμετροι \acs{YAMCS} υπό την αποτυχία \texttt{F-010}}
+	\label{fig:yamcsparametersf010}
+\end{figure}
+
+Στο \Cref{fig:yamcsparametersnominal}, φαίνονται οι τιμές θερμοκρασίας και κατάστασης σε κανονική λειτουργία. Οι τιμές λαμβάνονται κανονικά και οι αισθητήρες αποστέλλουν δεδομένα. Τη στιγμή που αποσυνδέσουμε το καλώδιο, το σύστημα\footnote{Η διαδικασία αυτή πραγματοποιείται από τον οδηγό του περιφερειακού, και όχι από την υλοποίηση των \acs{ECSS} services} θέτει την τιμή κατάστασης σε \texttt{TIMEOUT}, καθώς αναγνωρίζει την αποτυχία της ζεύξης (\Cref{fig:yamcsparametersf010}). Ταυτόχρονα, η τιμή της θερμοκρασίας γίνεται \emph{0}, καθώς δεν υπάρχει κάποια ενεργή μέτρηση.\footnote{Σε ένα πραγματικό σύστημα θα είχε νόημα και να διατηρείται η προηγούμενη τιμή της θερμοκρασίας. Σε εμάς η τιμή τέθηκε στο 0 για να επιβεβαιώσουμε πως ένα αποτυχημένο περιφερειακό που επιστρέφει λανθασμένες τιμές δεν μπορεί να επηρεάσει αρνητικά το υπόλοιπο σύστημα.}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics{screenshots/pus_f010_tran}
+	\caption{Πίνακας μετάβασης ορισμών παρακολούθησης, μετά από την αποτυχία \texttt{F-010} (όπως φαίνεται στην διεπαφή \acs{PUS}}
+	\label{fig:pusf010tran}
+\end{figure}
+
+\begin{table*}[h]
+	\centering
+	\caption[][10pt]{Πίνακας μετάβασης ορισμών παρακολούθησης, μετά από την αποτυχία \texttt{F-010}}
+	\label{tab:f010tran}
+	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
+		\toprule
+		Χρόνος (ms) & PMON & \multicolumn{3}{c}{Παράμετρος} & Μετάβαση \\ \midrule
+		0 & 4 & Θερμ. 1 & = & 0 & \ok \ar \invalid \\
+		0 & 6 & Θερμ. Δ & = & 25.6875 & \ok \ar \invalid \\
+		0 & 7 & Θερμ. 1 & = & 0 & \ok \ar \invalid \\
+		0 & 9 & Θερμ. Δ & = & 25.6875 & \ok \ar \invalid \\
+		0 & 10 & Θερμ. 1 & = & 0 & \ok \ar \invalid \\
+		1000 & 0 & Κατάστ. Θερμ. 1 & = & \texttt{TIMEOUT} & \ok \ar \unexpected \\[1ex]
+		\multicolumn{6}{c}{\textcolor{MaterialGrey500}{Αποκατάσταση βλάβης}}\\[1ex]
+		2500 & 0 & Κατάστ. Θερμ. 1 & = & \texttt{NOMINAL} & \unexpected \ar \ok \\
+		2500 & 4 & Θερμ. 1 & = & 25.5 & \invalid \ar \ok \\
+		4000 & 7 & Θερμ. 1 & = & 25.5 & \invalid \ar \ok  \\
+		4500 & 6 & Θερμ. Δ & = & 0.3125 & \invalid \ar \ok  \\
+		7000 & 9 & Θερμ. Δ & = & 0.25 & \invalid \ar \ok  \\
+		7000 & 10 & Θερμ. 1 & = & 25.5 & \invalid \ar \ok  \\ \bottomrule
+	\end{tabularx}
+\end{table*}
+
+Μετά από την αλλαγή των τιμών των παραμέτρων, σειρά έχει η υπηρεσία \emph{\texttt{ST[12]} on-board monitoring} και οι ορισμοί παρακολούθησης (\Cref{fig:pusf010tran,tab:f010tran}). 
+
+
+%2442576 [debug  ] T [T1]: 25.56
+%2442676 [debug  ] T [T2]: 25.56
+%2442706 [error  ] Error in TWI: 1
+%2442706 [debug  ] T [T1]: 0.00
+%2442807 [debug  ] T [T2]: 25.56
+%2442836 [error  ] Error in TWI: 1
+%2442836 [debug  ] T [T1]: 0.00
+%2442938 [debug  ] T [T2]: 25.63
+%2442967 [error  ] Error in TWI: 1
+%2442967 [debug  ] T [T1]: 0.00
+%2443000 [error  ] Monitoring status 4 changed from 0 to 2
+%2443000 [error  ] Monitoring status 6 changed from 0 to 2
+%2443001 [error  ] Monitoring status 7 changed from 0 to 2
+%2443002 [error  ] Monitoring status 9 changed from 0 to 2
+%2443002 [error  ] Monitoring status 10 changed from 0 to 2
+%2443003 [trace  ] New TM [3,25]
+%Received TM [25]
+%2443069 [debug  ] T [T2]: 25.63
+%2443097 [error  ] Error in TWI: 1
+%2443097 [debug  ] T [T1]: 0.00
+%2443155 [trace  ] New TM [12,12]
+%Received TM [82]
+%2443200 [debug  ] T [T2]: 25.56
+%2443228 [error  ] Error in TWI: 1
+%2443228 [debug  ] T [T1]: 0.00
+%2443331 [debug  ] T [T2]: 25.56
+%2443359 [error  ] Error in TWI: 1
+%2443359 [debug  ] T [T1]: 0.00
+
 
 \clearpage
 \subsection{Τροποποίηση του \acs{FDIR} σε πραγματικό χρόνο}
