@@ -1086,7 +1086,20 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
 
 Ο λεπτομερής σχεδιασμός αυτού του απλού συστήματος επίδειξης παρουσιάζεται στις επόμενες ενότητες, και καταστρώθηκε έτσι ώστε να ταιριάζει όσο το δυνατόν περισσότερο με τη λειτουργικότητα, τις διεπαφές, το σχεδιασμό και το λογισμικό του νανοδορυφόρου AcubeSAT.
 
+\begin{figure}
+	\includegraphics{test-system}\par
+	\vspace*{3ex}
+	\includegraphics{system_top}
+	\caption{Το πλήρες δοκιμαστικό σύστημα. Αριστερά, διακρίνεται η μπλε αναπτυξιακή πλακέτα του μικροελεγκτή. Δεξιά βρίσκεται το breadboard, όπου οι είναι συνδεδεμένοι οι δύο αισθητήρες θερμοκρασίες. Διακρίνεται ακόμα η καλωδίωση από την πλακέτα προς το breadboard. Οι δύο ενδεικτικές λυχνίες δίνουν μία οπτική ένδειξη του αν το εξάρτημα λαμβάνει ισχύ ή όχι.}
+\end{figure}
+
 \subsection{Υλικό}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=.7\textwidth]{atsamv71xult}
+	\caption{Επίσημη φωτογραφία της αναπτυξιακής πλακέτας ATSAMV71-XULT}
+\end{figure}
 
 Το κέντρο του συστήματος επίδειξης είναι ο \textbf{μικροελεγκτής} (\ac{MCU}) που χρησιμοποιείται για την προσομοίωση του σχεδιασμού και της λειτουργικότητας ενός από τα υποσυστήματα του AcubeSAT (\Cref{sec:obdh}). Ο επιλεγμένος μικροελεγκτής είναι ο Atmel \texttt{ATSAMV71Q21} που φιλοξενείται στην αναπτυξιακή πλακέτα \foothref{https://www.microchip.com/Developmenttools/ProductDetails/ATSAMV71-XULT}{\texttt{ATSAMV71-XULT}}. Αυτός ο μικροελεγκτής είναι λειτουργικά πανομοιότυπος με αυτόν που θα χρησιμοποιηθεί στην τροχιά, διαθέτοντας έναν 32-bit πυρήνα ARM Cortex-M7 με μνήμες \SI{2}{\mebi\byte} flash και \SI{384}{\kibi\byte} \acs{SRAM}, και μέγιστη ταχύτητα ρολογιού \SI{300}{\mega\hertz}.
 
@@ -1103,6 +1116,11 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
 Οι δύο αισθητήρες είναι συνδεδεμένοι σε διάταξη \textbf{ενεργού πλεονασμού}, λόγω της εξαιρετικά χαμηλής ισχύος λειτουργίας τους. Οι δύο αισθητήρες είναι συνδεδεμένοι σε διαφορετικούς διαύλους \ac{I2C}, έτσι ώστε πιθανή βλάβη του ενός διαύλου να μην επηρεάζει τη λειτουργία του άλλου αισθητήρα.
 
 \paragraph{Διεπαφή \acs{USB}} Για τη λήψη \acl{TM} και τη μετάδοση \acl{TC} στο υποσύστημα επίδειξης, ο σχεδιασμός περιλαμβάνει μια σύνδεση \acl{USB} με έναν τυπικό υπολογιστή. Η σύνδεση αυτή χρησιμοποιεί το περιφερειακό \acs{UART} του μικροελεγκτή, το οποίο μεταφέρει αποκλειστικά μηνύματα \acs{ECSS} μεταξύ του μικροελεγκτή και του υπολογιστή. Τα μηνύματα αυτά περιλαμβάνουν τις τυπικές αναφορές \acs{TM} και τα αιτήματα \acs{TC}, αλλά και μηνύματα καταγραφής που προορίζονται για διαγνωστικούς σκοπούς.
+
+\begin{marginfigure}
+	\includegraphics{mcp9808}
+	\caption{Ο αισθητήρας θερμοκρασίας MCP9808, κολλημένος επάνω στην πλακέτα του πειράματος}
+\end{marginfigure}
 
 Καθώς το πρωτόκολλο \acs{UART} δεν προσφέρει κάποιο μηχανισμό για διαχωρισμό πακέτων, εφαρμόζουμε κωδικοποίηση \acs{COBS} \autocite{cheshire_consistent_overhead_1997} για όλα τα μεταδιδόμενα μηνύματα.
 
@@ -1180,6 +1198,10 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
  		\\
 		\href{https://github.com/cmcqueen/cobs-c}{\texttt{cobs-c}}  & Υλοποίηση του πρωτοκόλλου \ac{COBS} %\autocite{cheshire_consistent_overhead_1997}
 		 & \\
+		 \href{https://getmdl.io/}{Material Design Lite}  & Σουίτα έτοιμων σχεδιαστικών στοιχείων σε γλώσσα CSS (για σταθμό βάσης)
+		 & \\
+		 \href{https://lodash.com/}{\texttt{lodash}}  & Βοηθητικές συναρτήσεις σε Javascript (για σταθμό βάσης)
+		 & \\
 		\bottomrule
 	\end{tabularx}
 \end{table*}
@@ -1223,12 +1245,13 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
 
 \begin{figure}[h]
 	\includegraphics[trim={0 10cm 0 1.8cm},clip]{scope_1}
+	\caption{Καθαρό σήμα \acs{I2C}. Η πράσινη κυματομορφή (\acf{SCL}) έχει σχήμα όπου μπορούν εύκολα να ξεχωριστούν οι παλμοί, και τα δεδομένα της κίτρινης κυματομορφής (\acf{SDA}) συνδέονται αντίστοιχα με τους παλμούς ρολογιού. Το πλάτος των κυματομορφών είναι περίπου \SI{3.3}{\volt}}
 	\label{subfig:i2c_clean}
 \end{figure}
 
 \begin{figure}[h]
 	\includegraphics[trim={0 10cm 0 1.8cm},clip]{scope_5}
-	\caption{blablabla}
+	\caption{Σήμα σε ένα ελαττωματικό δίκτυο \acs{I2C}, όπου υπάρχει πολύ μεγάλο χωρητικό φορτίο. Ο χρόνος ανόδου και των δύο σημάτων είναι υπερβολικά μεγάλο, και η επικοινωνία στη συγκεκριμένη συχνότητα δεν είναι δυνατή. Το σήμα δεν προλαβαίνει να φτάσει την τιμή των \SI{3.3}{\volt}. Σε αυτήν την περίπτωση, δεν είναι δυνατή η μεταφορά δεδομένων στον δίαυλο, και το δίκτυο ή το εξάρτημα θεωρείται πως έχουν αποτύχει.}
 	\label{subfig:i2c_dirty}
 \end{figure}
 
@@ -1259,7 +1282,7 @@ Additionally, the \ac{SYE} team is responsible for some specific technical devel
 
 Για να διευκολυνθεί η γρήγορη προβολή της διαδικασίας του \acs{FDIR}, υλοποιήσαμε μία online διεπαφή που δείχνει τα παραπάνω (\Cref{fig:pusviewer}). Η διεπαφή ενημερώνεται σε πραγματικό χρόνο μέσω του \acs{YAMCS} \acs{HTTP} \acs{API} και προβάλλει τους ορισμούς αλλά και την κατάσταση του \acs{FDIR}.
 
-Η εφαρμογή γράφτηκε σε HTML και Javascript, και το γραφικό περιβάλλον της βασίζεται στη βιβλιοθήκη Material Design Lite.\footurl{https://getmdl.io/} Βρίσκεται στο αποθετήριο \foothref{https://github.com/kongr45gpen/fdir-demo-yamcs/tree/master/ecss-interface}{\texttt{fdir-demo-yamcs}}, μαζί με τα υπόλοιπα κομμάτια του σταθμού βάσης της επίδειξης.
+Η εφαρμογή γράφτηκε σε HTML και Javascript, εκμεταλλευόμενη WebSockets, και το γραφικό περιβάλλον της βασίζεται στη βιβλιοθήκη Material Design Lite.\footurl{https://getmdl.io/} Βρίσκεται στο αποθετήριο \foothref{https://github.com/kongr45gpen/fdir-demo-yamcs/tree/master/ecss-interface}{\texttt{fdir-demo-yamcs}}, μαζί με τα υπόλοιπα κομμάτια του σταθμού βάσης της επίδειξης.
 
 
 \section{Στήσιμο \ac{FDIR}}
