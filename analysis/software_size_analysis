@@ -1,0 +1,13 @@
+utilisation
+Debug
+Memory region         Used Size  Region Size  %age Used
+             rom:      311044 B         2 MB     14.83%
+             ram:      206000 B       384 KB     52.39%
+Release
+Memory region         Used Size  Region Size  %age Used
+             rom:      254324 B         2 MB     12.13%
+             ram:      205992 B       384 KB     52.39%
+MinSizeRel
+Memory region         Used Size  Region Size  %age Used
+             rom:      228384 B         2 MB     10.89%
+             ram:      205992 B       384 KB     52.39%
