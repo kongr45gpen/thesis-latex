@@ -126,9 +126,18 @@ mincitenames=1,
 
 % Acronyms
 \usepackage{acro}
-\acsetup{case-sensitive=false}
+\acsetup{use-id-as-short,make-links=false,case-sensitive=false}
 \input{acronyms.tex}
 \input{commands.tex}
+
+\NewAcroTemplate[list]{glossary}{%
+	\begin{description}
+		\acronymsmapF{%
+			\item[\sffamily\textbf{\acrowrite{short}}] \acrowrite{long}%
+		}%
+		{ \item \AcroRerun{list} }%
+		\end {description}
+	}
 
 % Various utilities
 \usepackage{tabularx}
