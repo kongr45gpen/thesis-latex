@@ -16,7 +16,7 @@
 % Book metadata
 %\title{Design of Fault Detection, Isolation and Recovery in the AcubeSAT nanosatellite\thanks{AcubeSAT}}
 \title[Σχεδιασμός μηχανισμού FDIR στον νανοδορυφόρο AcubeSAT]{Σχεδιασμος μηχανισμου FDIR στον νανοδορυφορο AcubeSAT}
-\author[Κωνσταντίνος Καναβούρας]{Κωνσταντινος Καναβουρας}
+\author[Κωνσταντίνος Καναβούρας]{Κωνσταντίνος Καναβούρας}
 \publisher{\ensuregreek{Αριστοτελειο Πανεπιστημιο Θεσσαλονικης}}
 
 \input{glossary-el.tex}
@@ -36,6 +36,9 @@
 \renewcommand*{\figurename}{Σχήμα}
 \renewcommand*{\tablename}{Πίνακας}
 \renewcommand*{\contentsname}{Περιεχόμενα}
+\renewcommand*{\listfigurename}{Κατάλογος Σχημάτων}
+\renewcommand*{\listtablename}{Κατάλογος Πινάκων}
+\sisetup{range-phrase={ ως }}
 
 \Crefname{figure}{Σχήμα}{Σχήμα}
 \crefname{table}{Πίνακας}{Πίνακες}
@@ -100,7 +103,7 @@
 
 			\vspace{6ex}
 
-			{\large \draft{Ημερομηνία}}\\[4cm] % Date
+			{\large 30 Ιουνίου 2021}\\[4cm] % Date
 
 		\end{center}
 		\vfill
@@ -135,9 +138,7 @@ Copyright \copyright\ \the\year\ \thanklessauthor
 
 \par Οι απόψεις που εκφράζονται στο παρόν από τους συγγραφείς δεν μπορούν \smallcaps{σε καμια περιπτωση να θεωρηθει πως εκφραζουν} την επίσημη άποψη, ή υποστήριξη, του Ευρωπαϊκού Οργανισμού Διαστήματος.
 
-\par\textit{\draft{Rendered on \g{\today{}} (\texttt{\gitcommit}: \gitcommitmessage)}}
-
-\par\draft{μετάφραση τίτλων των επόμενων ενοτήτων}
+\par\textit{\draft{Εκδόθηκε στις {\selectlanguage{greek}\today{}}  (\texttt{\gitcommit}: \gitcommitmessage)}}
 \end{fullwidth}
 
 % r.5 contents
@@ -654,7 +655,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 
 \begin{figure*}
 	\centering
-	\caption[Το τσιπ μικρορευστομηχανικής και ο διαχωρισμός του σε 3 επιμέρους υποπειράματα και 1 γραμμή δοκιμής]{Το τσιπ μικρορευστομηχανικής και ο διαχωρισμός του σε 3 επιμέρους υποπειράματα και 1 γραμμή δοκιμής. Οι είσοδοι των υγρών φαίνονται στην αριστερή πλευρά του τσιπ, ενώ οι έξοδοι στα δεξιά. \emph{Πράσινο:} στρώμα ροής. \emph{Μπλε:} στρώμα ελέγχου.}
+	\caption[Το τσιπ μικρορευστομηχανικής]{Το τσιπ μικρορευστομηχανικής και ο διαχωρισμός του σε 3 επιμέρους υποπειράματα και 1 γραμμή δοκιμής. Οι είσοδοι των υγρών φαίνονται στην αριστερή πλευρά του τσιπ, ενώ οι έξοδοι στα δεξιά. \emph{Πράσινο:} στρώμα ροής. \emph{Μπλε:} στρώμα ελέγχου.}
 	\label{fig:chip}
 	\includegraphics{final_chip.pdf}
 	\begin{tikzpicture}[overlay]
@@ -904,7 +905,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 
 Στο παρακάτω κεφάλαιο γίνεται ανάλυση περίπτωσης (case study) για την εφαρμογή των παραπάνω (\Cref{cap:savoir}) στην αποστολή του AcubeSAT (\Cref{cap:acubesat}). Πιο συγκεκριμένα, μελετώνται οι σχεδιαστικές αποφάσεις που λήφθηκαν, τα κομμάτια των προτύπων που εφαρμόστηκαν, και οι συγκεκριμένες ενέργειες που εξαρτώνται από την αποστολή. \parencite{FMEA}
 
-\section{Βασικές αρχές του \ac{FDIR}}
+\section{Βασικές αρχές του \acs{FDIR}}
 \label{sec:fdirbaspri}
 
 Οι απαιτήσεις του \acs{FDIR} του AcubeSAT προέρχονται κυρίως από τις δυνατότητες του σχεδιασμού του συστήματος (\Cref{cap:acubesat}) και του πειράματος (\Cref{sec:su_fdir}). Πιο συγκεκριμένα, οι βασικές αρχές είναι:
@@ -1840,13 +1841,13 @@ We have created a Python library consolidating the above steps\footurl{https://g
 \begin{figure}[h]
 	\centering
 	\includegraphics{screenshots/pus_f010_tran}
-	\caption{Πίνακας μετάβασης ορισμών παρακολούθησης, μετά από την αποτυχία \texttt{F-010} (όπως φαίνεται στη διεπαφή \acs{PUS})}
+	\caption{Πίνακας μετάβασης ορισμών παρακολούθησης (αποτυχία \texttt{F-010} (όπως φαίνεται στη διεπαφή \acs{PUS})}
 	\label{fig:pusf010tran}
 \end{figure}
 
 \begin{table*}[h]
 	\centering
-	\caption[][10pt]{Πίνακας μετάβασης ορισμών παρακολούθησης, μετά από την αποτυχία \texttt{F-010}}
+	\caption[][10pt]{Πίνακας μετάβασης ορισμών παρακολούθησης (αποτυχία \texttt{F-010}}
 	\label{tab:f010tran}
 	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
 		\toprule
@@ -2005,7 +2006,7 @@ Received TM [82]
 
 \begin{table*}[h]
 	\centering
-	\caption{Πίνακας μετάβασης ορισμών παρακολούθησης, μετά από την αποτυχία \texttt{F-040}}
+	\caption{Πίνακας μετάβασης ορισμών παρακολούθησης (αποτυχία \texttt{F-040})}
 	\label{tab:f040tran}
 	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
 		\toprule
@@ -2022,12 +2023,12 @@ Received TM [82]
 
 Η λογική που χρησιμοποιήσαμε στην αρχιτεκτονική του \acs{FDIR} σημαίνει πως οι υπόλοιποι ορισμοί συνεχίζουν να παρακολουθούν την τιμή της θερμοκρασίας του αισθητήρα, χωρίς να λαμβάνουν τιμή \invalid. Για να αποφευχθεί τυχόν σύγκρουση μεταξύ των ορισμών, θα πρέπει ο αριθμός επαναλήψεων των μετρήσεών τους να είναι μεγαλύτερος από αυτόν που πυροδοτήθηκε τώρα. Πράγματι, στο πείραμα αυτό, δεν μεταβλήθηκε κανένας άλλος ορισμός πριν και μετά τη διόρθωση του σφάλματος.\footnote{Εναλλακτικά, ο έλεγχος εγκυρότητας των υπόλοιπων ορισμών μπορεί να βεβαιώνεται πως η τιμή δεν παραβιάζει τα όρια κάποιου άλλου ορισμού.}
 
-\begin{figure}[h]
+\begin{figure*}[h]
 	\centering
 	\includegraphics[width=\textwidth]{screenshots/yamcs_f040_trend}
 	\caption[Προβολή της παραμέτρου θερμοκρασίας στη διάρκεια της αποτυχίας \texttt{F-040}]{Προβολή της παραμέτρου θερμοκρασίας στη διάρκεια της αποτυχίας \texttt{F-040}. Φαίνεται η υπερβολικά μεγάλη τιμή που εισήγαγε το λογισμικό.}
 	\label{fig:yamcsf040trend}
-\end{figure}
+\end{figure*}
 
 \clearpage
 \paragraph{\textbf{\texttt{F-050}: Μόνιμη αλλαγή τιμής}}~
@@ -2045,7 +2046,7 @@ Received TM [82]
 
 \begin{table*}[h]
 	\centering
-	\caption[]{Πίνακας μετάβασης ορισμών παρακολούθησης, μετά από την αποτυχία \texttt{F-050}}
+	\caption[]{Πίνακας μετάβασης ορισμών παρακολούθησης (αποτυχία \texttt{F-050})}
 	\label{tab:f050tran}
 	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
 		\toprule
@@ -2090,7 +2091,7 @@ Received TM [82]
 \subparagraph{Αποτελέσματα}
 \begin{table*}[h]
 	\centering
-	\caption{Πίνακας μετάβασης ορισμών παρακολούθησης, μετά από την προσωρινή αποτυχία \texttt{F-040} (διαφορική)}
+	\caption{Πίνακας μετάβασης ορισμών παρακολούθησης (προσωρινή αποτυχία \texttt{F-040}, διαφορική)}
 	\label{tab:f040dtran}
 	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
 		\toprule
@@ -2107,7 +2108,7 @@ Received TM [82]
 
 \begin{table*}[h]
 	\centering
-	\caption{Πίνακας μετάβασης ορισμών παρακολούθησης, μετά από τη μόνιμη αποτυχία \texttt{F-050} (διαφορική) \draft{repeat measurements}}
+	\caption{Πίνακας μετάβασης ορισμών παρακολούθησης (μόνιμη αποτυχία \texttt{F-050}, διαφορική) \draft{repeat measurements}}
 	\label{tab:f050dtran}
 	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
 		\toprule
@@ -2306,7 +2307,7 @@ Received TM [82]
 \appendix
 
 \begin{fullwidth}
-\printbibliography[heading=bibnumbered]
+\printbibliography[heading=bibnumbered,title={Βιβλιογραφία}]
 \end{fullwidth}
 
 
@@ -2331,11 +2332,6 @@ Received TM [82]
 \end{fullwidth}
 
 \inputminted{julia}{analysis/comparisons_el.jl}
-
-\newpage
-\section*{\texttt{link.cpp}}
-
-\inputminted{cpp}{code/link.cpp}
 
 \section*{\texttt{main.cpp}}
 
