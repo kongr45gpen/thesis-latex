@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SpaceSystem name="fdirdemo" xmlns="http://www.omg.org/space/xtce"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <TelemetryMetaData>
+    <ParameterTypeSet>
+      <BooleanParameterType name="bool8_t">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="8" />
+      </BooleanParameterType>
+      <IntegerParameterType name="uint8_t" signed="false">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="8" />
+      </IntegerParameterType>
+      <IntegerParameterType name="uint16_t" signed="false">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="16" />
+      </IntegerParameterType>
+      <IntegerParameterType name="uint32_t" signed="false">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="32" />
+      </IntegerParameterType>
+      <IntegerParameterType name="uint64_t" signed="false">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="64" />
+      </IntegerParameterType>
+      <FloatParameterType name="float_t">
+        <UnitSet />
+        <FloatDataEncoding sizeInBits="32" />
+      </FloatParameterType>
+      <FloatParameterType name="double_t">
+        <UnitSet />
+        <FloatDataEncoding sizeInBits="64" />
+      </FloatParameterType>
+      <FloatParameterType name="Temperature_Type">
+        <UnitSet>
+          <Unit>celsius</Unit>
+        </UnitSet>
+        <FloatDataEncoding sizeInBits="32" />
+      </FloatParameterType>
+      <IntegerParameterType name="Tick_Type" signed="false">
+        <UnitSet>
+          <Unit>ms</Unit>
+        </UnitSet>
+        <IntegerDataEncoding sizeInBits="32" />
+      </IntegerParameterType>
+      <IntegerParameterType name="Packet_Version_Type" signed="false">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="3" />
+      </IntegerParameterType>
+      <IntegerParameterType name="APID_Type" signed="false">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="11" />
+      </IntegerParameterType>
+      <IntegerParameterType name="Packet_Sequence_Count_Type" signed="false">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="14" />
+      </IntegerParameterType>
+      <EnumeratedParameterType name="Packet_Type_Type">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="1" />
+        <EnumerationList>
+          <Enumeration label="TM" value="0" />
+          <Enumeration label="TC" value="1" />
+        </EnumerationList>
+      </EnumeratedParameterType>
+      <EnumeratedParameterType name="Temperature_Status_Type">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="8" />
+        <EnumerationList>
+          <Enumeration label="Nominal" value="1" />
+          <Enumeration label="Timeout" value="2" />
+          <Enumeration label="Disabled" value="0" />
+        </EnumerationList>
+      </EnumeratedParameterType>
+      <EnumeratedParameterType name="Event_Definition_ID_Type">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="16" />
+        <EnumerationList>
+          <Enumeration label="Informative_Unknown" value="0" />
+          <Enumeration label="WWDG_Reset" value="1" />
+          <Enumeration label="Assertion_Fail" value="2" />
+          <Enumeration label="MCU_Start" value="3" />
+          <Enumeration label="LowSeverity_Unknown" value="4" />
+          <Enumeration label="MediumSeverity_Unknown" value="5" />
+          <Enumeration label="HighSeverity_Unknown" value="6" />
+          <Enumeration label="Failed_Start_Of_Execution" value="7" />
+          <Enumeration label="Temp1_Timeout_Temporary" value="100" />
+          <Enumeration label="Temp2_Timeout_Temporary" value="101" />
+          <Enumeration label="Temp1_Timeout_Permanent" value="102" />
+          <Enumeration label="Temp2_Timeout_Permanent" value="103" />
+          <Enumeration label="Temp1_UnexpectedValue_Temporary" value="104" />
+          <Enumeration label="Temp2_UnexpectedValue_Temporary" value="105" />
+          <Enumeration label="TempDelta_UnexpectedValue_Temporary" value="106" />
+          <Enumeration label="Temp1_UnexpectedValue_Permanent" value="107" />
+          <Enumeration label="Temp2_UnexpectedValue_Permanent" value="108" />
+          <Enumeration label="TempDelta_UnexpectedValue_Permanent" value="109" />
+          <Enumeration label="Subsystem_Overheat_Temp1" value="110" />
+          <Enumeration label="Subsystem_Overheat_Temp2" value="111" />
+        </EnumerationList>
+      </EnumeratedParameterType>
+      <EnumeratedParameterType name="PMON_Definition_Check_ID_Type">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="8" />
+        <EnumerationList>
+          <Enumeration label="Expected_Value_Check" value="0" />
+          <Enumeration label="Limit_Check" value="1" />
+          <Enumeration label="Delta_Check" value="2" />
+        </EnumerationList>
+      </EnumeratedParameterType>
+      <EnumeratedParameterType name="PMON_Check_Status_Type">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="8" />
+        <EnumerationList>
+          <Enumeration label="OK" value="0" />
+          <Enumeration label="Unchecked" value="1" />
+          <Enumeration label="Invalid" value="2" />
+          <Enumeration label="Unexpected_Value" value="3" />
+          <Enumeration label="Below_Low_Limit" value="4" />
+          <Enumeration label="Above_High_Limit" value="5" />
+          <Enumeration label="Below_Low_Threshold" value="6" />
+          <Enumeration label="Above_High_Threshold" value="7" />
+        </EnumerationList>
+      </EnumeratedParameterType>
+      <AggregateParameterType name="PMON_Definition_Type">
+        <MemberList>
+          <Member name="PMON_ID" typeRef="uint16_t" />
+          <Member name="Monitored_Parameter_ID" typeRef="uint16_t" />
+          <Member name="Validity_Parameter_ID" typeRef="uint16_t" />
+          <Member name="Mask" typeRef="uint64_t" />
+          <Member name="Expected_Value" typeRef="uint64_t" />
+          <Member name="Monitoring_Interval" typeRef="uint32_t" />
+          <Member name="Check_Status" typeRef="PMON_Check_Status_Type" />
+          <Member name="Repetition_Number" typeRef="uint8_t" />
+          <Member name="Check_Type" typeRef="PMON_Definition_Check_ID_Type" />
+        </MemberList>
+      </AggregateParameterType>
+      <AggregateParameterType name="PMON_Expected_Value_Check_uint64_Type">
+        <MemberList>
+          <Member name="Mask" typeRef="uint64_t" />
+          <Member name="Expected_Value" typeRef="uint64_t" />
+          <Member name="Event_Definition_ID" typeRef="Event_Definition_ID_Type" />
+        </MemberList>
+      </AggregateParameterType>
+      <AggregateParameterType name="PMON_Expected_Value_Check_Temperature_Status_Type">
+        <MemberList>
+          <Member name="Mask" typeRef="uint64_t" />
+          <Member name="Expected_Value" typeRef="Temperature_Status_Type" />
+          <Member name="Event_Definition_ID" typeRef="Event_Definition_ID_Type" />
+        </MemberList>
+      </AggregateParameterType>
+      <AggregateParameterType name="PMON_Limit_Check_Float_Type">
+        <MemberList>
+          <Member name="Low_Limit" typeRef="float_t" />
+          <Member name="Low_Event" typeRef="Event_Definition_ID_Type" />
+          <Member name="High_Limit" typeRef="float_t" />
+          <Member name="High_Event" typeRef="Event_Definition_ID_Type" />
+        </MemberList>
+      </AggregateParameterType>
+      <AggregateParameterType name="PMON_Limit_Check_Double_Type">
+        <MemberList>
+          <Member name="Low_Limit" typeRef="double_t" />
+          <Member name="Low_Event" typeRef="Event_Definition_ID_Type" />
+          <Member name="High_Limit" typeRef="double_t" />
+          <Member name="High_Event" typeRef="Event_Definition_ID_Type" />
+        </MemberList>
+      </AggregateParameterType>
+      <StringParameterType name="TC_Request_Type">
+        <UnitSet />
+        <StringDataEncoding>
+          <SizeInBits>
+            <Fixed>
+              <FixedValue>512</FixedValue>
+            </Fixed>
+          </SizeInBits>
+        </StringDataEncoding>
+      </StringParameterType>
+      <AggregateParameterType name="EventAction_Definition_Type">
+        <MemberList>
+          <Member name="APID" typeRef="uint16_t" />
+          <Member name="Event_Definition_ID" typeRef="Event_Definition_ID_Type" />
+          <Member name="EventAction_Definition_ID" typeRef="uint16_t" />
+          <Member name="Enabled" typeRef="bool8_t" />
+          <Member name="TC" typeRef="TC_Request_Type" />
+        </MemberList>
+      </AggregateParameterType>
+      <AggregateParameterType name="EventAction_Status_Type">
+        <MemberList>
+          <Member name="APID" typeRef="uint16_t" />
+          <Member name="Event_Definition_ID" typeRef="Event_Definition_ID_Type" />
+          <Member name="EventAction_Definition_ID" typeRef="uint16_t" />
+          <Member name="Enabled" typeRef="bool8_t" />
+        </MemberList>
+      </AggregateParameterType>
+      <ArrayParameterType name="EventAction_List_Type" arrayTypeRef="EventAction_Status_Type"
+      numberOfDimensions="1">
+        <DimensionList>
+          <Dimension>
+            <StartingIndex>
+              <FixedValue>0</FixedValue>
+            </StartingIndex>
+            <EndingIndex>
+              <DynamicValue>
+                <ParameterInstanceRef parameterRef="EventAction_Count" />
+                <LinearAdjustment intercept="-1" />
+              </DynamicValue>
+            </EndingIndex>
+          </Dimension>
+        </DimensionList>
+      </ArrayParameterType>
+      <AggregateParameterType name="PMON_Check_Transition_Type">
+        <MemberList>
+          <Member name="PMON_ID" typeRef="uint16_t" />
+          <Member name="Monitored_Parameter_ID" typeRef="uint16_t" />
+          <Member name="Check_Type" typeRef="PMON_Definition_Check_ID_Type" />
+          <Member name="Value" typeRef="float_t" />
+          <Member name="Previous_Check_Status" typeRef="PMON_Check_Status_Type" />
+          <Member name="Current_Check_Status" typeRef="PMON_Check_Status_Type" />
+          <Member name="Timestamp" typeRef="uint32_t" />
+        </MemberList>
+      </AggregateParameterType>
+      <ArrayParameterType name="PMON_Check_Transition_List_Type" arrayTypeRef="PMON_Check_Transition_Type"
+      numberOfDimensions="1">
+        <DimensionList>
+          <Dimension>
+            <StartingIndex>
+              <FixedValue>0</FixedValue>
+            </StartingIndex>
+            <EndingIndex>
+              <DynamicValue>
+                <ParameterInstanceRef parameterRef="PMON_Check_Transition_Count" />
+                <LinearAdjustment intercept="-1" />
+              </DynamicValue>
+            </EndingIndex>
+          </Dimension>
+        </DimensionList>
+      </ArrayParameterType>
+    </ParameterTypeSet>
+    <ParameterSet>
+      <Parameter name="ECSS_Version" parameterTypeRef="uint8_t" />
+      <Parameter name="ECSS_Service_Type" parameterTypeRef="uint8_t" />
+      <Parameter name="ECSS_Message_Type" parameterTypeRef="uint8_t" />
+      <Parameter name="ECSS_MessageTypeCounter" parameterTypeRef="uint16_t" />
+      <Parameter name="ECSS_03_Housekeeping_Structure_ID" parameterTypeRef="uint8_t" />
+      <Parameter name="Temperature_1" parameterTypeRef="Temperature_Type" />
+      <Parameter name="Temperature_2" parameterTypeRef="Temperature_Type" />
+      <Parameter name="Status_Temperature_1" parameterTypeRef="Temperature_Status_Type" />
+      <Parameter name="Status_Temperature_2" parameterTypeRef="Temperature_Status_Type" />
+      <Parameter name="Temperature_Internal" parameterTypeRef="Temperature_Type" />
+      <Parameter name="MCU_Ticks" parameterTypeRef="Tick_Type" />
+      <Parameter name="Event_Definition_ID" parameterTypeRef="Event_Definition_ID_Type" />
+      <Parameter name="Verification_ECSS_Version" parameterTypeRef="Packet_Version_Type" />
+      <Parameter name="Verification_Packet_Type" parameterTypeRef="Packet_Type_Type" />
+      <Parameter name="Verification_APID" parameterTypeRef="APID_Type" />
+      <Parameter name="Verification_Packet_Sequence_Count" parameterTypeRef="Packet_Sequence_Count_Type" />
+      <Parameter name="Verification_Code" parameterTypeRef="uint16_t" />
+      <Parameter name="PMON_Monitoring_Definition_Count" parameterTypeRef="uint8_t" />
+      <Parameter name="PMON_Monitoring_Definition" parameterTypeRef="PMON_Definition_Type" />
+      <Parameter name="PMON_Expected_Value_Check_uint64"
+      parameterTypeRef="PMON_Expected_Value_Check_uint64_Type" />
+      <Parameter name="PMON_Expected_Value_Check_Temperature_Status"
+      parameterTypeRef="PMON_Expected_Value_Check_Temperature_Status_Type" />
+      <Parameter name="PMON_Limit_Check_Float" parameterTypeRef="PMON_Limit_Check_Float_Type" />
+      <Parameter name="PMON_Limit_Check_Double" parameterTypeRef="PMON_Limit_Check_Double_Type" />
+      <Parameter name="PMON_Check_Transition_Count" parameterTypeRef="uint8_t" />
+      <Parameter name="PMON_Check_Transition_List" parameterTypeRef="PMON_Check_Transition_List_Type" />
+      <Parameter name="EventAction_Count" parameterTypeRef="uint16_t" />
+      <Parameter name="EventAction_List" parameterTypeRef="EventAction_List_Type" />
+      <Parameter name="EventAction_Definition" parameterTypeRef="EventAction_Definition_Type" />
+    </ParameterSet>
+    <AlgorithmSet>
+      <CustomAlgorithm name="EventTranscriberAlgorithm">
+        <AncillaryDataSet>
+          <AncillaryData name="Yamcs:AlgorithmMandatoryInput">eventID</AncillaryData>
+          <AncillaryData name="Yamcs:AlgorithmMandatoryInput">messageType</AncillaryData>
+        </AncillaryDataSet>
+        <AlgorithmText language="JavaScript">if (eventID == null) return; if (messageType.value == 1) {
+        Yamcs.watch("ECSS_Event_Parser", "ECSS_Informative_Event", "ECSS informative event " + eventID.rawValue +
+        " " + eventID.value); } else if (messageType.value == 2) { Yamcs.warning("ECSS_Event_Parser",
+        "ECSS_LowSev_Anomaly", "ECSS low severity anomaly " + eventID.rawValue + " " + eventID.value); } else if
+        (messageType.value == 3) { Yamcs.distress("ECSS_Event_Parser", "ECSS_MedSev_Anomaly", "ECSS medium
+        severity anomaly " + eventID.rawValue + " " + eventID.value); } else if (messageType.value == 4) {
+        Yamcs.critical("ECSS_Event_Parser", "ECSS_HiSev_Anomaly", "ECSS high severity anomaly " + eventID.rawValue
+        + " " + eventID.value); }</AlgorithmText>
+        <InputSet>
+          <InputParameterInstanceRef parameterRef="Event_Definition_ID" inputName="eventID" />
+          <InputParameterInstanceRef parameterRef="ECSS_Message_Type" inputName="messageType" />
+        </InputSet>
+        <TriggerSet>
+          <OnParameterUpdateTrigger parameterRef="Event_Definition_ID" />
+        </TriggerSet>
+      </CustomAlgorithm>
+    </AlgorithmSet>
+    <ContainerSet>
+      <SequenceContainer abstract="true" name="ECSSTM">
+        <EntryList>
+          <ParameterRefEntry parameterRef="ECSS_Version" />
+          <ParameterRefEntry parameterRef="ECSS_Service_Type" />
+          <ParameterRefEntry parameterRef="ECSS_Message_Type" />
+          <ParameterRefEntry parameterRef="ECSS_MessageTypeCounter" />
+        </EntryList>
+      </SequenceContainer>
+      <SequenceContainer name="Housekeeping">
+        <EntryList>
+          <ParameterRefEntry parameterRef="ECSS_03_Housekeeping_Structure_ID" />
+        </EntryList>
+        <BaseContainer containerRef="ECSSTM">
+          <RestrictionCriteria>
+            <ComparisonList>
+              <Comparison value="3" parameterRef="ECSS_Service_Type" />
+              <Comparison value="25" parameterRef="ECSS_Message_Type" />
+            </ComparisonList>
+          </RestrictionCriteria>
+        </BaseContainer>
+      </SequenceContainer>
+      <SequenceContainer name="Housekeeping1">
+        <EntryList>
+          <ParameterRefEntry parameterRef="Temperature_1" />
+          <ParameterRefEntry parameterRef="Status_Temperature_1" />
+          <ParameterRefEntry parameterRef="Temperature_2" />
+          <ParameterRefEntry parameterRef="Status_Temperature_2" />
+          <ParameterRefEntry parameterRef="Temperature_Internal" />
+          <ParameterRefEntry parameterRef="MCU_Ticks" />
+        </EntryList>
+        <BaseContainer containerRef="Housekeeping">
+          <RestrictionCriteria>
+            <ComparisonList>
+              <Comparison value="1" parameterRef="ECSS_03_Housekeeping_Structure_ID" />
+            </ComparisonList>
+          </RestrictionCriteria>
+        </BaseContainer>
+      </SequenceContainer>
+      <SequenceContainer name="EventReporting">
+        <EntryList>
+          <ParameterRefEntry parameterRef="Event_Definition_ID" />
+        </EntryList>
+        <BaseContainer containerRef="ECSSTM">
+          <RestrictionCriteria>
+            <ComparisonList>
+              <Comparison value="5" parameterRef="ECSS_Service_Type" />
+              <Comparison comparisonOperator="&gt;=" value="1" parameterRef="ECSS_Message_Type" />
+              <Comparison comparisonOperator="&lt;=" value="4" parameterRef="ECSS_Message_Type" />
+            </ComparisonList>
+          </RestrictionCriteria>
+        </BaseContainer>
+      </SequenceContainer>
+      <SequenceContainer name="VerificationReport">
+        <EntryList>
+          <ParameterRefEntry parameterRef="Verification_ECSS_Version" />
+          <ParameterRefEntry parameterRef="Verification_Packet_Type" />
+          <ParameterRefEntry parameterRef="Verification_APID">
+            <LocationInContainerInBits referenceLocation="previousEntry">
+              <FixedValue>1</FixedValue>
+            </LocationInContainerInBits>
+          </ParameterRefEntry>
+          <ParameterRefEntry parameterRef="Verification_Packet_Sequence_Count">
+            <LocationInContainerInBits referenceLocation="previousEntry">
+              <FixedValue>2</FixedValue>
+            </LocationInContainerInBits>
+          </ParameterRefEntry>
+          <ParameterRefEntry parameterRef="Verification_Code" />
+        </EntryList>
+        <BaseContainer containerRef="ECSSTM">
+          <RestrictionCriteria>
+            <ComparisonList>
+              <Comparison value="1" parameterRef="ECSS_Service_Type" />
+            </ComparisonList>
+          </RestrictionCriteria>
+        </BaseContainer>
+      </SequenceContainer>
+      <SequenceContainer name="MonitoringDefinitions">
+        <EntryList>
+          <ParameterRefEntry parameterRef="PMON_Monitoring_Definition_Count" />
+          <ParameterRefEntry parameterRef="PMON_Monitoring_Definition" />
+        </EntryList>
+        <BaseContainer containerRef="ECSSTM">
+          <RestrictionCriteria>
+            <ComparisonList>
+              <Comparison value="12" parameterRef="ECSS_Service_Type" />
+              <Comparison value="9" parameterRef="ECSS_Message_Type" />
+            </ComparisonList>
+          </RestrictionCriteria>
+        </BaseContainer>
+      </SequenceContainer>
+      <SequenceContainer name="MonitoringDefinition_ExpectedValue_TemperatureStatus">
+        <EntryList>
+          <ParameterRefEntry parameterRef="PMON_Expected_Value_Check_Temperature_Status" />
+        </EntryList>
+        <BaseContainer containerRef="MonitoringDefinitions">
+          <RestrictionCriteria>
+            <ComparisonList>
+              <Comparison value="1" parameterRef="PMON_Monitoring_Definition_Count" />
+              <Comparison value="Expected_Value_Check" parameterRef="PMON_Monitoring_Definition.Check_Type" />
+              <Comparison comparisonOperator="&gt;=" value="3"
+              parameterRef="PMON_Monitoring_Definition.Monitored_Parameter_ID" />
+              <Comparison comparisonOperator="&lt;=" value="5"
+              parameterRef="PMON_Monitoring_Definition.Monitored_Parameter_ID" />
+            </ComparisonList>
+          </RestrictionCriteria>
+        </BaseContainer>
+      </SequenceContainer>
+      <SequenceContainer name="MonitoringDefinition_ExpectedValue_uint64">
+        <EntryList>
+          <ParameterRefEntry parameterRef="PMON_Expected_Value_Check_uint64" />
+        </EntryList>
+        <BaseContainer containerRef="MonitoringDefinitions">
+          <RestrictionCriteria>
+            <ComparisonList>
+              <Comparison value="1" parameterRef="PMON_Monitoring_Definition_Count" />
+              <Comparison value="Expected_Value_Check" parameterRef="PMON_Monitoring_Definition.Check_Type" />
+            </ComparisonList>
+          </RestrictionCriteria>
+        </BaseContainer>
+      </SequenceContainer>
+      <SequenceContainer name="MonitoringDefinition_Limit_Float">
+        <EntryList>
+          <ParameterRefEntry parameterRef="PMON_Limit_Check_Float" />
+        </EntryList>
+        <BaseContainer containerRef="MonitoringDefinitions">
+          <RestrictionCriteria>
+            <ComparisonList>
+              <Comparison value="1" parameterRef="PMON_Monitoring_Definition_Count" />
+              <Comparison value="Limit_Check" parameterRef="PMON_Monitoring_Definition.Check_Type" />
+            </ComparisonList>
+          </RestrictionCriteria>
+        </BaseContainer>
+      </SequenceContainer>
+      <SequenceContainer name="PMON_Check_Transition_Report">
+        <EntryList>
+          <ParameterRefEntry parameterRef="PMON_Check_Transition_Count" />
+          <ArrayParameterRefEntry parameterRef="PMON_Check_Transition_List">
+            <DimensionList>
+              <Dimension>
+                <StartingIndex>
+                  <FixedValue>0</FixedValue>
+                </StartingIndex>
+                <EndingIndex>
+                  <DynamicValue>
+                    <ParameterInstanceRef parameterRef="PMON_Check_Transition_Count" />
+                    <LinearAdjustment intercept="-1" />
+                  </DynamicValue>
+                </EndingIndex>
+              </Dimension>
+            </DimensionList>
+          </ArrayParameterRefEntry>
+        </EntryList>
+        <BaseContainer containerRef="ECSSTM">
+          <RestrictionCriteria>
+            <ComparisonList>
+              <Comparison value="12" parameterRef="ECSS_Service_Type" />
+              <Comparison value="12" parameterRef="ECSS_Message_Type" />
+            </ComparisonList>
+          </RestrictionCriteria>
+        </BaseContainer>
+      </SequenceContainer>
+      <SequenceContainer name="EventAction_List">
+        <EntryList>
+          <ParameterRefEntry parameterRef="EventAction_Count" />
+          <ArrayParameterRefEntry parameterRef="EventAction_List">
+            <DimensionList>
+              <Dimension>
+                <StartingIndex>
+                  <FixedValue>0</FixedValue>
+                </StartingIndex>
+                <EndingIndex>
+                  <DynamicValue>
+                    <ParameterInstanceRef parameterRef="EventAction_Count" />
+                    <LinearAdjustment intercept="-1" />
+                  </DynamicValue>
+                </EndingIndex>
+              </Dimension>
+            </DimensionList>
+          </ArrayParameterRefEntry>
+        </EntryList>
+        <BaseContainer containerRef="ECSSTM">
+          <RestrictionCriteria>
+            <ComparisonList>
+              <Comparison value="19" parameterRef="ECSS_Service_Type" />
+              <Comparison value="7" parameterRef="ECSS_Message_Type" />
+            </ComparisonList>
+          </RestrictionCriteria>
+        </BaseContainer>
+      </SequenceContainer>
+      <SequenceContainer name="EventAction_Request_List">
+        <EntryList>
+          <ParameterRefEntry parameterRef="EventAction_Definition">
+            <LocationInContainerInBits referenceLocation="previousEntry">
+              <FixedValue>8</FixedValue>
+            </LocationInContainerInBits>
+          </ParameterRefEntry>
+        </EntryList>
+        <BaseContainer containerRef="ECSSTM">
+          <RestrictionCriteria>
+            <ComparisonList>
+              <Comparison value="19" parameterRef="ECSS_Service_Type" />
+              <Comparison value="11" parameterRef="ECSS_Message_Type" />
+            </ComparisonList>
+          </RestrictionCriteria>
+        </BaseContainer>
+      </SequenceContainer>
+    </ContainerSet>
+  </TelemetryMetaData>
+  <CommandMetaData>
+    <ArgumentTypeSet>
+      <IntegerArgumentType name="uint4_t" signed="false">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="4" />
+      </IntegerArgumentType>
+      <IntegerArgumentType name="uint8_t" signed="false">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="8" />
+      </IntegerArgumentType>
+      <IntegerArgumentType name="uint16_t" signed="false">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="16" />
+      </IntegerArgumentType>
+      <IntegerArgumentType name="uint64_t" signed="false">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="64" />
+      </IntegerArgumentType>
+      <FloatArgumentType name="float_t">
+        <UnitSet />
+        <FloatDataEncoding sizeInBits="32" />
+      </FloatArgumentType>
+      <IntegerArgumentType name="interval_ms_16" signed="false">
+        <UnitSet>
+          <Unit>milliseconds</Unit>
+        </UnitSet>
+        <IntegerDataEncoding sizeInBits="16" />
+      </IntegerArgumentType>
+      <EnumeratedArgumentType name="AcubeSAT_ECSS_03_Definitions">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="8" />
+        <EnumerationList>
+          <Enumeration value="1" label="Temperature Housekeeping" />
+        </EnumerationList>
+      </EnumeratedArgumentType>
+      <EnumeratedArgumentType name="Event_Definition_ID_Type">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="16" />
+        <EnumerationList>
+          <Enumeration label="Informative_Unknown" value="0" />
+          <Enumeration label="WWDG_Reset" value="1" />
+          <Enumeration label="Assertion_Fail" value="2" />
+          <Enumeration label="MCU_Start" value="3" />
+          <Enumeration label="LowSeverity_Unknown" value="4" />
+          <Enumeration label="MediumSeverity_Unknown" value="5" />
+          <Enumeration label="HighSeverity_Unknown" value="6" />
+          <Enumeration label="Failed_Start_Of_Execution" value="7" />
+          <Enumeration label="Temp1_Timeout_Temporary" value="100" />
+          <Enumeration label="Temp2_Timeout_Temporary" value="101" />
+          <Enumeration label="Temp1_Timeout_Permanent" value="102" />
+          <Enumeration label="Temp2_Timeout_Permanent" value="103" />
+          <Enumeration label="Temp1_UnexpectedValue_Temporary" value="104" />
+          <Enumeration label="Temp2_UnexpectedValue_Temporary" value="105" />
+          <Enumeration label="TempDelta_UnexpectedValue_Temporary" value="106" />
+          <Enumeration label="Temp1_UnexpectedValue_Permanent" value="107" />
+          <Enumeration label="Temp2_UnexpectedValue_Permanent" value="108" />
+          <Enumeration label="TempDelta_UnexpectedValue_Permanent" value="109" />
+          <Enumeration label="Subsystem_Overheat_Temp1" value="110" />
+          <Enumeration label="Subsystem_Overheat_Temp2" value="111" />
+        </EnumerationList>
+      </EnumeratedArgumentType>
+      <StringArgumentType name="ECSS_Function_Name_Type">
+        <UnitSet />
+        <StringDataEncoding>
+          <SizeInBits>
+            <Fixed>
+              <FixedValue>128</FixedValue>
+            </Fixed>
+          </SizeInBits>
+        </StringDataEncoding>
+      </StringArgumentType>
+      <StringArgumentType name="ECSS_Function_Data_Type">
+        <UnitSet />
+        <StringDataEncoding>
+          <SizeInBits>
+            <Fixed>
+              <FixedValue>128</FixedValue>
+            </Fixed>
+          </SizeInBits>
+        </StringDataEncoding>
+      </StringArgumentType>
+      <BinaryArgumentType name="TC_Request_Type">
+        <UnitSet />
+        <BinaryDataEncoding>
+          <SizeInBits>
+            <Fixed>
+              <FixedValue>512</FixedValue>
+            </Fixed>
+          </SizeInBits>
+        </BinaryDataEncoding>
+      </BinaryArgumentType>
+      <EnumeratedArgumentType name="Temperature_Status_Type">
+        <UnitSet />
+        <IntegerDataEncoding sizeInBits="8" />
+        <EnumerationList>
+          <Enumeration label="Nominal" value="1" />
+          <Enumeration label="Disabled" value="0" />
+        </EnumerationList>
+      </EnumeratedArgumentType>
+    </ArgumentTypeSet>
+    <MetaCommandSet>
+      <MetaCommand name="ECSSTC" abstract="true">
+        <ArgumentList>
+          <Argument argumentTypeRef="uint4_t" name="ECSS_Version" />
+          <Argument argumentTypeRef="uint4_t" name="ECSS_Acknowledgement_Flags" />
+          <Argument argumentTypeRef="uint8_t" name="ECSS_Service_Type" />
+          <Argument argumentTypeRef="uint8_t" name="ECSS_Message_Type" />
+          <Argument argumentTypeRef="uint16_t" name="ECSS_Source_ID" />
+        </ArgumentList>
+        <CommandContainer name="ECSSTCContainer">
+          <EntryList>
+            <ArgumentRefEntry argumentRef="ECSS_Version" />
+            <ArgumentRefEntry argumentRef="ECSS_Acknowledgement_Flags" />
+            <ArgumentRefEntry argumentRef="ECSS_Service_Type" />
+            <ArgumentRefEntry argumentRef="ECSS_Message_Type" />
+            <ArgumentRefEntry argumentRef="ECSS_Source_ID" />
+          </EntryList>
+        </CommandContainer>
+      </MetaCommand>
+      <MetaCommand name="AcubeSATTC" abstract="true">
+        <BaseMetaCommand metaCommandRef="ECSSTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Version" argumentValue="2" />
+            <ArgumentAssignment argumentName="ECSS_Acknowledgement_Flags" argumentValue="0b1111" />
+            <ArgumentAssignment argumentName="ECSS_Source_ID" argumentValue="0" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList />
+        <CommandContainer name="AcubeSATTC">
+          <EntryList />
+          <BaseContainer containerRef="ECSSTCContainer" />
+        </CommandContainer>
+        <VerifierSet>
+          <FailedVerifier>
+            <ContainerRef containerRef="VerificationReport" />
+            <CheckWindow timeToStopChecking="PT2S" />
+          </FailedVerifier>
+        </VerifierSet>
+      </MetaCommand>
+      <MetaCommand name="Test">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="17" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="1" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <CommandContainer name="TestContainer">
+          <EntryList />
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="none" />
+      </MetaCommand>
+      <MetaCommand name="ST03_Enable" shortDescription="Enable the generation of housekeeping reports">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="3" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="5" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList>
+          <Argument argumentTypeRef="AcubeSAT_ECSS_03_Definitions" name="Definition"
+          shortDescription="Housekeeping Definition ID" />
+        </ArgumentList>
+        <CommandContainer name="ST03_Enable">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="01" sizeInBits="8" />
+            <ArgumentRefEntry argumentRef="Definition" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="warning" />
+      </MetaCommand>
+      <MetaCommand name="ST03_Disable" shortDescription="Disable the generation of housekeeping reports">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="3" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="6" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList>
+          <Argument argumentTypeRef="AcubeSAT_ECSS_03_Definitions" name="Definition"
+          shortDescription="Housekeeping Definition ID" />
+        </ArgumentList>
+        <CommandContainer name="ST03_Disable">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="01" sizeInBits="8" />
+            <ArgumentRefEntry argumentRef="Definition" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="warning" />
+      </MetaCommand>
+      <MetaCommand name="ST03_SetInterval" shortDescription="Set the generation interval of housekeeping reports">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="3" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="31" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList>
+          <Argument argumentTypeRef="AcubeSAT_ECSS_03_Definitions" name="Definition"
+          shortDescription="Housekeeping Definition ID" />
+          <Argument argumentTypeRef="interval_ms_16" name="Collection_Interval" />
+        </ArgumentList>
+        <CommandContainer name="ST03_SetInterval">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="01" sizeInBits="8" />
+            <ArgumentRefEntry argumentRef="Definition" />
+            <ArgumentRefEntry argumentRef="Collection_Interval" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="watch" />
+      </MetaCommand>
+      <MetaCommand name="TestError" shortDescription="An erroneous command to test parsing errors">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="95" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="60" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <CommandContainer name="TestError">
+          <EntryList />
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="none" />
+      </MetaCommand>
+      <MetaCommand name="ST08_Function" abstract="true" shortDescription="Run an ST[08] on-board function">
+        <ArgumentList>
+          <Argument argumentTypeRef="ECSS_Function_Name_Type" name="ECSS_Function_Name"
+          shortDescription="Function definition name" />
+          <Argument argumentTypeRef="ECSS_Function_Data_Type" name="ECSS_Function_Data"
+          shortDescription="Auxiliary data to include" initialValue="0" />
+        </ArgumentList>
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="8" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="1" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <CommandContainer name="ST08_Function">
+          <EntryList>
+            <ArgumentRefEntry argumentRef="ECSS_Function_Name" />
+            <ArgumentRefEntry argumentRef="ECSS_Function_Data" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="none" />
+      </MetaCommand>
+      <MetaCommand name="Log" shortDescription="Output a string via UART">
+        <BaseMetaCommand metaCommandRef="ST08_Function">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Function_Name" argumentValue="log" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <CommandContainer name="Log">
+          <EntryList />
+          <BaseContainer containerRef="ST08_Function" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="none" />
+      </MetaCommand>
+      <MetaCommand name="MCU_Reset" shortDescription="Perform a soft reset of the MCU">
+        <BaseMetaCommand metaCommandRef="ST08_Function">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Function_Name" argumentValue="restart" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <CommandContainer name="MCU_Reset">
+          <EntryList />
+          <BaseContainer containerRef="ST08_Function" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="warning" />
+      </MetaCommand>
+      <MetaCommand name="Sensor1_Restart" shortDescription="Restart Sensor 1">
+        <BaseMetaCommand metaCommandRef="ST08_Function">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Function_Name" argumentValue="restart_sensor" />
+            <ArgumentAssignment argumentName="ECSS_Function_Data" argumentValue="1" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <CommandContainer name="Sensor1_Restart">
+          <EntryList />
+          <BaseContainer containerRef="ST08_Function" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="watch" />
+      </MetaCommand>
+      <MetaCommand name="Sensor2_Restart" shortDescription="Restart Sensor 2">
+        <BaseMetaCommand metaCommandRef="ST08_Function">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Function_Name" argumentValue="restart_sensor" />
+            <ArgumentAssignment argumentName="ECSS_Function_Data" argumentValue="2" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <CommandContainer name="Sensor2_Restart">
+          <EntryList />
+          <BaseContainer containerRef="ST08_Function" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="watch" />
+      </MetaCommand>
+      <MetaCommand name="OnBoardMonitoring_Enable"
+      shortDescription="Enable the entire on-board monitoring function">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="12" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="15" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <CommandContainer name="OnBoardMonitoring_Enable">
+          <EntryList />
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="distress" />
+      </MetaCommand>
+      <MetaCommand name="OnBoardMonitoring_Disable"
+      shortDescription="Disable the entire on-board monitoring function">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="12" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="16" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <CommandContainer name="OnBoardMonitoring_Disable">
+          <EntryList />
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="distress" />
+      </MetaCommand>
+      <MetaCommand name="ST20_SetOne" abstract="true" shortDescription="Set one on-board parameter">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="20" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="3" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <CommandContainer name="ST20_SetOne">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="0001" sizeInBits="16" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+      </MetaCommand>
+      <MetaCommand name="Set_Temp1_Status" shortDescription="Set the status of temperature sensor 1">
+        <BaseMetaCommand metaCommandRef="ST20_SetOne" />
+        <ArgumentList>
+          <Argument argumentTypeRef="Temperature_Status_Type" name="Temperature_Status"
+          shortDescription="Temperature sensor status" />
+        </ArgumentList>
+        <CommandContainer name="Set_Temp1_Status">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="0003" sizeInBits="16" />
+            <ArgumentRefEntry argumentRef="Temperature_Status" />
+          </EntryList>
+          <BaseContainer containerRef="ST20_SetOne" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="watch" />
+      </MetaCommand>
+      <MetaCommand name="Set_Temp2_Status" shortDescription="Set the status of temperature sensor 2">
+        <BaseMetaCommand metaCommandRef="ST20_SetOne" />
+        <ArgumentList>
+          <Argument argumentTypeRef="Temperature_Status_Type" name="Temperature_Status"
+          shortDescription="Temperature sensor status" />
+        </ArgumentList>
+        <CommandContainer name="Set_Temp2_Status">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="0004" sizeInBits="16" />
+            <ArgumentRefEntry argumentRef="Temperature_Status" />
+          </EntryList>
+          <BaseContainer containerRef="ST20_SetOne" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="watch" />
+      </MetaCommand>
+      <MetaCommand name="ST12_ListAllDefinitions"
+      shortDescription="Report the list of all parameter monitoring definitions">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="12" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="8" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <CommandContainer name="ST12_ListAllDefinitions">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="00" sizeInBits="8" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="none" />
+      </MetaCommand>
+      <MetaCommand name="ST19_ListAllEventAction"
+      shortDescription="Report the list of all event-action definitions">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="19" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="6" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <CommandContainer name="ST19_ListAllEventAction">
+          <EntryList />
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="none" />
+      </MetaCommand>
+      <MetaCommand name="ST19_Enable" shortDescription="Enable the event-action function">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="19" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="8" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <CommandContainer name="ST19_Enable">
+          <EntryList />
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="distress" />
+      </MetaCommand>
+      <MetaCommand name="ST19_ListEventActionRequest"
+      shortDescription="Show an event-action definition with TC requests">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="19" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="10" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList>
+          <Argument argumentTypeRef="uint16_t" name="Event_Action_Definition_ID" />
+        </ArgumentList>
+        <CommandContainer name="ST19_ListEventActionRequest">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="01" sizeInBits="8" />
+            <ArgumentRefEntry argumentRef="Event_Action_Definition_ID" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="none" />
+      </MetaCommand>
+      <MetaCommand name="ST19_Disable" shortDescription="Disable the event-action function">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="19" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="9" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <CommandContainer name="ST19_Disable">
+          <EntryList />
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="distress" />
+      </MetaCommand>
+      <MetaCommand name="ST19_Enable_Definition" shortDescription="Enable one event-action definition">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="19" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="4" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList>
+          <Argument argumentTypeRef="Event_Definition_ID_Type" name="Event_Definition_ID" />
+        </ArgumentList>
+        <CommandContainer name="ST19_Enable_Definition">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="0001" sizeInBits="16" />
+            <FixedValueEntry name="APID" binaryValue="0000" sizeInBits="16" />
+            <ArgumentRefEntry argumentRef="Event_Definition_ID" />
+            <FixedValueEntry name="Event_Action_Definition_ID" binaryValue="0000" sizeInBits="16" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="warning" />
+      </MetaCommand>
+      <MetaCommand name="ST19_Disable_Definition" shortDescription="Disable one event-action definition">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="19" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="5" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList>
+          <Argument argumentTypeRef="Event_Definition_ID_Type" name="Event_Definition_ID" />
+        </ArgumentList>
+        <CommandContainer name="ST19_Disable_Definition">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="0001" sizeInBits="16" />
+            <FixedValueEntry name="APID" binaryValue="0000" sizeInBits="16" />
+            <ArgumentRefEntry argumentRef="Event_Definition_ID" />
+            <FixedValueEntry name="Event_Action_Definition_ID" binaryValue="0000" sizeInBits="16" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="warning" />
+      </MetaCommand>
+      <MetaCommand name="ST19_Add_Definition" shortDescription="Create one event-action definition">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="19" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="1" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList>
+          <Argument argumentTypeRef="uint16_t" name="APID" initialValue="0" />
+          <Argument argumentTypeRef="uint16_t" name="Event_Definition_ID" />
+          <Argument argumentTypeRef="uint16_t" name="Event_Action_Definition_ID" />
+          <Argument argumentTypeRef="TC_Request_Type" name="TC" />
+        </ArgumentList>
+        <CommandContainer name="ST19_Add_Definition">
+          <EntryList>
+            <ArgumentRefEntry argumentRef="APID" />
+            <ArgumentRefEntry argumentRef="Event_Definition_ID" />
+            <ArgumentRefEntry argumentRef="Event_Action_Definition_ID" />
+            <ArgumentRefEntry argumentRef="TC" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="warning" />
+      </MetaCommand>
+      <MetaCommand name="ST19_Delete_Definition" shortDescription="Delete one event-action definition">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="19" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="2" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList>
+          <Argument argumentTypeRef="uint16_t" name="APID" initialValue="0" />
+          <Argument argumentTypeRef="uint16_t" name="Event_Definition_ID" />
+          <Argument argumentTypeRef="uint16_t" name="Event_Action_Definition_ID" />
+        </ArgumentList>
+        <CommandContainer name="ST19_Delete_Definition">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="0001" sizeInBits="16" />
+            <ArgumentRefEntry argumentRef="APID" />
+            <ArgumentRefEntry argumentRef="Event_Definition_ID" />
+            <ArgumentRefEntry argumentRef="Event_Action_Definition_ID" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="warning" />
+      </MetaCommand>
+      <MetaCommand name="ST12_Enable_Definition"
+      shortDescription="Enable one on-board parameter monitoring definition">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="12" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="1" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList>
+          <Argument argumentTypeRef="uint16_t" name="PMON_ID" />
+        </ArgumentList>
+        <CommandContainer name="ST12_Enable_Definition">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="01" sizeInBits="8" />
+            <ArgumentRefEntry argumentRef="PMON_ID" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="warning" />
+      </MetaCommand>
+      <MetaCommand name="ST12_Disable_Definition"
+      shortDescription="Disable one on-board parameter monitoring definition">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="12" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="2" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList>
+          <Argument argumentTypeRef="uint16_t" name="PMON_ID" />
+        </ArgumentList>
+        <CommandContainer name="ST12_Disable_Definition">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="01" sizeInBits="8" />
+            <ArgumentRefEntry argumentRef="PMON_ID" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="warning" />
+      </MetaCommand>
+      <MetaCommand name="ST12_Add_Definition" abstract="true"
+      shortDescription="Add a parameter monitoring definition">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="12" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="5" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList>
+          <Argument argumentTypeRef="uint16_t" name="PMON_ID" />
+          <Argument argumentTypeRef="uint16_t" name="Monitored_Parameter_ID" />
+          <Argument argumentTypeRef="uint16_t" name="Validity_Parameter_ID" />
+          <Argument argumentTypeRef="uint64_t" name="Validity_Mask" />
+          <Argument argumentTypeRef="uint64_t" name="Validity_Expected_Value" />
+          <Argument argumentTypeRef="interval_ms_16" name="Monitoring_Interval" />
+          <Argument argumentTypeRef="uint8_t" name="Repetition_Number" />
+          <Argument argumentTypeRef="uint8_t" name="Check_Type" />
+        </ArgumentList>
+        <CommandContainer name="ST12_Add_Definition">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="01" sizeInBits="8" />
+            <ArgumentRefEntry argumentRef="PMON_ID" />
+            <ArgumentRefEntry argumentRef="Monitored_Parameter_ID" />
+            <ArgumentRefEntry argumentRef="Validity_Parameter_ID" />
+            <ArgumentRefEntry argumentRef="Validity_Mask" />
+            <ArgumentRefEntry argumentRef="Validity_Expected_Value" />
+            <ArgumentRefEntry argumentRef="Monitoring_Interval" />
+            <ArgumentRefEntry argumentRef="Repetition_Number" />
+            <ArgumentRefEntry argumentRef="Check_Type" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="warning" />
+      </MetaCommand>
+      <MetaCommand name="ST12_Add_Definition_Limit"
+      shortDescription="Add a parameter monitoring definition: Limit check, float type">
+        <BaseMetaCommand metaCommandRef="ST12_Add_Definition">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="Check_Type" argumentValue="1" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList>
+          <Argument argumentTypeRef="float_t" name="Low_Limit" />
+          <Argument argumentTypeRef="uint16_t" name="Low_Event" />
+          <Argument argumentTypeRef="float_t" name="High_Limit" />
+          <Argument argumentTypeRef="uint16_t" name="High_Event" />
+        </ArgumentList>
+        <CommandContainer name="ST12_Add_Definition_Limit">
+          <EntryList>
+            <ArgumentRefEntry argumentRef="Low_Limit" />
+            <ArgumentRefEntry argumentRef="Low_Event" />
+            <ArgumentRefEntry argumentRef="High_Limit" />
+            <ArgumentRefEntry argumentRef="High_Event" />
+          </EntryList>
+          <BaseContainer containerRef="ST12_Add_Definition" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="warning" />
+      </MetaCommand>
+      <MetaCommand name="ST12_Add_Definition_Expected_Value"
+      shortDescription="Add a parameter monitoring definition: Expected value, uint64_t type">
+        <BaseMetaCommand metaCommandRef="ST12_Add_Definition">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="Check_Type" argumentValue="0" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList>
+          <Argument argumentTypeRef="uint64_t" name="Mask" />
+          <Argument argumentTypeRef="uint64_t" name="Expected_Value" />
+          <Argument argumentTypeRef="uint16_t" name="Event_ID" />
+        </ArgumentList>
+        <CommandContainer name="ST12_Add_Definition_Expected_Value">
+          <EntryList>
+            <ArgumentRefEntry argumentRef="Mask" />
+            <ArgumentRefEntry argumentRef="Expected_Value" />
+            <ArgumentRefEntry argumentRef="Event_ID" />
+          </EntryList>
+          <BaseContainer containerRef="ST12_Add_Definition" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="warning" />
+      </MetaCommand>
+      <MetaCommand name="ST12_Delete_Definition" shortDescription="Delete a parameter monitoring definition">
+        <BaseMetaCommand metaCommandRef="AcubeSATTC">
+          <ArgumentAssignmentList>
+            <ArgumentAssignment argumentName="ECSS_Service_Type" argumentValue="12" />
+            <ArgumentAssignment argumentName="ECSS_Message_Type" argumentValue="6" />
+          </ArgumentAssignmentList>
+        </BaseMetaCommand>
+        <ArgumentList>
+          <Argument argumentTypeRef="uint16_t" name="PMON_ID" />
+        </ArgumentList>
+        <CommandContainer name="ST12_Delete_Definition">
+          <EntryList>
+            <FixedValueEntry name="N" binaryValue="01" sizeInBits="8" />
+            <ArgumentRefEntry argumentRef="PMON_ID" />
+          </EntryList>
+          <BaseContainer containerRef="AcubeSATTC" />
+        </CommandContainer>
+        <DefaultSignificance consequenceLevel="warning" />
+      </MetaCommand>
+    </MetaCommandSet>
+  </CommandMetaData>
+</SpaceSystem>

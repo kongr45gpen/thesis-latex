@@ -1,3 +1,12 @@
+/*******************************************************************************
+  Main Source File
+
+  Description:
+    This file contains the "main" function for a project.  The
+    "main" function calls the "SYS_Initialize" function to initialize the state
+    machines of all modules in the system
+ *******************************************************************************/
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
@@ -13,6 +22,11 @@
 #include <ServicePool.hpp>
 #include <Parameters/SystemParameterMonitoring.hpp>
 #include <Tasks/UARTTask.hpp>
+#include <Tasks/UARTRXTask.hpp>
+#include <Tasks/ECSSTask.h>
+#include <Peripherals/MCP9808.hpp>
+#include <Tasks/TemperatureTask.hpp>
+#include <Tasks/InternalTemperatureTask.hpp>
 #include "definitions.h"                // SYS function prototypes
 #include "FreeRTOS.h"
 #include "task.h"
@@ -26,45 +40,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-volatile uint8_t pinval = 0;
-volatile int xTask1 = 1;
-
-_Noreturn void xTask1Code(void *pvParameters){
-
-    AFEC0_ChannelsDisable(AFEC_CH10_MASK);
-    AFEC0_ChannelGainSet(AFEC_CH11, AFEC_CHANNEL_GAIN_X1);
-    AFEC0_ChannelOffsetSet(AFEC_CH11, 690);
-    AFEC0_ChannelsEnable(AFEC_CH11_MASK);
-
-
-    for(;;){
-//        PIO_PinToggle(PIO_PIN_PA23);
-        //pinval = PIO_PinRead(PIO_PIN_PA23);
-        AFEC0_ConversionStart();
-        PIO_PinToggle(PIO_PIN_PA23);
-        vTaskDelay(pdMS_TO_TICKS(100));
-
-        uint16_t rawTemperature = AFEC0_ChannelResultGet(AFEC_CH11);
-        float temperature = 30 + (rawTemperature - 4000.0f) / 46.27f;
-
-        systemParameters.temperature1Value.setValue(temperature);
-
-        LOG_DEBUG << "kalispera " << temperature;
-    }
-
-};
-
-_Noreturn void xTask2Code(void *pvParameters){
-
-    for(;;){
-        pinval = PIO_PinRead(PIO_PIN_PA23);
-        vTaskDelay(pdMS_TO_TICKS(1));
-        Services.onBoardMonitoring.checkAll(xTaskGetTickCount());
-        Services.housekeeping.checkAndSendHousekeepingReports(TimeHelper::ticksToUTC(xTaskGetTickCount()));
-    }
-
-};
-
 /**
  * Just calls the operator() function of a task
  * @param pvParameters Pointer to object of type Task
@@ -74,38 +49,51 @@ static void vClassTask(void *pvParameters) {
     (static_cast<Task *>(pvParameters))->operator()();
 }
 
+std::optional<TemperatureTask> temp1task;
+std::optional<TemperatureTask> temp2task;
+std::optional<InternalTemperatureTask> tempInternal;
 
 int main ( void )
 {
-    /* Initialize all modules */
+    // Initialize all modules
     SYS_Initialize ( NULL );
+
+    // Disable interrupts to prevent RTOS SysTick from crashing the system
+    SysTick->CTRL &= ~(SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk);
 
     Logger::format.precision(2);
 
     systemParameterMonitoring.emplace();
     uartTask.emplace();
+    uartRXtask.emplace();
+    ecssTask.emplace();
 
-    xTaskCreate(xTask1Code, "Task1",1000, NULL, tskIDLE_PRIORITY + 1, NULL);
-    xTaskCreate(xTask2Code, "Task2",3000, NULL, tskIDLE_PRIORITY + 1, NULL);
+    temp1task.emplace(systemParameters.temperature1, 
+                      systemParameters.temperature1Status, 0, SENS1_PIN, BTN0_PIN);
+    temp2task.emplace(systemParameters.temperature2, 
+                      systemParameters.temperature2Status, 2, SENS2_PIN, BT1_PIN);
 
-    xTaskCreate(vClassTask<UARTTask>, "UART", 3000, &*uartTask, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(vClassTask<InternalTemperatureTask>, 
+                "Internal_Temp",2500, &*tempInternal, tskIDLE_PRIORITY + 1, nullptr);
+    xTaskCreate(vClassTask<ECSSTask>, "ECSS",3000, &*ecssTask, tskIDLE_PRIORITY + 1, nullptr);
 
+    xTaskCreate(vClassTask<UARTTask>, "UART_Tx", 3000, &*uartTask, tskIDLE_PRIORITY + 1, nullptr);
+    xTaskCreate(vClassTask<UARTRXTask>, "UART_Rx", 6000, &*uartRXtask, tskIDLE_PRIORITY + 1, nullptr);
+
+    xTaskCreate(vClassTask<TemperatureTask>, "T1", 1500, &*temp1task, tskIDLE_PRIORITY + 1, nullptr);
+    xTaskCreate(vClassTask<TemperatureTask>, "T2", 1500, &*temp2task, tskIDLE_PRIORITY + 1, nullptr);
+
+    SysTick->CTRL |= SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
     vTaskStartScheduler();
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
     while ( true )
     {
-
-
-        /* Maintain state machines of all polled MPLAB Harmony modules. */
         SYS_Tasks ( );
     }
 #pragma clang diagnostic pop
 
     /* Execution should not come here during normal operation */
-
     return ( EXIT_FAILURE );
 }
-
-
 
