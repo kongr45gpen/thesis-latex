@@ -900,13 +900,38 @@ We have created a Python library consolidating the above steps\footurl{https://g
 
 \section{Μελέτη διαφορετικών αρχιτεκτονικών}
 
+Προτού μελετήσουμε τη δομή του \acs{FDIR}, έχει νόημα να μελετήσουμε διαφορετικές αρχιτεκτονικές αποφάσεις που μπορούν να ληφθούν κατά το σχεδιασμό ενός μικρού δορυφορικού συστήματος. Πιο συγκεκριμένα, θα συγκρίνουμε τις δομές: \autocite{birolini_reliability_engineering_2004}
 
+\begin{compactenum}
+	\item \textbf{Απλού εξαρτήματος}
+	\item \textbf{Διπλού πλεονασμού}, όπου έχουμε δύο όμοια εξαρτήματα που πραγματοποιούν την ίδια λειτουργία, και το ένα μπορεί να αντικαταστήσει το άλλο.
+	\item \textbf{Τριπλού πλεονασμού με ψηφοφορία} (triple modular redundancy), όπου έχουμε τρία εξαρτήματα που πραγματοποιούν συνεχώς τους ίδιους υπολογισμούς, και ένα κύκλωμα ψηφοφορίας επιλέγει την έξοδο που έχει την πλειοψηφία από τα 3 εξαρτήματα.
+\end{compactenum}
+
+Η σύγκριση των συστημάτων αυτών θα γίνει σε επίπεδο μόνιμων και προσωρινών βλαβών:
+
+\begin{itemize}
+	\item Στις \textbf{μόνιμες βλάβες} εξετάζουμε συμβάντα (π.χ. ακτινοβολία, απώλεια μνήμης) τα οποία δεν μπορούν να διορθωθούν και οδηγούν σε απώλεια της αποστολής. Η μελέτη εδώ γίνεται με βάση την έννοια της αξιοπιστίας (reliability) \( R \), δηλαδή της πιθανότητας το σύστημα να επιζήσει εντός μιας χρονικής περιόδου \( t \).
+	\item Στις \textbf{προσωρινές βλάβες} εξετάζουμε συμβάντα (π.χ. αλλαγές bit, bugs λογισμικού, λάθη στη μεταφορά μηνυμάτων) που είναι παροδικά και επηρεάζουν συνήθως μόνο μία μέτρηση, μία ενέργεια ή ένα αποτέλεσμα. Εδώ η μελέτη γίνεται με βάση την έννοια του ρυθμού αξιοπιστίας (failure rate) \( \lambda \), δηλαδή της συχνότητας των αποτυχιών.
+\end{itemize}
+
+\draft{μαθηματικές σχέσεις που χρησιμοποιήθηκαν\textellipsis}
 
 \begin{figure}
 	\centering
-	\includegraphics[width=.5\textwidth]{demoplot}
-	\caption{\draft{Error rates}}
+	\includegraphics{analysis/reliability_norepair}
+	\caption{Ανθεκτικότητα σύνθετου συστήματος σε μόνιμες βλάβες (θεωρώντας αλάνθαστο ψηφοφόρο)}
+	\label{fig:reliability_norepair}
 \end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics{analysis/reliability_repair}
+	\caption{Ανθεκτικότητα σύνθετου συστήματος σε παροδικά σφάλματα (θεωρώντας αλάνθαστο ψηφοφόρο)}
+	\label{fig:reliability_repair}
+\end{figure}
+
+\draft{επεξήγηση \& συμπεράσματα}
 
 \FloatBarrier
 \section{Λεπτομερείς Ενέργειες του FDIR}
@@ -2258,22 +2283,54 @@ Received TM [82]
 
 \setminted{
 	bgcolor={},
-	fontsize=\fontsize{9pt}{9pt}
+	fontsize=\fontsize{9pt}{9pt},
+	linenos
 }
 
 %\begin{fullwidth}
 
-\section*{\texttt{main.cpp}}
+\section*{\texttt{analysis.jl}}
+\label{app:analysisjl}
 
-%\inputminted{cpp}{code/main.cpp}
+\begin{fullwidth}
+	\draft{1 γραμμή - επεξήγηση του κάθε αρχείου}
+\end{fullwidth}
+
+\inputminted{julia}{analysis/comparisons_el.jl}
 
 \newpage
+\section*{\texttt{link.cpp}}
+
+\inputminted{cpp}{code/link.cpp}
+
+\section*{\texttt{main.cpp}}
+
+\inputminted{cpp}{code/main.cpp}
+
+\newpage
+\section*{\texttt{SystemParameters.hpp}}
+
+\inputminted{cpp}{code/SystemParameters.hpp}
+
+\newpage
+\section*{\texttt{TemperatureTask.cpp}}
+
+\inputminted{cpp}{code/TemperatureTask.cpp}
+
 \section*{\texttt{xtce.xml}}
 \label{app:xtce}
 
-fixme
+\inputminted{xml}{code/xtce-small.xml}
 
-%\inputminted{xml}{code/xtce.xml}
+\newpage
+\section*{\texttt{ecss-interface.js}}
+
+\inputminted{javascript}{code/ecss-interface.js}
+
+\newpage
+\section*{\texttt{link.cpp}}
+
+\inputminted{cpp}{code/link.cpp}
 
 %\end{fullwidth}
 
