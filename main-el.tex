@@ -162,7 +162,7 @@ Copyright \copyright\ \the\year\ \thanklessauthor
 %\acuseall%
 \bgroup
 \setlength\parskip{1ex}
-\printacronyms[pages={display=all,seq/use=false},exclude = {glossary}]
+\printacronyms[pages={display=all,seq/use=false},exclude = {glossary},name = {Ακρωνύμια}]
 \egroup
 
 \end{fullwidth}
@@ -416,7 +416,7 @@ nodes near coords={\pgfmathprintnumber\pgfplotspointmeta\%}
 \g{εγγενώς}
 συνδεδεμένη με τη λειτουργία όλων των υποσυστημάτων, \g{αναφέρονται} επίσης οι λεπτομέρειες που αφορούν το \acs{FDIR}. Για πιο λεπτομερείς πληροφορίες, ο αναγνώστης ενθαρρύνεται να ανατρέξει στην \foothref{https://acubesat.spacedot.gr/subsystems/}{ιστοσελίδα του AcubeSAT}, ή στα δημοσίως διαθέσιμα \foothref{https://gitlab.com/acubesat/documentation/cdr-public}{έγγραφα του \ac{CDR}}.
 
-\subsection{\acf{ADCS}}
+\subsection{Υποσύστημα Προσδιορισμού και Ελέγχου Προσανατολισμού (\acs{ADCS})}
 \label{sec:adcs}
 
 Η υποομάδα του \ac{ADCS} είναι υπεύθυνη για τον έλεγχο του \textbf{προσανατολισμού} του δορυφόρου σε τροχιά. Αυτό επιτυγχάνεται με τη χρήση μιας σειράς ενεργοποιητών, που προέρχονται έτοιμοι από την αγορά (\ac{COTS}): μία πλακέτα 3 αξόνων και έναν τροχός αντίδρασης 1 άξονα, σε συνδυασμό με αισθητήρες για τον προσδιορισμό της περιστροφής του δορυφόρου (1 γυροσκόπιο και 2 μαγνητόμετρα) και αλγορίθμους φιλτραρίσματος \& ελέγχου. \autocite{DDJF_AOCS,velentzas_design_attitude_2021}
@@ -446,7 +446,7 @@ nodes near coords={\pgfmathprintnumber\pgfplotspointmeta\%}
 
 %Οι επιδόσεις του \ac{ADCS} μπορούν να αξιολογηθούν με μετρικές όπως αυτές που παρουσιάζονται στον \Cref{tab:adcsape}.
 
-\subsection{\acf{COMMS}}
+\subsection{Υποσύστημα Τηλεπικοινωνιών (\acs{COMMS})}
 
 Το υποσύστημα communications (τηλεπικοινωνιών) είναι υπεύθυνο για τη μετάδοση δεδομένων μεταξύ της Γης και του δορυφόρου σε τροχιά. Τα μεταδιδόμενα δεδομένα χωρίζονται σε 3 διαφορετικές κατηγορίες\autocite{DDJF_TTC}:
 \begin{itemize}
@@ -468,7 +468,7 @@ nodes near coords={\pgfmathprintnumber\pgfplotspointmeta\%}
 
 Το υποσύστημα τηλεπικοινωνιών είναι επίσης υπεύθυνο για την ανάλυση ηλεκτρομαγνητικής συμβατότητας (\acs{EMC}), καθώς και για το σχεδιασμό και την κατασκευή του Σταθμού Βάσης. Ο τελευταίος θα αποτελέσει μέρος του \textbf{SatNOGS}\autocite{white_overview_satellite_2018}, ενός παγκόσμιου δικτύου δορυφορικών επίγειων σταθμών που βασίζεται σε ανοικτές τεχνολογίες και ανοικτά δεδομένα.
 
-\subsection{\acf{EPS}}
+\subsection{Υποσύστημα Ενέργειας (\acs{EPS})}
 
 Το \ac{EPS} είναι το υποσύστημα υπεύθυνο για την παραγωγή, κατανομή και αποθήκευση ηλεκτρικής ενέργειας στον δορυφόρο. Είναι ένα κρίσιμο κομμάτι του CubeSat, λόγω της άμεσης εξάρτησης και των σχετικά αυξημένων ενεργειακών αναγκών πολλών υποσυστημάτων του, και θεωρείται πως είναι ο πιο πιθανός λόγος αποτυχίας των CubeSat σε τροχιά. \autocite{langer_reliability_cubesats_2016}
 
@@ -524,7 +524,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 	\caption[Δυναμική ανάλυση προϋπολογισμού ισχύος]{Δυναμική ανάλυση προϋπολογισμού ισχύος. Αριστερά: Κατανάλωση \& παραγωγή ισχύος στην τροχιά. Δεξιά: Επίπεδο εκφόρτισης μπαταρίας κατά τη διάρκεια της αποστολής}
 \end{figure*}
 
-\subsection{\acf{OBDH}}
+\subsection{Υποσύστημα Διαχείρισης Δεδομένων (\acs{OBDH})}
 \label{sec:obdh}
 
 Το υποσύστημα \ac{OBDH} είναι υπεύθυνο για το σχεδιασμό των διεπαφών δεδομένων του διαστημικού σκάφους, καθώς και για το σχεδιασμό της πλακέτας \textbf{\acf{OBC}}, η οποία είναι επιφορτισμένη με τον έλεγχο των βασικών λειτουργιών του AcubeSAT. \autocite{DDJF_OBDH}
@@ -540,13 +540,13 @@ We have created a Python library consolidating the above steps\footurl{https://g
 
 Η διεπαφή δεδομένων μεταξύ των υποσυστημάτων του AcubeSAT χρησιμοποιεί ένα \ac{CAN} bus σε \textbf{ψυχρό πλεονασμό} (cold redundancy), το οποίο επιλέχθηκε λόγω της υψηλής αξιοπιστίας του. \autocite{bouwmeester_survey_implementation_2017} Οι πλακέτες του AcubeSAT ικανοποιούν τις μηχανικές απαιτήσεις του προτύπου PC/104. \autocite{PC104}
 
-\subsection{\acf{OBSW}}
+\subsection{Υποσύστημα Λογισμικού (\acs{OBSW})}
 
 
 Το υποσύστημα \ac{OBSW} είναι υπεύθυνο για το σχεδιασμό και την ανάπτυξη του λογισμικού του νανοδορυφόρου. Η γλώσσα που επιλέχθηκε να χρησιμοποιηθεί στους 4 μικροελεγκτές είναι μια περιορισμένη μορφή της \textbf{C++}, και ο κώδικας ελέγχεται από μια σειρά προτύπων, στατικών αναλυτών και unit tests. \autocite{DDJF_OBSW} Όλο το λογισμικό εκτελείται επάνω στο λειτουργικό σύστημα πραγματικού χρόνου Free\acs{RTOS}.
 
 
-\subsection{\acf{OPS}}
+\subsection{Υποσύστημα Χειρισμού (\acs{OPS})}
 
 Το υποσύστημα Operations είναι υπεύθυνο για το σχεδιασμό των λειτουργιών \& διαδικασιών του σκάφους και για τη διασφάλιση της λειτουργικότητας, της δυνατότητας ελέγχου και της παρατηρησιμότητας του δορυφόρου πριν και κατά τη διάρκεια της τροχιάς του.
 
@@ -577,7 +577,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 %\end{figure}
 
 
-\subsection{Structural}
+\subsection{Υποσύστημα Δομής (Structural)}
 
 Το υποσύστημα Structural έχει αναλάβει:
 \begin{itemize}
@@ -592,13 +592,13 @@ We have created a Python library consolidating the above steps\footurl{https://g
 	\label{fig:structure}
 \end{marginfigure}
 
-\subsection{\acf{SYE}}
+\subsection{Μηχανική Συστήματος (\acs{SYE})}
 
 Η υποομάδα του \acl{SYE} λειτουργεί ως τεχνική αρχή του δορυφόρου. Είναι υπεύθυνη για το συντονισμό των εργασιών και της επικοινωνίας μεταξύ των υποσυστημάτων, τη συμμόρφωση με τα πρότυπα και τις τεχνικές προδιαγραφές, καθώς και τον εντοπισμό \& την επίλυση όλων των ζητημάτων που προκύπτουν από τον πολύπλοκο σχεδιασμό ενός δορυφορικού συστήματος.
 
 Επιπλέον, η ομάδα \ac{SYE} είναι υπεύθυνη για ορισμένα τεχνικά κομμάτια που δεν ανήκουν σε κανένα από τα άλλα υποσυστήματα, όπως την ανάλυση αξιοπιστίας (\acs{RAMS}), την ανάλυση αποτυχιών \& αποτελεσμάτων τους (\ac{FMEA}), την καλωδίωση και το πλάνο κατασκευής \& δοκιμών (\acs{MAIV}).
 
-\subsection{\acf{SU}}
+\subsection{Επιστημονική Μονάδα (\acs{SU})}
 
 Η υποομάδα \acl{SU} είναι υπεύθυνη για τη σχεδίαση και την υλοποίηση του επιστημονικού φορτίου της αποστολής, δηλαδή τη μελέτη της επιδράσεων του περιβάλλοντος Χαμηλής Γήινης Τροχιάς (\ac{LEO}) σε ζυμομύκητες.
 
@@ -648,14 +648,14 @@ We have created a Python library consolidating the above steps\footurl{https://g
 	\end{tikzpicture}
 \end{figure*}
 
-\subsection{Thermal}
+\subsection{Υποσύστημα Θερμικού Ελέγχου (Thermal)}
 
 
 Η υποομάδα Thermal είναι υπεύθυνη για τη θερμική ανάλυση του δορυφόρου, όπου η εισερχόμενη ηλιακή ακτινοβολία συνδυάζεται με την απαγωγή θερμότητας των υποσυστημάτων, με σκοπό τον προσδιορισμό των χειρότερων θερμοκρασιών που αντιμετωπίζει ο δορυφόρος, σε θερμές και ψυχρές συνθήκες.
 
 Τα αποτελέσματα της θερμικής ανάλυσης οδηγούν συνήθως στην εφαρμογή παθητικών ή ενεργητικών μεθόδων θερμικού ελέγχου. Ειδικότερα στο AcubeSAT, χρησιμοποιούνται 3 ηλεκτρονικά ελεγχόμενα θερμαντικά σώματα για τις μπαταρίες, το πειραματικό τσιπ και τις βαλβίδες.
 
-\subsection{Trajectory}
+\subsection{Ανάλυση Τροχιάς (Trajectory)}
 
 Η υποομάδα Trajectory είναι υπεύθυνη για την ανάλυση της τροχιάς του διαστημικού σκάφους, την αποτίμηση των επιπτώσεων της ακτινοβολίας, τη συμμόρφωση του δορυφόρου με τους κανονισμούς για τα διαστημικά σκουπίδια και την εκτίμηση της διάρκειας ζωής του σε τροχιά.
 
@@ -680,7 +680,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 	\item \foothref{https://gitlab.com/acubesat/utilities/mattermost-documentation-bot}{Documentation List}, πλατφόρμα για καταλογοποίηση και πλοήγηση στα έγγραφα που έχει παράξει η ομάδα
 \end{compactitem}
 
-\chapter{Η φιλοσοφία \acs{FDIR} του SAVOIR}
+\chapter{Η φιλοσοφία \acs{FDIR} της πρωτοβουλίας SAVOIR}
 \label{cap:savoir}
 
 Στην παρούσα ενότητα θα εξετάσουμε συνοπτικά τον συνδυασμό δύο φιλοσοφιών που χρησιμοποιούνται από ευρωπαϊκούς φορείς με δράση στο χώρο του διαστήματος. Η πρώτη φιλοσοφία συνδέεται με το \textbf{πρότυπο \texttt{ECSS-E-ST-70-41C}} \autocite{ECSS-E-ST-70-41C} του οργανισμού \acf{ECSS}, το οποίο ορίζει το βασικό σύνολο τηλεμετρίας (\acs{TM}) και τηλεεντολών (\acs{TC}) που χρειάζεται η πλατφόρμα ενός δορυφόρου για να ελεγθεί από τον σταθμό βάσης.
@@ -1065,6 +1065,22 @@ We have created a Python library consolidating the above steps\footurl{https://g
 
 Όλα τα παραπάνω εκτελούνται στο υπόβαθρο του κάθε μικροελεγκτή σαν μία διεργασία του \acs{RTOS}, και, βασισμένα στις υπηρεσίες \acs{PUS}, είναι πλήρως προσαρμόσιμα από τον σταθμό βάσης.
 
+\begin{table*}[h]
+	\centering
+	\caption{Σύνοψη της λειτουργικότητας του AcubeSAT σε διαφορετικές Λειτουργίες Συστήματος}
+	\label{tab:acubesatmodes}
+	\begin{tabular}{@{}llllll@{}}
+		\toprule
+		Υποσύστημα    & Εκτόξευση & Εκκίνηση & Κανονική                 & Επιστημονική        & Ασφαλής             \\ \midrule
+		\acs{ADCS}  & \color{off} Off    & Σταθεροποίηση     & \color{on} Στόχευση                & Σταθεροποίηση     & Σταθεροποίηση       \\
+		\acs{COMMS} & \color{off} Off    & \acs{UHF} μόνο & \color{on} \acs{UHF} και S-Band    & \acs{UHF} μόνο & \acs{UHF} μόνο   \\
+		\acs{EPS}   & \color{off} Off    & \color{on} On             & \color{on} On                      & \color{on} On             & \color{on} On               \\
+		\acs{OBC}   & \color{off} Off    & \color{on} On             & \color{on} On                      & \color{on} On             & \color{on} On               \\
+		\acs{SU}    & \color{off} Off    & \color{off} Off            & Συντήρηση \& δεδομένα & \color{on} On             & Συντήρηση \\ \bottomrule
+	\end{tabular}
+	\vspace{1em}
+\end{table*}
+
 \subsection{Ασφαλής Λειτουργία}
 
 \begin{figure*}[h]
@@ -1077,23 +1093,6 @@ We have created a Python library consolidating the above steps\footurl{https://g
 %Σε αυτή τη λογική, το \acs{FDIR} κατά τη διάρκεια της Ασφαλούς Λειτουργίας έχει σχεδιαστεί με βάση σκληρά κωδικοποιημένους ελέγχους και διαδικασίες ανάκτησης, για τον μικρό αριθμό ενεργών στοιχείων και λειτουργιών. Προβλέπεται επίσης να υλοποιηθεί η δυνατότητα απενεργοποίησης αυτών των ελέγχων μέσω εντολών εδάφους.
 
 Στο AcubeSAT, η λειτουργικότητα του δορυφόρου είναι σημαντικά μειωμένη: το προφίλ στόχευσης προσπαθεί να πετύχει μόνο σταθεροποίηση, δεν εκτελούνται περίπλοκες λειτουργίες, και τα υποσυστήματα πραγματοποιούν μόνο συντήρηση. Ωστόσο, η επικοινωνία \ac{UHF} και η μετάδοση του περιοδικού ραδιοφάρου (beacon) εξακολουθούν να είναι ενεργές για λόγους παρατηρησιμότητας, και για να επιτραπεί η διόρθωση του εντοπισμένου προβλήματος.
-\end{itemize}
-
-\begin{table*}[h]
-\centering
-\caption{Σύνοψη της λειτουργικότητας του AcubeSAT σε διαφορετικές Λειτουργίες Συστήματος}
-\label{tab:acubesatmodes}
-\begin{tabular}{@{}llllll@{}}
-	\toprule
-	Υποσύστημα    & Εκτόξευση & Εκκίνηση & Κανονική                 & Επιστημονική        & Ασφαλής             \\ \midrule
-	\acs{ADCS}  & \color{off} Off    & Σταθεροποίηση     & \color{on} Στόχευση                & Σταθεροποίηση     & Σταθεροποίηση       \\
-	\acs{COMMS} & \color{off} Off    & \acs{UHF} μόνο & \color{on} \acs{UHF} και S-Band    & \acs{UHF} μόνο & \acs{UHF} μόνο   \\
-	\acs{EPS}   & \color{off} Off    & \color{on} On             & \color{on} On                      & \color{on} On             & \color{on} On               \\
-	\acs{OBC}   & \color{off} Off    & \color{on} On             & \color{on} On                      & \color{on} On             & \color{on} On               \\
-	\acs{SU}    & \color{off} Off    & \color{off} Off            & Συντήρηση \& δεδομένα & \color{on} On             & Συντήρηση \\ \bottomrule
-\end{tabular}
-\vspace{1em}
-\end{table*}
 
 \newthought{Η γενικη αρχιτεκτονικη} του \acs{FDIR} για την ασφαλή λειτουργία παρουσιάζεται στο \Cref{fig:safeflow}. Οι ενέργειες αποκατάστασης περιλαμβάνουν:
 \begin{itemize}
@@ -1200,7 +1199,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 
 \section{Λογισμικό}
 
-\subsection{Flight Segment}
+\subsection{Δορυφορικό Κομμάτι}
 
 Όλες οι λειτουργίες του \ac{FDIR} αναπτύχθηκαν χρησιμοποιώντας τη γλώσσα \textbf{C++}.\footnote{Επιλέχθηκε το μοντέρνο πρότυπο \texttt{C++17}. Ολόκληρη η εργασία βασίζεται σε ελεύθερο και ανοικτό λογισμικό το οποίο διατίθεται ελεύθερα για λήψη και τροποποίηση. Όλος ο κώδικας αναπτύχθηκε σε \href{https://git-scm.com/}{Git}.}
 	
@@ -2308,7 +2307,10 @@ Received TM [82]
 \appendix
 
 \begin{fullwidth}
+\bgroup
+\selectlanguage{greek}
 \printbibliography[heading=bibnumbered,title={Βιβλιογραφία}]
+\egroup
 \end{fullwidth}
 
 
