@@ -184,5 +184,67 @@ mincitenames=1,
 \def\gitcommitmessage{\input{\jobname.git1.tmp}\unskip}
 \makeatother
 
+% Smart citations
+
+\makeatletter
+
+%\def\blx@imc@mkbibquote{\blx@enquote}
+
+\newbibmacro*{cite:title}{%
+  \printtext[bibhyperref]{%
+    \printfield[citetitle]{labeltitle}}%
+  \finentry}
+
+\newbibmacro*{cite:shorthand}{%
+	\printtext[bibhyperref]{\printfield{shorthand}}}
+
+\newbibmacro*{cite:full}{%
+	\iffieldundef{shorthand}
+	{\printnames{labelname}%
+		\setunit*{\printdelim{nametitledelim}}%
+		\usebibmacro{cite:title}}%
+	{\usebibmacro{cite:shorthand}}}
+
+\newbibmacro*{cite:marginnote}{%
+	\marginnote{%
+		% \mkbibbrackets should be used here probably
+		[%
+			\printfield{labelprefix}%
+			\printfield{labelnumber}%
+		]
+		\usebibmacro{cite:full}%
+	}%
+}
+
+\DeclareCiteCommand{\dualcite}[\mkbibbrackets]
+  {\usebibmacro{cite:init}%
+   \usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite:marginnote}%
+   \usebibmacro{cite:comp}}%
+  {}
+  {\usebibmacro{cite:dump}%
+   \usebibmacro{postnote}}
+
+\def\tuftecite{
+	\iffootnote{footnote}{text}
+}
+
+% Patching commands that enter information in margins, so that we can detect which
+% citation should be used
+\newtoggle{inmargin}
+\pretocmd{\marginpar}{\toggletrue{inmargin}}{}{}
+\apptocmd{\@xympar}{\togglefalse{inmargin}}{}{}
+\pretocmd{\@tufte@float}{\toggletrue{inmargin}}{}{}
+\pretocmd{\end@tufte@float}{\togglefalse{inmargin}}{}{}
+\pretocmd{\@tufte@margin@float}{\toggletrue{inmargin}}{}{}
+\pretocmd{\end@tufte@margin@float}{\togglefalse{inmargin}}{}{}
+
+\def\autocite{%
+	\iftoggle{inmargin}\parencite\dualcite%
+}
+
+\makeatother
+
 % Temporary!
 \let\subparagraph\paragraph
