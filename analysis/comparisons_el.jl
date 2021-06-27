@@ -6,13 +6,13 @@ R = 0:0.01:1;
 reliability_single = R;
 reliability_dr = @. 1 - (1 - R)^2;
 #reliability_tmr = @. 1 - (1 - R)^3;
-reliability_tmr = @. 1 - (3 * (1 - R)^2 - 2 * (1 - R)^3);
+reliability_tmr = @. 3 * R^2 - 2 * R^3
 
 plot(
     R,
     [reliability_single, reliability_dr, reliability_tmr],
     label = ["Απλό εξάρτημα" "Διπλός πλεονασμός" "Τριπλός πλεονασμός με ψηφοφορία"],
-    title = "Ανθεκτικότητα σύνθετου συστήματος σε μόνιμες βλάβες",
+    # title = "Ανθεκτικότητα σύνθετου συστήματος σε μόνιμες βλάβες",
     legend = :bottomright,
     xlabel = "Αξιοπιστία εξαρτήματος",
     ylabel = "Αξιοπιστία συστήματος",
@@ -30,11 +30,11 @@ savefig("reliability_norepair.pdf")
 plot(
     λ,
     [λ_single, λ_single, λ_dr, λ_tmr],
-    label = [
+    label = permutedims([
         "Απλό εξάρτημα"
         "Διπλός πλεονασμός, ψυχρός"
         "Διπλός πλεονασμός, ενεργός"
-        "Τριπλός πλεονασμός με ψηφοφορία"],
+        "Τριπλός πλεονασμός με ψηφοφορία"]),
     title = "Ανθεκτικότητα σύνθετου συστήματος σε παροδικά σφάλματα",
     legend = :bottomright,
     xlabel = "Ρυθμός αποτυχίας εξαρτήματος",

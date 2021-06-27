@@ -25,11 +25,36 @@
 \let\textlozenge\undefined
 \usepackage{gfsartemisia-euler}
 \NewDocumentCommand{\g}{m}{\foreignlanguage{greek}{#1}}
+\NewDocumentCommand{\e}{m}{\foreignlanguage{english}{#1}}
 %\usepackage{hyphenation-greek}
 %\input{hyphenation-el.tex}
 \DefineBibliographyStrings{english}{%
 	page             = {σ\adddot},
 	pages            = {σσ\adddot},
+}
+\DefineBibliographyExtras{USenglish}{%
+	% d-m-y format for long dates
+	\protected\def\mkbibdatelong#1#2#3{%
+		\iffieldundef{#3}
+		{}
+		{\stripzeros{\thefield{#3}}%
+			\iffieldundef{#2}{}{\nobreakspace}}%
+		\iffieldundef{#2}
+		{}
+		{\mkbibmonth{\thefield{#2}}%
+			\iffieldundef{#1}{}{\space}}%
+		\iffieldbibstring{#1}{\bibstring{\thefield{#1}}}{\stripzeros{\thefield{#1}}}}%
+	% d-m-y format for short dates
+	\protected\def\mkbibdateshort#1#2#3{%
+		\iffieldundef{#3}
+		{}
+		{\mkdatezeros{\thefield{#3}}%
+			\iffieldundef{#2}{}{/}}%
+		\iffieldundef{#2}
+		{}
+		{\mkdatezeros{\thefield{#2}}%
+			\iffieldundef{#1}{}{/}}%
+		\iffieldbibstring{#1}{\bibstring{\thefield{#1}}}{\mkdatezeros{\thefield{#1}}}}%
 }
 
 
@@ -67,6 +92,11 @@
 \renewcommand*{\listfigurename}{Κατάλογος Σχημάτων}
 \renewcommand*{\listtablename}{Κατάλογος Πινάκων}
 \sisetup{range-phrase={ ως }}
+
+\renewcommand{\crefpairconjunction}{ και\nobreakspace}%
+\renewcommand{\creflastconjunction}{ και\nobreakspace}%
+\renewcommand{\crefpairgroupconjunction}{ και\nobreakspace}%
+\renewcommand{\creflastgroupconjunction}{, και\nobreakspace}%
 
 \crefname{figure}{\g{Σχήματος}}{\g{Σχημάτων}}
 \Crefname{figure}{\g{Σχή\-μα}}{\g{Σχήμα}}
@@ -182,9 +212,9 @@ Copyright \copyright\ \the\year\ \thanklessauthor
 \chapter*{Μεταφράσεις ξενόγλωσσης ορολογίας}
 
 \bgroup
-\setlength\parskip{1.5ex}
+\setlength\parskip{.8ex}
 \acuseall
-\printacronyms[include=glossary,template=glossary]
+\printacronyms[include=glossary,template=glossary]%,template=glossary]
 \acresetall  % Trick to print the glossary here, and reset acronym usage for the rest of the document
 \egroup
 
@@ -690,12 +720,13 @@ We have created a Python library consolidating the above steps\footurl{https://g
 
 Η υποομάδα Trajectory είναι υπεύθυνη για την ανάλυση της τροχιάς του διαστημικού σκάφους, την αποτίμηση των επιπτώσεων της ακτινοβολίας, τη συμμόρφωση του δορυφόρου με τους κανονισμούς για τα διαστημικά σκουπίδια και την εκτίμηση της διάρκειας ζωής του σε τροχιά.
 
-\g{Οι απαιτήσεις του AcubeSAT δεν υπαγορεύουν τη χρήση προωθητήρων, πράγμα που σημαίνει ότι η τροχιά του δορυφόρου καθορίζεται αποκλειστικά από την εκτόξευση και δεν μπορεί να τροποποιηθεί κατά την πτήση. Καθώς πληροφορίες για την εκτόξευση είναι άγνωστες μέχρι κάποιο χρονικό διάστημα πριν από την παράδοση του δορυφόρου, εκτελείται ένα σύνολο αναλύσεων ευαισθησίας για τον προσδιορισμό των επιτρεπόμενων τροχιών} \autocite{MDO,anthopoulos_orbital_analysis_2020}.
 \begin{figure}
 	\includegraphics{GmatScreenShot_002}
 	\caption[Επίγειο ίχνος μιας πιθανής τροχιάς του AcubeSAT]{Επίγειο ίχνος μιας πιθανής τροχιάς του AcubeSAT, σχεδιασμένο με χρήση του εργαλείου \acl{GMAT} της NASA}
 	\label{fig:gmat}
 \end{figure}
+
+\g{Οι απαιτήσεις του AcubeSAT δεν υπαγορεύουν τη χρήση προωθητήρων, πράγμα που σημαίνει ότι η τροχιά του δορυφόρου καθορίζεται αποκλειστικά από την εκτόξευση και δεν μπορεί να τροποποιηθεί κατά την πτήση. Καθώς πληροφορίες για την εκτόξευση είναι άγνωστες μέχρι κάποιο χρονικό διάστημα πριν από την παράδοση του δορυφόρου, εκτελείται ένα σύνολο αναλύσεων ευαισθησίας για τον προσδιορισμό των επιτρεπόμενων τροχιών} \autocite{MDO,anthopoulos_orbital_analysis_2020}.
 
 % Maybe add some info about the sensitivity results and LTAN value?
 % No
@@ -949,22 +980,62 @@ We have created a Python library consolidating the above steps\footurl{https://g
 
 \section{Μελέτη διαφορετικών αρχιτεκτονικών}
 
-Προτού μελετήσουμε τη δομή του \acs{FDIR}, έχει νόημα να μελετήσουμε διαφορετικές αρχιτεκτονικές αποφάσεις που μπορούν να ληφθούν κατά το σχεδιασμό ενός μικρού δορυφορικού συστήματος. Πιο συγκεκριμένα, θα συγκρίνουμε τις δομές: \autocite{birolini_reliability_engineering_2004}
+Προτού μελετήσουμε τη δομή του \acs{FDIR}, έχει νόημα να μελετήσουμε διαφορετικές αρχιτεκτονικές αποφάσεις που μπορούν να ληφθούν κατά το σχεδιασμό ενός μικρού δορυφορικού συστήματος. Πιο συγκεκριμένα, θα συγκρίνουμε τις δομές \autocite{birolini_reliability_engineering_2004}:
 
-\begin{compactenum}
+\begin{enumerate}
 	\item \textbf{Απλού εξαρτήματος}
-	\item \textbf{Διπλού πλεονασμού}, όπου έχουμε δύο όμοια εξαρτήματα που πραγματοποιούν την ίδια λειτουργία, και το ένα μπορεί να αντικαταστήσει το άλλο.
+	\item \textbf{Διπλού πλεονασμού}, όπου έχουμε δύο όμοια εξαρτήματα που πραγματοποιούν την ίδια λειτουργία, και το ένα μπορεί να αντικαταστήσει το άλλο.Η συνδεσμολογία αυτή μπορεί να ακολουθεί με τη λογική του \textbf{ψυχρού πλεονασμού} ή του \textbf{ενεργού πλεονασμού}.
+	
+	Στον \textbf{ψυχρό πλεονασμό}, μόνο ένα από τα εξαρτήματα λειτουργεί κάθε φορά, και ένα εξωτερικό κύκλωμα\footnote{Ή τα ίδια τα εξαρτήματα, στην περίπτωση του θερμού πλεονασμού \autocite[20]{SAVOIR-HB-003}} ελέγχει ποιό από τα δύο δεν βρίσκεται σε κατάσταση σφάλματος, για να του παραδώσει τον έλεγχο.
+	
+	Στον \textbf{ενεργό πλεονασμό}, και τα δύο εξαρτήματα είναι λειτουργικά ταυτόχρονα, πραγματοποιώντας τις ίδιες διαδικασίες, και το ένα εξάρτημα μπορεί να αναλάβει τις λειτουργικές ευθύνες σε περίπτωση βλάβης του άλλου.
+	
 	\item \textbf{Τριπλού πλεονασμού με ψηφοφορία} (triple modular redundancy), όπου έχουμε τρία εξαρτήματα που πραγματοποιούν συνεχώς τους ίδιους υπολογισμούς, και ένα κύκλωμα ψηφοφορίας επιλέγει την έξοδο που έχει την πλειοψηφία από τα 3 εξαρτήματα.
-\end{compactenum}
+\end{enumerate}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{RedunSchemes-el}
+	\caption{Οπτική απεικόνιση των διαφορετικών μορφών σύνδεσης που θα εξεταστούν}
+\end{figure}
 
 Η σύγκριση των συστημάτων αυτών θα γίνει σε επίπεδο μόνιμων και προσωρινών βλαβών:
 
 \begin{itemize}
-	\item Στις \textbf{μόνιμες βλάβες} εξετάζουμε συμβάντα (π.χ. ακτινοβολία, απώλεια μνήμης) τα οποία δεν μπορούν να διορθωθούν και οδηγούν σε απώλεια της αποστολής. Η μελέτη εδώ γίνεται με βάση την έννοια της αξιοπιστίας (reliability) \( R \), δηλαδή της πιθανότητας το σύστημα να επιζήσει εντός μιας χρονικής περιόδου \( t \).
-	\item Στις \textbf{προσωρινές βλάβες} εξετάζουμε συμβάντα (π.χ. αλλαγές bit, bugs λογισμικού, λάθη στη μεταφορά μηνυμάτων) που είναι παροδικά και επηρεάζουν συνήθως μόνο μία μέτρηση, μία ενέργεια ή ένα αποτέλεσμα. Εδώ η μελέτη γίνεται με βάση την έννοια του ρυθμού αξιοπιστίας (failure rate) \( \lambda \), δηλαδή της συχνότητας των αποτυχιών.
+	\item \g{Στις \textbf{μόνιμες βλάβες} εξετάζουμε συμβάντα (π.χ. ακτινοβολία, απώλεια μνήμης) τα οποία δεν μπορούν να διορθωθούν και οδηγούν σε απώλεια της αποστολής. Η μελέτη εδώ γίνεται με βάση την έννοια της αξιοπιστίας (\e{reliability}) \( R \), δηλαδή της πιθανότητας το σύστημα να επιζήσει εντός μιας χρονικής περιόδου \( t \).}
+	\item Στις \textbf{προσωρινές βλάβες} εξετάζουμε συμβάντα (π.χ. αλλαγές bit, bugs λογισμικού, λάθη στη μεταφορά μηνυμάτων) που είναι παροδικά και επηρεάζουν συνήθως μόνο μία μέτρηση, μία ενέργεια ή ένα αποτέλεσμα. Εδώ η μελέτη γίνεται με βάση την έννοια του ρυθμού βλαβών (failure rate) \( \lambda \), δηλαδή της συχνότητας των αποτυχιών.
 \end{itemize}
 
-\draft{μαθηματικές σχέσεις που χρησιμοποιήθηκαν\textellipsis}
+\selectlanguage{greek}
+
+Στην παρούσα ανάλυση δεν είναι εύκολο να χρησιμοποιηθούν ακριβείς τιμές αξιοπιστίας και ρυθμού αποτυχιών για τα εξαρτήματα, καθώς δεν υπάρχουν στη βιβλιογραφία διαθέσιμα στοιχεία μεγάλης κλίμακας για τις αποτυχίες εξαρτημάτων στο διάστημα \e{\autocite{esatec-qqd_effective_reliability_2016}}. Επομένως, η ανάλυση θα γίνει σε ένα εύρος τιμών αξιοπιστίας και ρυθμού σφαλμάτων.
+
+Ενδεικτικά, αναφέρουμε ότι η τάξη μεγέθους του ρυθμού αποτυχιών μιας συσκευής λόγω ακτινοβολίας μπορεί να εκτείνεται μεταξύ \SIrange{1e-8}{1e3}{} \(\frac{\text{αποτυχίες}}{\text{ημέρα}}\), εξαρτώμενη από το περιβάλλον ακτινοβολίας, τη σοβαρότητα της βλάβης, και την κατασκευή της κάθε συσκευής \e{\autocite[158-159]{gupta_analysis_single_2017}}.
+
+Ο κώδικας που χρησιμοποιήθηκε για όλα τα παρακάτω παραδείγματα βρίσκεται στο \Cref{app:analysisjl}.
+
+\subsection{Μόνιμες βλάβες (ανάλυση αξιοπιστίας)}
+
+\paragraph{Ιδεατός ψηφοφόρος}
+
+Αν θεωρήσουμε ότι η αξιοπιστία ενός εξαρτήματος είναι \(R\), η αξιοπιστία \emph{δύο εξαρτημάτων} συνδεδεμένων παράλληλα είναι \e{\autocite[31]{birolini_reliability_engineering_2004}}:
+\begin{equation}
+R_2 = 2R - R^2 = 1 - (1 - R)^2 \label{eq:dual_redun}
+\end{equation}
+
+\marginnote{Σε όλες τις αναλύσεις υποθέτουμε ότι τα ευάλωτα εξαρτήματα είναι πανομοιότυπα και έχουν τα ίδια χαρακτηριστικά αξιοπιστίας.}
+Η \eqref{eq:dual_redun} ισχύει τόσο στον ψυχρό, όσο και στον ενεργό πλεονασμό, καθώς θεωρούμε ότι το σύστημα μπορεί να ανακάμψει από μόνιμες βλάβες και στις δύο περιπτώσεις, μετακινώντας τη "δικαιοδοσία" ελέγχου στο ανεπηρέαστο εξάρτημα.
+
+Η αξιοπιστία του συστήματος \emph{τριπλής ψηφορορίας} είναι \e{\parencite[31]{birolini_reliability_engineering_2004}}:
+\begin{align}
+R_3 &= \sum_{i=k}^{n} \binom{n}{i} R^i (1-R)^{n-i}\nonumber\\
+&= \sum_{i=2}^{3} \binom{3}{i} R^i (1-R)^{3-i} \nonumber\\
+&= \binom{3}{2} R^2 (1-R) + \binom{3}{3} R^3 (1-R)^0 \nonumber\\
+&= 3R^2 - 3R^3 + R^3 = 3R^2 - 2R^3
+\label{eq:tmr}
+\end{align}
+
+Εδώ αξίζει να σημειωθεί πως το σύστημα τριπλής ψηφοφορίας θεωρεί έναν απλό ψηφοφόρο, και σε περίπτωση \emph{μόνιμης βλάβης και των δύο ευάλωτων εξαρτημάτων}, το σύστημα θεωρείται πως δεν μπορεί να ανακάμψει.
 
 \begin{figure}
 	\centering
@@ -972,6 +1043,17 @@ We have created a Python library consolidating the above steps\footurl{https://g
 	\caption{Ανθεκτικότητα σύνθετου συστήματος σε μόνιμες βλάβες (θεωρώντας αλάνθαστο ψηφοφόρο)}
 	\label{fig:reliability_norepair}
 \end{figure}
+
+Τα αποτελέσματα εφαρμογής των \eqref{eq:dual_redun} και \eqref{eq:tmr} φαίνονται στο \Cref{fig:reliability_norepair}. Μπορεί να διακριθεί πως η χρήση δύο πλεονάζοντων εξαρτημάτων αυξάνει σε έναν βαθμό την αξιοπιστία του συστήματος, σε σχέση με το απλό εξάρτημα, καθώς οι βλάβες του ενός εξαρτήματος μπορούν να διορθωθούν, αλλά οι βλάβες και στα δύο είναι καταστροφικές. Αντίθετα, \textbf{ο τριπλός πλεονασμός εισάγει περισσότερα σημεία αποτυχίας}. Καθώς η αποτυχία οποιουδήποτε συνδυασμού 2 εκ των 3 εξαρτημάτων είναι καταστροφική, ο τριπλός πλεονασμός υστερεί στις μόνιμες βλάβες σε σχέση με τον διπλό.
+
+\paragraph{Ευάλωτος ψηφοφόρος}
+
+Ιδιαίτερο ενδιαφέρον έχει η μελέτη της περίπτωσης του ευάλωτου κυκλώματος ψηφοφορίας, το οποίο συνδέεται 
+
+\subsection{Προσωρινές βλάβες (ανάλυση ρυθμού βλαβών)}
+
+\selectlanguage{english}
+
 
 \begin{figure}
 	\centering
@@ -985,7 +1067,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 \FloatBarrier
 \section{Λεπτομερείς Ενέργειες του FDIR}
 
-Στην παρακάτω ενότητα παρουσιάζεται η λίστα με τους πιθανούς τρόπους εντοπισμού, πρόληψης και αντιμετώπισης των σφαλμάτων που εμφανίζονται στον δορυφόρο. Για την κάθε πιθανή αποτυχία που εντοπίζεται στο \acs{FMEA}, \autocite{retselis_acubesat_fmea_2020} επιλέγεται ένας ή περισσότεροι τρόποι εντοπισμού και διόρθωσης από αυτούς τους πίνακες, και προσαρμόζονται στο εκάστοτε στοιχείο.
+Στην παρακάτω ενότητα παρουσιάζεται η λίστα με τους πιθανούς τρόπους εντοπισμού, πρόληψης και αντιμετώπισης των σφαλμάτων που εμφανίζονται στον δορυφόρο. Για την κάθε πιθανή αποτυχία που εντοπίζεται στο \acs{FMEA} \autocite{retselis_acubesat_fmea_2020}, επιλέγεται ένας ή περισσότεροι τρόποι εντοπισμού και διόρθωσης από αυτούς τους πίνακες, και προσαρμόζονται στο εκάστοτε στοιχείο.
 
 \clearpage
 \subsection{Τρόποι εντοπισμού αποτυχιών}
@@ -1447,7 +1529,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 
 Η σουίτα λογισμικού \acs{YAMCS} \autocite{sela_yamcs_lightweight_2012} \g{επιλέχθηκε για να καλύψει τις παραπάνω ανάγκες, και προσαρμόστηκε ώστε να παρέχει τις δυνατότητες που απαιτούνται για την παρούσα επίδειξη}.
 
-Το πρωτόκολλο \ac{ECSS} \autocite{ECSS-E-ST-70-41C} \g{δεν υποστηρίζεται εγγενώς από το} \acs{YAMCS}. \g{Ωστόσο, οι απαραίτητες εντολές έχουν εισαχθεί στο σύστημα μέσω αρχείων μορφής} \ac{XTCE} \autocite{simon_xtce_standard_2004}. Ο πηγαίος κώδικας της ενσωμάτωσης μπορεί να βρεθεί στο \Cref{app:xtce}.
+Το πρωτόκολλο \ac{ECSS} \autocite{ECSS-E-ST-70-41C} \g{δεν υποστηρίζεται εγγενώς από το \linebreak[4]}\acs{YAMCS}\g{. Ωστόσο, οι απαραίτητες εντολές έχουν εισαχθεί στο σύστημα μέσω αρχείων μορφής} \ac{XTCE} \autocite{simon_xtce_standard_2004}. Ο πηγαίος κώδικας της ενσωμάτωσης μπορεί να βρεθεί στο \Cref{app:xtce}.
 
 \begin{figure}[h]
 	\includegraphics{screenshots/yamcs_replay}
@@ -1883,13 +1965,13 @@ We have created a Python library consolidating the above steps\footurl{https://g
 \begin{figure}[h]
 	\centering
 	\includegraphics{screenshots/pus_f010_tran}
-	\caption{Πίνακας μετάβασης ορισμών παρακολούθησης (αποτυχία \texttt{F-010} (όπως φαίνεται στη διεπαφή \acs{PUS})}
+	\caption{Πίνακας μετάβασης ορισμών παρακολούθησης (αποτυχία \texttt{F-010} όπως φαίνεται στη διεπαφή \acs{PUS})}
 	\label{fig:pusf010tran}
 \end{figure}
 
 \begin{table*}[h]
 	\centering
-	\caption[][10pt]{Πίνακας μετάβασης ορισμών παρακολούθησης (αποτυχία \texttt{F-010}}
+	\caption[][10pt]{Πίνακας μετάβασης ορισμών παρακολούθησης (αποτυχία \texttt{F-010})}
 	\label{tab:f010tran}
 	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
 		\toprule

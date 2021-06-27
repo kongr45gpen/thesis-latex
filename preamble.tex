@@ -135,6 +135,15 @@ mincitenames=1,
 	\begin{description}
 		\acronymsmapF{%
 			\item[\sffamily\textbf{\acrowrite{short}}] \acrowrite{long}%
+			\acroifanyT {foreign,extra} {~(}%
+			\acrowrite {foreign}%
+			\acroifallT {foreign,extra} {,~}%
+			\acrowrite {extra}%
+			\acroifanyT {foreign,extra} {)}%
+			\acropagefill%
+			\acropages%
+				{ \acrotranslate {page} \nobreakspace }%
+				{ \acrotranslate {pages} \nobreakspace }%
 		}%
 		{ \item \AcroRerun{list} }%
 		\end {description}
