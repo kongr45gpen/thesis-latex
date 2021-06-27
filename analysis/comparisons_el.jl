@@ -45,15 +45,12 @@ heatmap(
 )
 savefig("reliability_norepair_voter.pdf")
 
-##
+## Ρrepair reliability
 λ = 10 .^ (LinRange(-11, -2, 1000))
-
 
 λ_single = λ;
 λ_dr = @. -lambertw(- (2λ * exp(-λ) - λ^2 * exp(-2λ)));
-# λ_tmr = @. -lambertw(- exp(-2λ) * λ^2);
 λ_tmr = @. -lambertw(- (3(λ * exp(-λ))^2 - 2(λ * exp(-λ))^3));
-# 3\left(λe^{-λ}\right)^2 - 2\left(λe^{-λ}\right)^3
 
 plot(
     λ,
