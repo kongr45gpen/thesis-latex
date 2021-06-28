@@ -253,7 +253,10 @@ mincitenames=1,
 	\iftoggle{inmargin}\parencite\dualcite%
 }
 
-\makeatother
+% Tufte disables subparagraphs. This brings them back.
+\renewcommand\subparagraph{\@startsection{subparagraph}{5}{\parindent}%
+	{3.25ex \@plus1ex \@minus .2ex}%
+	{-1em}%
+	{\hspace{1em}\normalfont\normalsize\itshape}}
 
-% Temporary!
-\let\subparagraph\paragraph
+\makeatother
