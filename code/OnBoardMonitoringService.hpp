@@ -27,7 +27,8 @@ public:
         uint64_t expectedValue;
 
         bool check() {
-            return (systemParameters.convertParameterValueToInt(parameterId) & mask) == (expectedValue & mask);
+            return (systemParameters.convertParameterValueToInt(parameterId) & mask) ==
+                   (expectedValue & mask);
         }
     };
 
@@ -50,14 +51,18 @@ public:
         uint16_t pmonId; ///< Parameter monitoring ID as defined in the standard
         uint16_t monitoredParameterId;
         uint32_t monitoringInterval;
-        uint8_t repetitionNumber; ///< The number of consistent and continuous checks needed to switch the parameter status
+        uint8_t repetitionNumber; ///< The number of checks needed to switch the parameter status
 
         std::optional<CheckValidityCondition> validityCondition;
 
-        ParameterMonitoringDefinitionBase(uint16_t pmonId, uint16_t monitoredParameterId, uint32_t monitoringInterval,
-                                          uint16_t repetitionNumber, const std::optional<CheckValidityCondition>& condition)
-                : pmonId(pmonId), monitoredParameterId(monitoredParameterId), monitoringInterval(monitoringInterval),
+        ParameterMonitoringDefinitionBase(uint16_t pmonId, uint16_t monitoredParameterId,
+                                          uint32_t monitoringInterval,
+                                          uint16_t repetitionNumber,
+                                          const std::optional<CheckValidityCondition> &condition)
+                : pmonId(pmonId), monitoredParameterId(monitoredParameterId),
+                  monitoringInterval(monitoringInterval),
                   repetitionNumber(repetitionNumber), validityCondition(condition) {}
+
     public:
         virtual std::optional<CheckTransitionEntry> check(uint64_t timestamp) = 0;
 
@@ -73,9 +78,12 @@ public:
     template<typename T, class CheckType>
     class ParameterMonitoringDefinition : public ParameterMonitoringDefinitionBase {
     public:
-        ParameterMonitoringDefinition(uint16_t pmonId, uint16_t monitoredParameterId, uint32_t monitoringInterval,
-                                      uint16_t repetitionNumber, CheckType checkParameters, const std::optional<CheckValidityCondition>& condition)
-                : ParameterMonitoringDefinitionBase(pmonId, monitoredParameterId, monitoringInterval, repetitionNumber, condition),
+        ParameterMonitoringDefinition(uint16_t pmonId, uint16_t monitoredParameterId,
+                                      uint32_t monitoringInterval,
+                                      uint16_t repetitionNumber, CheckType checkParameters,
+                                      const std::optional<CheckValidityCondition> &condition)
+                : ParameterMonitoringDefinitionBase(pmonId, monitoredParameterId, monitoringInterval,
+                                                    repetitionNumber, condition),
                   checkParameters(checkParameters) {}
 
         std::optional<CheckTransitionEntry> check(uint64_t timestamp) override;
@@ -163,6 +171,7 @@ public:
     void checkTransitionReport();
 
     void execute(Message &message);
+
 private:
     inline static const int CheckTransitionListItems = 12;
     inline static const uint64_t TransitionListPeriod = 200;
@@ -182,7 +191,8 @@ private:
 };
 
 template<typename T, class CheckType>
-inline void OnBoardMonitoringService::ParameterMonitoringDefinition<T, CheckType>::appendDefinitionReport(Message& message) {
+inline void OnBoardMonitoringService::ParameterMonitoringDefinition<T, CheckType>::appendDefinitionReport(
+        Message &message) {
     message.append(uint16_t{pmonId});
     message.append(uint16_t{monitoredParameterId});
     if (validityCondition) {
@@ -202,7 +212,8 @@ inline void OnBoardMonitoringService::ParameterMonitoringDefinition<T, CheckType
 }
 
 template<typename T, class CheckType>
-std::optional<OnBoardMonitoringService::CheckTransitionEntry> OnBoardMonitoringService::ParameterMonitoringDefinition<T, CheckType>::check(uint64_t timestamp) {
+std::optional<OnBoardMonitoringService::CheckTransitionEntry>
+OnBoardMonitoringService::ParameterMonitoringDefinition<T, CheckType>::check(uint64_t timestamp) {
     // TODO: Split the "monitoring interval" and "repetition count" capabilities of this function
 
     if (timestamp - lastCheckTimestamp < monitoringInterval) {
@@ -211,7 +222,7 @@ std::optional<OnBoardMonitoringService::CheckTransitionEntry> OnBoardMonitoringS
 
     lastCheckTimestamp = timestamp;
     T parameterValue;
-    if constexpr (std::is_same_v<T,float>) {
+    if constexpr (std::is_same_v<T, float>) {
         parameterValue = systemParameters.convertParameterValueToFloat(monitoredParameterId);
     } else {
         parameterValue = systemParameters.getParameterValue<T>(monitoredParameterId);
@@ -263,7 +274,8 @@ std::optional<OnBoardMonitoringService::CheckTransitionEntry> OnBoardMonitoringS
     }
 
     if (transition) {
-        LOG_ERROR << "Monitoring status " << pmonId << " changed from " << static_cast<int>(previousStatus) << " to " << static_cast<int>(currentStatus);
+        LOG_ERROR << "Monitoring status " << pmonId << " changed from " << static_cast<int>(previousStatus)
+                  << " to " << static_cast<int>(currentStatus);
         checkParameters.generateEvent(currentStatus);
 
         return std::optional<OnBoardMonitoringService::CheckTransitionEntry>({

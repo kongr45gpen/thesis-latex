@@ -7,7 +7,8 @@
 
 class SystemParameterMonitoring {
     template<class Check>
-    using MonitoringDefinition = OnBoardMonitoringService::ParameterMonitoringDefinition<typename Check::type, Check>;
+    using MonitoringDefinition =
+        OnBoardMonitoringService::ParameterMonitoringDefinition<typename Check::type, Check>;
 
     MonitoringDefinition<ExpectedValueCheck<SystemParameters::TemperatureStatus>> sensor1timeoutCheck{
             0, 3, 500, 2, {

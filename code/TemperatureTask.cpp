@@ -3,10 +3,10 @@
 #include "Tasks/TemperatureTask.hpp"
 
 TemperatureTask::TemperatureTask(Parameter<float> &parameter,
-                                 CallbackParameter<SystemParameters::TemperatureStatus> &statusParameter, 
+                                 CallbackParameter<SystemParameters::TemperatureStatus> &statusParameter,
                                  uint8_t sensorI2c, PIO_PIN sensorPin, PIO_PIN buttonPin)
-        : parameter(parameter), statusParameter(statusParameter), mcp9808(sensorI2c), 
-        sensorPin(sensorPin), buttonPin(buttonPin) {
+        : parameter(parameter), statusParameter(statusParameter), mcp9808(sensorI2c), sensorPin(sensorPin),
+          buttonPin(buttonPin) {
     PIO_PinWrite(sensorPin, true);
 }
 
@@ -14,6 +14,8 @@ void TemperatureTask::operator()() {
     taskHandle = xTaskGetCurrentTaskHandle();
 
     while (true) {
+        wasSuspended = false;
+
         vTaskDelay(130);
 
         float temperature = 0;
@@ -21,6 +23,12 @@ void TemperatureTask::operator()() {
 
         if (status) {
             status = mcp9808.getTemp(temperature);
+        }
+
+        if (!status && wasSuspended) {
+            // I2C timeout, but the task was suspended so the I2C peripheral didn't get enough information.
+            // Retry again after a delay
+            continue;
         }
 
         if (status) {
@@ -31,6 +39,10 @@ void TemperatureTask::operator()() {
 
         if (!PIO_PinRead(buttonPin)) {
             temperature += 80;
+        }
+
+        if (bogusTemperatureTime != 0) {
+            temperature += bellFunction();
         }
 
         // TODO: Set parameter on timeout?
@@ -45,10 +57,9 @@ void TemperatureTask::setOutput(bool output) {
 
     if (taskHandle != nullptr) {
         if (output) {
+            wasSuspended = true;
             vTaskResume(taskHandle);
         } else {
-            // TODO: When suspending the task, the I2C peripheral should also be restarted, 
-            // otherwise we run the risk of spurious timeout in case we blocked an I2C transaction
             vTaskSuspend(taskHandle);
         }
     }
@@ -64,4 +75,26 @@ void TemperatureTask::restart() {
     if (statusParameter.getValue() != SystemParameters::TemperatureStatus::Disabled) {
         setOutput(true);
     }
+}
+
+float TemperatureTask::bellFunction() {
+    const float MaxBogusTemperature = 60;
+    const float BogusDuration = 7000;
+
+    // Apply error for t in (0, 2*BogusDuration)
+    float t = xTaskGetTickCount() - bogusTemperatureTime;
+
+    // Apply error for σt in (-BogusDuration, BogusDuration)
+    float shiftedT = t - BogusDuration;
+
+    if (abs(shiftedT) >= BogusDuration) {
+        return 0;
+    } else {
+        return MaxBogusTemperature * expf(1) *
+               expf(powf(BogusDuration, 2) / (powf(shiftedT, 2) - powf(BogusDuration, 2)));
+    }
+}
+
+void TemperatureTask::addBogusTemperature(int32_t shift) {
+    bogusTemperatureTime = xTaskGetTickCount() + shift;
 }

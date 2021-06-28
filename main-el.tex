@@ -155,7 +155,9 @@
 \crefname{enumi}{\g{Στοιχείου}}{\g{Στοιχείων}}
 \Crefname{enumi}{\g{Στοιχείο}}{\g{Στοιχεία}}
 \Crefname{chapter}{\g{Κεφάλαιο}}{\g{Κεφάλαια}}
+\crefname{section}{\g{Ενότητας}}{\g{Ενοτήτων}}
 \Crefname{section}{\g{Ενότητα}}{\g{Ενότητες}}
+\crefname{subsection}{\g{Ενότητας}}{\g{Ενοτήτων}}
 \Crefname{subsection}{\g{Ενότητα}}{\g{Ενότητες}}
 \Crefname{appendix}{\g{Παράρτημα}}{\g{Παραρτήματα}}
 
@@ -2679,6 +2681,10 @@ Received TM [82]
 \chapter{Πηγαίος κώδικας}
 \label{sec:source_code}
 
+\begin{fullwidth}
+	Στο Παράρτημα αυτό παρατίθεται ο πηγαίος κώδικας που αναπαριστά την κύρια λογική της πειραματικής διάταξης. Για τον πλήρη κώδικα που περιλαμβάνει τις βιβλιοθήκες και τα υποστηρικτικά αρχεία, ανατρέξτε στους \Cref{tab:new_software,tab:old_software}. Ο κώδικας αυτού του παραρτήματος γράφτηκε εξ' ολοκλήρου στα πλαίσια της διπλωματικής, και διατηρείται στα αποθετήρια των προαναφερθέντων πινάκων.
+\end{fullwidth}
+
 \setminted{
 	bgcolor={},
 	fontsize=\fontsize{9pt}{9pt},
@@ -2691,41 +2697,94 @@ Received TM [82]
 \label{app:analysisjl}
 
 \begin{fullwidth}
-	\draft{1 γραμμή - επεξήγηση του κάθε αρχείου}
+	Το αρχείο αυτό, γραμμένο στη γλώσσα \href{https://julialang.org/}{Julia}, δημιουργεί όλα τα διαγράμματα της \cref{sec:theoretical}. Μπορεί να βρεθεί επίσης στη διεύθυνση
+	\url{https://github.com/kongr45gpen/thesis-latex/tree/main/analysis}.
 \end{fullwidth}
 
 \inputminted{julia}{analysis/comparisons_el.jl}
 
-\section*{\texttt{main.cpp}}
+\newpage
+\section*{\texttt{main.cpp} {\small(fdir-demo)}}
+
+\begin{fullwidth}
+	Πρόκειται για το σημείο έναρξης της εφαρμογής του μικροελεγκτή, όπου ορίζονται οι διεργασίες του λειτουργικού συστήματος, και εκκινείται ο προγραμματιστής.
+\end{fullwidth}
 
 \inputminted{cpp}{code/main.cpp}
 
 \newpage
-\section*{\texttt{SystemParameters.hpp}}
+\section*{\texttt{SystemParameters.hpp} {\small(fdir-demo)}}
+
+\begin{fullwidth}
+	Εδώ ορίζονται όλες οι παράμετροι που διατηρούνται στον μικροελεγκτή, σε συνδυασμό με τους τύπους δεδομένων τους, και συναρτήσεις που καλούνται κατά την ανάγνωση και την εγγραφή τους.
+\end{fullwidth}
 
 \inputminted{cpp}{code/SystemParameters.hpp}
 
 \newpage
-\section*{\texttt{TemperatureTask.cpp}}
+\section*{\texttt{SystemParameterMonitoring.hpp} {\small(fdir-demo)}}
+
+\begin{fullwidth}
+	Εδώ ορίζονται οι προεπιλεγμένοι ορισμοί παρακολούθησης. Οι τιμές αυτού του αρχείου συμπίπτουν με αυτές του \cref{tab:demo_monitoring}.
+\end{fullwidth}
+
+\inputminted{cpp}{code/SystemParameterMonitoring.hpp}
+
+
+\newpage
+\section*{\texttt{ECSSTask.cpp} {\small(fdir-demo)}}
+
+\begin{fullwidth}
+	Εδώ ορίζονται δεδομένα των \acs{ECSS} υπηρεσιών που δεν ορίστηκαν σε άλλα αρχεία. Ακόμα, εδώ εκτελείται ο κύριως βρόχος των υπηρεσιών \acs{ECSS}.
+\end{fullwidth}
+
+\inputminted{cpp}{code/ECSSTask.cpp}
+
+\newpage
+\section*{\texttt{TemperatureTask.cpp} {\small(fdir-demo)}}
+
+\begin{fullwidth}
+	Η διεργασία αυτή είναι η κύρια διεπαφή του μικροελεγκτή με έναν αισθητήρα θερμοκρασίας. Λαμβάνει την τιμή του κάθε \SI{130}{\milli\second} και ενημερώνει την αντίστοιχη παράμετρο. Ταυτόχρονα, ελέγχει την υγεία του διαύλου \acs{I2C} και προσθέτει εικονικές τιμές αν ζητείται.
+\end{fullwidth}
 
 \inputminted{cpp}{code/TemperatureTask.cpp}
 
-\section*{\texttt{xtce.xml}}
-\label{app:xtce}
+\newpage
+\section*{\texttt{OnBoardMonitoringService.hpp} {\small(fdir-demo)}}
 
-\inputminted{xml}{code/xtce-small.xml}
+\begin{fullwidth}
+	Η καρδιά της λογικής του \acs{FDIR}, αυτή η κλάση δημιουργήθηκε στα πλαίσια αυτής της διπλωματικής, και εκτελεί όλους τους ελέγχους για τον εντοπισμό βλαβών.
+\end{fullwidth}
+
+\inputminted{cpp}{code/OnBoardMonitoringService.hpp}
 
 \newpage
-\section*{\texttt{ecss-interface.js}}
+\section*{\texttt{xtce.xml} {\small(fdir-demo-yamcs)}}
+\label{app:xtce}
+
+\begin{fullwidth}
+	Το αρχείο αυτό ορίζει τη μορφή των πακέτων τηλεμετρίας και τηλεεντολών που μπορεί να αντιληφθεί και να εκπέμψει αντίστοιχα ο σταθμός βάσης.
+\end{fullwidth}
+
+\inputminted[fontsize=\fontsize{7pt}{7pt}]{xml}{code/xtce-small.xml}
+
+\newpage
+\section*{\texttt{ecss-interface.js} {\small(fdir-demo-yamcs)}}
+
+\begin{fullwidth}
+	Το αρχείο αυτό είναι το κύριο κομμάτι της εφαρμογής προβολής της βάσης δεδομένων \acs{PUS}. Συνδέεται με το \acs{YAMCS} και προβάλλει τα δεδομένα στον χρήστη. Επίσης έχει τη δυνατότητα αποστολής τηλεεντολών, όταν χρειάζεται ο μικροελεγκτής να στείλει τα απαραίτητα δεδομένα.
+\end{fullwidth}
 
 \inputminted{javascript}{code/ecss-interface.js}
 
 \newpage
-\section*{\texttt{link.cpp}}
+\section*{\texttt{link.cpp} {\small(fdir-demo-yamcs)}}
+
+\begin{fullwidth}
+	Το αρχείο αυτό λειτουργεί ως το χαμηλότερο επίπεδο στην επικοινωνία υπολογιστή-μικροελεγκτή. Μεταφέρει πακέτα από το \acs{YAMCS} προς το \acs{UART} του μικροελεγκτή και αντίθετα.
+\end{fullwidth}
 
 \inputminted{cpp}{code/link.cpp}
-
-\draft{more files}
 
 \end{document}
 

@@ -26,20 +26,25 @@ ECSSTask::ECSSTask() {
     auto &Function = Services.functionManagement;
     auto &Parameter = Services.parameterManagement;
 
-    auto compose = [](auto && PH1) { return MessageParser::composeArbitraryECSS<64>(std::forward<decltype(PH1)>(PH1), 0); };
+    auto compose = [](auto &&PH1) {
+        return MessageParser::composeArbitraryECSS<64>(std::forward<decltype(PH1)>(PH1), 0);
+    };
 
     Services.functionManagement.include("restart", functionRestart);
     Services.functionManagement.include("restart_sensor", functionRestartSensor);
     Services.functionManagement.include("log", functionLog);
+    Services.functionManagement.include("bogus_temp", functionBogusTemperature);
 
     Services.eventAction.addEventActionDefinition(
             {0, 100, 1, compose(Function.callFromGround("restart_sensor", "1"))});
     Services.eventAction.addEventActionDefinition(
             {0, 101, 2, compose(Function.callFromGround("restart_sensor", "2"))});
     Services.eventAction.addEventActionDefinition(
-            {0, 102, 3, compose(Parameter.setParameterFromGround(systemParameters.temperature1Status, SystemParameters::TemperatureStatus::Disabled))});
+            {0, 102, 3, compose(Parameter.setParameterFromGround(
+                systemParameters.temperature1Status, SystemParameters::TemperatureStatus::Disabled))});
     Services.eventAction.addEventActionDefinition(
-            {0, 103, 4, compose(Parameter.setParameterFromGround(systemParameters.temperature2Status, SystemParameters::TemperatureStatus::Disabled))});
+            {0, 103, 4, compose(Parameter.setParameterFromGround(
+                systemParameters.temperature2Status, SystemParameters::TemperatureStatus::Disabled))});
     Services.eventAction.addEventActionDefinition(
             {0, 104, 5, compose(Function.callFromGround("restart_sensor", "1"))});
     Services.eventAction.addEventActionDefinition(
@@ -47,13 +52,17 @@ ECSSTask::ECSSTask() {
     Services.eventAction.addEventActionDefinition(
             {0, 106, 7, compose(Function.callFromGround("restart_sensor", "3"))});
     Services.eventAction.addEventActionDefinition(
-            {0, 107, 8, compose(Parameter.setParameterFromGround(systemParameters.temperature1Status, SystemParameters::TemperatureStatus::Disabled))});
+            {0, 107, 8, compose(Parameter.setParameterFromGround(
+                systemParameters.temperature1Status, SystemParameters::TemperatureStatus::Disabled))});
     Services.eventAction.addEventActionDefinition(
-            {0, 108, 9, compose(Parameter.setParameterFromGround(systemParameters.temperature2Status, SystemParameters::TemperatureStatus::Disabled))});
+            {0, 108, 9, compose(Parameter.setParameterFromGround(
+                systemParameters.temperature2Status, SystemParameters::TemperatureStatus::Disabled))});
     Services.eventAction.addEventActionDefinition(
-            {0, 109, 10, compose(Parameter.setParameterFromGround(systemParameters.temperature1Status, SystemParameters::TemperatureStatus::Disabled))});
+            {0, 109, 10, compose(Parameter.setParameterFromGround(
+                systemParameters.temperature1Status, SystemParameters::TemperatureStatus::Disabled))});
     Services.eventAction.addEventActionDefinition(
-            {0, 109, 11, compose(Parameter.setParameterFromGround(systemParameters.temperature2Status, SystemParameters::TemperatureStatus::Disabled))});
+            {0, 109, 11, compose(Parameter.setParameterFromGround(
+                systemParameters.temperature2Status, SystemParameters::TemperatureStatus::Disabled))});
     Services.eventAction.addEventActionDefinition(
             {0, 110, 12, compose(Function.callFromGround("restart"))});
     Services.eventAction.addEventActionDefinition(
@@ -83,11 +92,16 @@ void ECSSTask::functionRestartSensor(String<16> args) {
 }
 
 void ECSSTask::functionLog(String<16> log) {
-    char data[17] { '\0' };
+    char data[17]{'\0'};
     memcpy(data, log.data(), 16);
     data[16] = '\0';
 
     LOG_INFO << data;
+}
+
+void ECSSTask::functionBogusTemperature(String<16>) {
+    temp1task->addBogusTemperature();
+    temp2task->addBogusTemperature(500);
 }
 
 #pragma clang diagnostic pop
