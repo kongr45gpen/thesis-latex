@@ -14,7 +14,7 @@
 %   works
 
 
-\documentclass[a4paper,nobib]{tufte-book}
+\documentclass[a4paper,nobib,justified]{tufte-book}
 
 \input{preamble.tex}
 
@@ -56,6 +56,56 @@
 			\iffieldundef{#1}{}{/}}%
 		\iffieldbibstring{#1}{\bibstring{\thefield{#1}}}{\mkdatezeros{\thefield{#1}}}}%
 }
+
+% Override tufte command for headers to remove greek accents
+\makeatletter
+\ExplSyntaxOn
+\cs_new_protected:Npn \removeaccent #1 { 
+	\tl_set:Nn \replace_str {#1}
+	\def\acctonos{}
+	\let\accdialytikatonos\accdialytika
+	\tl_replace_all:Nnn \replace_str { ά } { α }
+	\tl_replace_all:Nnn \replace_str { έ } { ε }
+	\tl_replace_all:Nnn \replace_str { ή } { η }
+	\tl_replace_all:Nnn \replace_str { ί } { ι }
+	\tl_replace_all:Nnn \replace_str { ό } { ο }
+	\tl_replace_all:Nnn \replace_str { ύ } { υ }
+	\tl_replace_all:Nnn \replace_str { ώ } { ω }
+	\tl_replace_all:Nnn \replace_str { ϊ } { ϊ }
+	\tl_replace_all:Nnn \replace_str { ϋ } { ϋ }
+	\tl_replace_all:Nnn \replace_str { ΐ } { Ϊ }
+	\tl_replace_all:Nnn \replace_str { ΰ } { Ϋ }
+	\tl_replace_all:Nnn \replace_str { Ά } { α }
+	\tl_replace_all:Nnn \replace_str { Έ } { Ε }
+	\tl_replace_all:Nnn \replace_str { Ή } { Η }
+	\tl_replace_all:Nnn \replace_str { Ί } { Ι }
+	\tl_replace_all:Nnn \replace_str { Ό } { Ο }
+	\tl_replace_all:Nnn \replace_str { Ύ } { Υ }
+	\tl_replace_all:Nnn \replace_str { Ώ } { Ω }
+	%    \tl_replace_all:Nnn \replace_str { Ϊ } { Ι }
+	%    \tl_replace_all:Nnn \replace_str { Ϋ } { Υ }
+	\tl_use:N \replace_str
+}
+\ExplSyntaxOff
+\renewcommand\mainmatter{%
+	\if@openright%
+	\cleardoublepage%
+	\else%
+	\clearpage%
+	\fi%
+	\@mainmattertrue%
+	\fancyhf{}%
+	\ifthenelse{\boolean{@tufte@twoside}}%
+	{% two-side
+		\renewcommand{\chaptermark}[1]{\markboth{##1}{}}%
+		\fancyhead[LE]{\thepage\quad\smallcaps{\newlinetospace{\removeaccent{\plaintitle}}}}% book title
+		\fancyhead[RO]{\smallcaps{\newlinetospace{\removeaccent{\leftmark}}}\quad\thepage}% chapter title
+	}%
+	{% one-side
+		\fancyhead[RE,RO]{\smallcaps{\newlinetospace{\removeaccent{\plaintitle}}}\quad\thepage}% book title
+	}%
+}
+\makeatother
 
 
 %%
@@ -183,7 +233,7 @@
 \thispagestyle{empty}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{\baselineskip}
-Copyright \copyright\ \the\year\ \thanklessauthor
+Copyright \copyright\ \the\year\ Κωνσταντίνος Καναβούρας
 
 \par\smallcaps{Δημοσιευτηκε απο το \thanklesspublisher}
 
@@ -193,6 +243,8 @@ Copyright \copyright\ \the\year\ \thanklessauthor
 
 \par Αυτή η εργασία χορηγείται με άδεια Creative Commons Αναφορά Δημιουργού 4.0 Διεθνές (CC BY 4.0 --- η ``Άδεια'')· το κείμενο του παρόντος δεν επιτρέπεται να χρησιμοποιηθεί παρά μόνο με βάση την Άδεια. Για να δείτε ένα αντίγραφο αυτής της άδειας, επισκεφτείτε το
 \url{https://creativecommons.org/licenses/by/4.0/legalcode.el}, ή δείτε μια "αναγνώσιμη από άνθρωπο" σύνοψη στο \url{https://creativecommons.org/licenses/by/4.0/deed.el}.\index{license}
+
+\par Η εργασία ετοιμάστηκε χρησιμοποιώντας \LaTeX{} με το πρότυπο \href{https://ctan.org/pkg/tufte-latex?lang=en}{\texttt{tufte-latex}} και τις βελτιώσεις του \href{https://github.com/lalider/tufte-latex-thesis}{\texttt{tufte-latex-thesis}}.
 
 \par Το AcubeSAT project εκτελείται με την υποστήριξη του Education Office του \href{https://www.esa.int/}{Ευρωπαϊκού Οργανισμού Διαστήματος}, στα πλαίσια του \href{https://www.esa.int/Education/CubeSats_-_Fly_Your_Satellite/}{προγράμματος Fly Your Satellite!}
 
@@ -275,7 +327,6 @@ Copyright \copyright\ \the\year\ \thanklessauthor
 %%
 % Start the main matter (normal chapters)
 \mainmatter
-\justify
 
 \chapter{Εισαγωγή}
 
@@ -629,7 +680,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 \end{itemize}
 
 
-Κάθε λειτουργία συνδέεται με ένα διάγραμμα \textbf{λειτουργικής ροής}, το οποίο δείχνει μια υψηλού επιπέδου περιγραφή των διαδικασιών που εκτελούνται κατά τη διάρκειά της \autocite{acubesat_functional_2021}.
+Κάθε λειτουργία συνδέεται με ένα διάγραμμα \textbf{λειτουργικής ροής}, το οποίο δείχνει μια υψηλού επιπέδου περιγραφή των διαδικασιών που εκτελούνται κατά τη διάρκειά της \autocite{acubesatteam_acubesat_functional_2021}.
 
 %\begin{figure}
 %	\centering
@@ -741,7 +792,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 	\item \foothref{https://gitlab.com/acubesat/utilities/mattermost-documentation-bot}{Documentation List}, \g{πλατφόρμα για καταλογοποίηση και πλοήγηση στα έγγραφα που έχει παράξει η ομάδα}
 \end{compactitem}
 
-\chapter{Η φιλοσοφία \acs{FDIR} της πρωτοβουλίας SAVOIR}
+\chapter{Η φιλοσοφία FDIR της πρωτοβουλίας SAVOIR}
 \label{cap:savoir}
 
 Στην παρούσα ενότητα θα εξετάσουμε συνοπτικά τον συνδυασμό δύο φιλοσοφιών που χρησιμοποιούνται από ευρωπαϊκούς φορείς με δράση στο χώρο του διαστήματος. Η πρώτη φιλοσοφία συνδέεται με το \textbf{πρότυπο \texttt{ECSS-E-ST-70-41C}} \autocite{ECSS-E-ST-70-41C} του οργανισμού \acf{ECSS}, το οποίο ορίζει το βασικό σύνολο τηλεμετρίας (\acs{TM}) και τηλεεντολών (\acs{TC}) που χρειάζεται η πλατφόρμα ενός δορυφόρου για να ελεγθεί από τον σταθμό βάσης.
@@ -919,7 +970,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 	\label{fig:FDIR-levels}
 \end{figure}
 
-\g{Συνεχίζοντας, παρουσιάζεται μία \textbf{προσαρμόσιμη} υλοποίηση που εκμεταλλεύεται τη \textbf{βάση δεδομένων} του συστήματος και την επικοινωνία με τα} \textbf{\acs{PUS} services} \g{ώστε να καλυφθούν πλήρως οι ανάγκες του \acs{FDIR}. Η λογική αυτή προϋποθέτει τα ακόλουθα:}
+\g{Συνεχίζοντας, παρουσιάζεται μία \textbf{προσαρμόσιμη} υλοποίηση που εκμεταλλεύεται τη \textbf{βάση δεδομένων} του συστήματος και την επικοινωνία με τα} \textbf{\acs{PUS} services} \g{ώστε να καλυφθούν πλήρως οι ανάγκες του \e{\acs{FDIR}}. Η λογική αυτή προϋποθέτει τα ακόλουθα:}
 \begin{compactenum}
 	\item \g{Δεδομένα αξιοπιστίας αποθηκεύονται σε \textbf{παραμέτρους} (π.χ. τιμές αισθητήρων, κατάσταση περιφερειακών)}
 	\item \g{Οι παράμετροι αυτές \textbf{παρακολουθούνται} από την υπηρεσία} on-board monitoring. \g{Όταν κάποια παράμετρος αποκτήσει τιμή εκτός ορίων, σημαίνει πως έχει εμφανιστεί κάποια αποτυχία.}
@@ -944,12 +995,12 @@ We have created a Python library consolidating the above steps\footurl{https://g
 \end{compactitem}
 
 
-\chapter{\acs{FDIR} στο AcubeSAT}
+\chapter{FDIR στο AcubeSAT}
 \label{cap:acufdir}
 
 Στο παρακάτω κεφάλαιο γίνεται ανάλυση περίπτωσης (case study) για την εφαρμογή των παραπάνω (\Cref{cap:savoir}) στην αποστολή του AcubeSAT (\Cref{cap:acubesat}). Πιο συγκεκριμένα, μελετώνται οι σχεδιαστικές αποφάσεις που λήφθηκαν, τα κομμάτια των προτύπων που εφαρμόστηκαν, και οι συγκεκριμένες ενέργειες που εξαρτώνται από την αποστολή \autocite{FMEA}.
 
-\section{Βασικές αρχές του \acs{FDIR}}
+\section{Βασικές αρχές του FDIR}
 \label{sec:fdirbaspri}
 
 Οι απαιτήσεις του \acs{FDIR} του AcubeSAT προέρχονται κυρίως από τις δυνατότητες του σχεδιασμού του συστήματος (\Cref{cap:acubesat}) και του πειράματος (\Cref{sec:su_fdir}). Πιο συγκεκριμένα, οι βασικές αρχές είναι:
@@ -1252,7 +1303,7 @@ P_3 &= 3P^2 - 2P^3 \nonumber\\
 	\end{tabularx}
 \end{table*}
 
-\FloatBarrier
+\clearpage
 \section{Λειτουργική ροή του \acs{FDIR}}
 \label{sec:fdir_operating_modes}
 
@@ -1306,10 +1357,10 @@ P_3 &= 3P^2 - 2P^3 \nonumber\\
 	\label{fig:safeflow}
 \end{figure*}
 
-Ο στόχος της ασφαλούς λειτουργίας είναι να παρέχει μια ισχυρή, καλά δοκιμασμένη και ντετερμινιστική κατάσταση, όπου ο δορυφόρος μπορεί να λειτουργήσει αυτόνομα, μέχρι οι χειριστές μπορέσουν να αποκαταστήσουν την απειλητική για την αποστολή βλάβη. Το \acs{FDIR} της Ασφαλούς Λειτουργίας ακολουθεί επίσης το πρότυπο \acs{PUS} και τις προδιαγραφές του AcubeSAT (\Cref{sec:fdirbaspri}), συνεχίζοντας να επιτρέπει τις αλλαγές από τους χειριστές.
+\g{Ο στόχος της ασφαλούς λειτουργίας είναι να παρέχει μια ισχυρή, καλά δοκιμασμένη και ντετερμινιστική κατάσταση, όπου ο δορυφόρος μπορεί να λειτουργήσει αυτόνομα, μέχρι οι χειριστές μπορέσουν να αποκαταστήσουν την απειλητική για την αποστολή βλάβη.} Το \acs{FDIR} της Ασφαλούς Λειτουργίας ακολουθεί επίσης το πρότυπο \acs{PUS} και τις προδιαγραφές του AcubeSAT (\Cref{sec:fdirbaspri}), συνεχίζοντας να επιτρέπει τις αλλαγές από τους χειριστές.
 %Σε αυτή τη λογική, το \acs{FDIR} κατά τη διάρκεια της Ασφαλούς Λειτουργίας έχει σχεδιαστεί με βάση σκληρά κωδικοποιημένους ελέγχους και διαδικασίες ανάκτησης, για τον μικρό αριθμό ενεργών στοιχείων και λειτουργιών. Προβλέπεται επίσης να υλοποιηθεί η δυνατότητα απενεργοποίησης αυτών των ελέγχων μέσω εντολών εδάφους.
 
-Στο AcubeSAT, η λειτουργικότητα του δορυφόρου είναι σημαντικά μειωμένη: το προφίλ στόχευσης προσπαθεί να πετύχει μόνο σταθεροποίηση, δεν εκτελούνται περίπλοκες λειτουργίες, και τα υποσυστήματα πραγματοποιούν μόνο συντήρηση. Ωστόσο, η επικοινωνία \ac{UHF} και η μετάδοση του περιοδικού ραδιοφάρου (beacon) εξακολουθούν να είναι ενεργές για λόγους παρατηρησιμότητας, και για να επιτραπεί η διόρθωση του εντοπισμένου προβλήματος.
+Στο AcubeSAT, η λειτουργικότητα του δορυφόρου είναι σημαντικά μειωμένη: το προφίλ στόχευσης προσπαθεί να πετύχει μόνο σταθεροποίηση, δεν εκτελούνται περίπλοκες λειτουργίες, και τα υποσυστήματα πραγματοποιούν μόνο συντήρηση. Ωστόσο, η επικοινωνία \ac{UHF} \g{και η μετάδοση του περιοδικού ραδιοφάρου (beacon) εξακολουθούν να είναι ενεργές για λόγους παρατηρησιμότητας, και για να επιτραπεί η διόρθωση του εντοπισμένου προβλήματος.}
 
 \newthought{Η γενικη αρχιτεκτονικη} του \acs{FDIR} για την ασφαλή λειτουργία παρουσιάζεται στο \Cref{fig:safeflow}. Οι ενέργειες αποκατάστασης περιλαμβάνουν:
 \begin{itemize}
@@ -1334,7 +1385,7 @@ P_3 &= 3P^2 - 2P^3 \nonumber\\
 
 Η επαλήθευση του \acs{FDIR} είναι το τελευταίο κομμάτι της διαδικασίας, και περιλαμβάνει έλεγχο της κάθε επίφοβης αποτυχίας, μέσω προσομοίωσης με υλικό ή λογισμικό.
 
-\chapter{\g{Πρακτική επίδειξη του} \acs{FDIR}}
+\chapter{Πρακτική επίδειξη του FDIR}
 \label{cap:practical}
 
 Ως πείραμα "proof-of-concept" για την υλοποίηση του \ac{FDIR} του AcubeSAT, προετοιμάσαμε μια πρακτική διάταξη για την προσομοίωση της συμπεριφοράς του δορυφόρου (\Cref{fig:block}). Η διάταξη αποτελείται από:
@@ -1990,16 +2041,16 @@ P_3 &= 3P^2 - 2P^3 \nonumber\\
 \subsection{Προσομοίωση αστοχιών}
 \label{sec:simul}
 
-\begin{otherlanguage}{greek}
+
 Για την προσομοίωση κάθε αποτυχίας χρησιμοποιήθηκαν οι ακόλουθες μέθοδοι:
 \begin{itemize}
-	\item Για τις αποτυχίες επικοινωνίας μεταξύ εξαρτημάτων, κάθε αισθητήρας απλά αποσυνδέθηκε φυσικά από το σύστημα.
-	\item Για μικρές αλλαγές στη θερμοκρασία, ένα πιστόλι θερμού αέρα ή άλλη πηγή θερμότητας στρεφόταν προς κάθε αισθητήρα, με κατάλληλη φροντίδα ώστε να μη ξεπεραστούν τα λειτουργικά όρια των εξαρτημάτων.
-	\item Για μεταβολές της θερμοκρασίας που δεν ήταν πρακτικά δυνατό να προσομοιωθούν, η βλάβη εισήχθη στο λογισμικό, τροποποιώντας χειροκίνητα τις αντίστοιχες μεταβλητές.
+	\item \g{Για τις αποτυχίες επικοινωνίας μεταξύ εξαρτημάτων, κάθε αισθητήρας απλά αποσυνδέθηκε φυσικά από το σύστημα.}
+	\item \g{Για μικρές αλλαγές στη θερμοκρασία, ένα πιστόλι θερμού αέρα ή άλλη πηγή θερμότητας στρεφόταν προς κάθε αισθητήρα, με κατάλληλη φροντίδα ώστε να μη ξεπεραστούν τα λειτουργικά όρια των εξαρτημάτων.}
+	\item \g{Για μεταβολές της θερμοκρασίας που δεν ήταν πρακτικά δυνατό να προσομοιωθούν, η βλάβη εισήχθη στο λογισμικό, τροποποιώντας χειροκίνητα τις αντίστοιχες μεταβλητές.}
 	
-	Τα δύο κουμπιά που υπάρχουν στην αναπτυξιακή πλακέτα χρησιμοποιήθηκαν ένα απλό μέσο για την "εισαγωγή" ακραίων τιμών θερμοκρασίας.
+	\g{Τα δύο κουμπιά που υπάρχουν στην αναπτυξιακή πλακέτα χρησιμοποιήθηκαν ένα απλό μέσο για την "εισαγωγή" ακραίων τιμών θερμοκρασίας.}
 \end{itemize}
-\end{otherlanguage}
+
 
 \begin{table*}
 	\centering
@@ -2507,7 +2558,7 @@ Received TM [82]
 
 \paragraph{\textbf{\texttt{RC-030} Προσθήκη/διαγραφή ορισμών παρακολούθησης}}~
 
-\draft{todo...}
+%\draft{todo...}
 
 \paragraph{\textbf{\texttt{RC-040} Προσθήκη/διαγραφή αντιδράσεων}}~
 
