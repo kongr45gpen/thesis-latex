@@ -126,7 +126,14 @@ mincitenames=1,
 
 % Acronyms
 \usepackage{acro}
-\acsetup{use-id-as-short,make-links=false,case-sensitive=false}
+\acsetup{
+	use-id-as-short,
+	make-links=false,
+	case-sensitive=false,
+	patch/floats=false,
+	patch/caption=false,
+	patch/tabularx=false
+}
 \input{acronyms.tex}
 \input{commands.tex}
 
@@ -150,6 +157,7 @@ mincitenames=1,
 
 % Various utilities
 \usepackage{tabularx}
+\usepackage[singlelinecheck=false]{caption}
 \usepackage{subcaption}
 \usepackage{comment}
 
