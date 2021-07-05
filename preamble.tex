@@ -268,4 +268,9 @@ mincitenames=1,
 	{-1em}%
 	{\hspace{1em}\normalfont\normalsize\itshape}}
 
+% \acuse command that also adds the current page
+%\NewAcroTemplate{fdirthesisempty}{}
+%\NewAcroCommand\acusepage{m}{}
+\let\acusepage\acuse
+
 \makeatother
