@@ -10,6 +10,12 @@
 \author[Konstantinos Kanavouras]{Konstantinos Kanavouras}
 \publisher{Aristotle University of Thessaloniki}
 
+\acsetup{foreign/display=false, list/foreign/display=false}
+
+\def\g{\ignorespaces}
+\def\e{\ignorespaces}
+\def\acusepage#1{}
+
 \begin{document}
 
 % Front matter
@@ -103,6 +109,8 @@ WARRANTIES OR CONDITIONS OF ANY KIND}, either express or implied. See the
 License for the specific language governing permissions and limitations
 under the License.\index{license}
 
+\par This thesis was produced using \LaTeX, the \href{https://ctan.org/pkg/tufte-latex?lang=en}{\texttt{tufte-latex}} template, and the modifications from \linebreak[4] \href{https://github.com/lalider/tufte-latex-thesis}{\texttt{tufte-latex-thesis}}.
+
 \par The AcubeSAT project is carried out with the support of the Education Office of the \href{https://www.esa.int/}{European Space Agency}, under the educational \href{https://www.esa.int/Education/CubeSats_-_Fly_Your_Satellite/}{Fly Your Satellite! programme}.
 
 \par The views expressed herein by the authors can \smallcaps{in no way be taken to reflect} the official opinion, or endorsement, of the European Space Agency.
@@ -132,12 +140,8 @@ under the License.\index{license}
 
 \chapter*{Abstract}
 
-%This sample book discusses the design of Edward Tufte's
-%books\parencite{Tufte2001,Tufte1990,Tufte1997,Tufte2006}.
 \justify
-Space is not a welcoming environment; while the aerospace engineering community has managed to reliably operate thousands of satellites in orbit, CubeSats, the most popular class of nanosatellite, only have a 50\% success rate. Low costs, lack of strict technical requirements and scarcity of publicly available documentation often drives up the risks for educational, scientific and commercial CubeSats. This thesis investigates a configurable and modular Fault Detection, Isolation and Recovery (FDIR) architecture that uses the ECSS Packet Utilisation Standard. This FDIR concept, along with the provided open-source software implementation, can be used by CubeSat missions to increase the reliability of their design and chances of mission success, by autonomously responding to on-board errors. The thesis also includes background information regarding CubeSat reliability, and explores the software and hardware used to implement the proposed FDIR design on the AcubeSAT mission, currently under design by students of the Aristotle University of Thessaloniki.
-
-\newthought{kapou edw} \draft{tha mpei kai to abstract sta ellhnika}
+Space is not a welcoming environment; while the aerospace engineering community has managed to reliably operate thousands of satellites in orbit, CubeSats, the most popular class of nanosatellite, only have a 50\% success rate. Low costs, lack of strict technical requirements and scarcity of publicly available documentation often drive up the risks for educational, scientific and commercial CubeSats. This thesis investigates a configurable and modular Fault Detection, Isolation and Recovery (FDIR) architecture that uses the ECSS Packet Utilisation Standard. This FDIR concept, along with the provided open-source software implementation, can be used by CubeSat missions to increase the reliability of their design and chances of mission success, by autonomously responding to on-board errors. The thesis also includes background information regarding CubeSat reliability, and explores the software and hardware used to implement the proposed FDIR design on the AcubeSAT mission, currently under design by students of the Aristotle University of Thessaloniki.
 
 %%
 % Start the main matter (normal chapters)
@@ -147,11 +151,154 @@ Space is not a welcoming environment; while the aerospace engineering community 
 \chapter{Introduction}
 
 \section{Thesis research area}
-\draft{1-2 pages}
 
+
+\begin{marginfigure}
+	\centering
+	\begin{tikzpicture}[every node/.style={scale=.8}]
+	\pie[
+	sum=auto,after number=,radius={1.8},text=pin
+	]{1440/Commercial,
+		436/Government,
+		339/Military,
+		133/Civilian,
+		318/Combination
+	}
+	
+	\end{tikzpicture}
+	\caption[Types of satellites in operation in 2018]{Types of satellites in operation in 2018 \autocite{wood_visualizing_all_2020}}
+	\label{fig:satellite_types}
+\end{marginfigure}
+
+This thesis investigates Aerospace Engineering, focusing on satellite manufacturing and operation. The first artificial satellite \e{``Sputnik 1''} was launched in 1957, and by 2021 about \SI{8900}{} satellites have been launched, of which about \SI{4000}{} are currently operational and in orbit \autocite{unionofconcernedscientists_satellite_database_2021,kelso_norad_twoline,wood_visualizing_all_2020}.
+
+Artificial satellites can perform a number of different functions, which typically include telecommunications, earth observation, navigation (\acs{GNSS}), scientific research, technology demonstration, and other purposes, excluding manned missions, missions beyond Earth orbit, and space stations. The data generated using space technology have long been an integral part of modern civilisation, having influenced transportation, weather forecasting, and technology.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=.9\textwidth]{satellites}
+	\caption[Active satellites orbiting the earth in 2021]{Active satellites orbiting the earth in 2021. \acl{LEO} satellites can be seen close to the planet, and Geostationary Orbit satellites can be seen at a fixed high altitude, while Medium Earth Orbit are between the two previous categories.}
+				\label{fig:all_satellites}
+				\setfloatalignment{t}
+			\end{figure}
+			
+After launch, satellites typically remain in space until the completion of their mission after some years, at which point they can either return to Earth and burn up in the atmosphere, or remain in space as space junk.
+
+\begin{marginfigure}
+	\includegraphics{cool_satellite}
+	\caption[Artistic view of the Jason-3 satellite]{Artistic view of the \href{https://www.flickr.com/photos/noaasatellites/16979948568}{Jason-3} satellite} %The image shows the solar panels, the two directional antennas and the thermal insulation of the satellite.
+\end{marginfigure}
+
+Space technology developments present a significant degree of difficulty, which stems from the highly increased reliability requirements in the harsh environment of space. In particular, the long distances, extreme temperatures, mechanical launch loads, high-energy radiation, vacuum, and the inability to repair damage, have raised a wide range of challenges in space exploration. As such, aerospace projects are integrally linked to a number of engineering disciplines such as systems engineering, product assurance, reliability engineering, and assembly, integration and verification. This thesis focuses on \textbf{\acf{FDIR}}, i.e. the ability of space systems to automatically detect and recover from faults and operational failures.%\acusepage{reliability}
+	
+Despite the above-mentioned difficulties, modern technology has advanced enough to make space a commercial target. As part of the ``NewSpace'' philosophy, more and more commercial or non-profit entities are taking advantage of the possibilities offered beyond the limits of our planet \autocite{denis_new_space_2020}. Start-ups, satellite constellations, educational missions and commercial services are concepts that have already become commonplace in the 21\textsuperscript{st} century, with more countries around the world obtaining access to space or even launch capabilities.
+	
+\begin{marginfigure}
+	\includegraphics{f1_cubesat_fm}
+	\caption{The ``F-1'' CubeSat of the FPT University in Vietnam (1U size)}
+	\label{fig:cubesat}
+\end{marginfigure}
+
+Given the above, this thesis is focused on the increasingly popular \textbf{nanosatellite} technology \autocite{sweeting_modern_small_2018a}. \textbf{CubeSats}, the most popular class of nanosatellite, were introduced as a concept in 1999. Their low cost and size, as well as their relatively low complexity, have allowed universities and organizations worldwide to launch over \SI{1530}{} CubeSats by 2021 \autocite{swartwout_cubesat_database_2021}.
+	
+CubeSats are designed using ``building blocks'' sized at \SI[product-units = single]{10 x 10 x 10}{\centi\metre} called \textbf{Units}. Typical satellite sizes are obtained by "stacking" these units, resulting in satellites of 1U, 1.5U, 2U, 3U, 6U and 12U. Each unit can weigh up to \SI{2}{\kilogram} \autocite{CDS14}. Internally,  CubeSats use low-cost commercial electronic components, henceforth referred to as \textbf{\acf{COTS}} components. CubeSats are typically launched in Low Earth Orbits (\acs{LEO}) \autocite{anthopoulos_orbital_analysis_2020,riebeek_catalog_earth_2009}, deployed as secondary payloads in larger satellite launches (``piggyback launches''), and remain active for periods of about 1 to 3 years.
+
+\pagebreak[4]
 \section{Thesis goals \& contribution}
 
+\begin{marginfigure}
+	\centering
+	\begin{tikzpicture}[every node/.style={scale=0.8}]
+	\pie[
+	sum=auto,after number=,radius={1},text=pin,rotate=0,scale font,color={MaterialGreen400, MaterialBlue, MaterialAmber, MaterialRed, MaterialYellow, MaterialGrey}
+	]{131/Mission complete,
+		144/In progress,
+		61/Early loss,
+		120/\acs{DOA},
+		37/{Failed launch},
+		204/Unknown
+	}
+	
+	\end{tikzpicture}
+	\caption[CubeSat mission status since 2000]{CubeSat mission status since 2000 \autocite{swartwout_cubesat_mission_2019}}
+			\label{fig:cubesat_status}
+			\acusepage{reliability}
+		\end{marginfigure}
+		
+		\begin{marginfigure}
+			\centering
+			\begin{tikzpicture}[every node/.style={scale=0.8}]
+			\pie[
+			sum=auto,after number=,radius={1},text=pin,rotate=0,scale font,color={MaterialGreen400, MaterialBlue, MaterialAmber, MaterialRed, MaterialYellow, MaterialGrey}
+			]{38/Mission complete,
+				54/In progress,
+				34/Early loss,
+				88/\acs{DOA},
+				17/{Failed launch},
+				58/Unknown
+			}
+			
+			\end{tikzpicture}
+			\caption[CubeSat mission status from independent manufacturers]{CubeSat mission status from ``hobbyists'' (scientific and other research/educational projects) \autocite{swartwout_cubesat_database_2021}}
+			\label{fig:cubesat_status_hobbyist}
+		\end{marginfigure}
+
+This work is dedicated to improving the reliability of nanosatellites and CubeSat systems. Although the majority of large satellite launches have completed their missions, even partially \autocite{kattakuri_failures_spacecraft_2019,jacklin_smallsatellite_mission_2019}, 39.6\% of launched CubeSats have failed to complete their mission or did not operate at all. This number can be increased to 57.0\% if we focus on the subset of CubeSats launched as the first space mission of an organisation lacking the expertise of major manufaturers and space entities.
+
+The reasons explaining the high failure rate of CubeSats are mainly related to the compressed manufacturing schedule, which leads to errors and problems that aren't detected during design. Sources of failures such as environmental degradation (thermal cycles, radiation), lack of safety margins in power and telecommunications, and software problems, combined with the general lack of experience and haphazard procedures followed by new manufacturers, reduce the overall reliability of nanosatellites \autocite{swartwout_cubesat_mission_2019,langer_reliability_estimation_2017}.
+
+The approaches taken to increase CubeSat reliability include:
+\begin{compactitem}
+	\item Reducing the number of potential failures from the design phase, by including reliability analysis in the early phases of a project
+	\item Structured reliability assessment and improvement tools, such as \textbf{\acf{FMEA}} and \textbf{\acf{FDIR}} \autocite{faure_lean_satellites_2017,menchinelli_reliability_engineering_2018}
+	\item Adaptation and adoption of open space standards for design, manufacturing and verification
+\end{compactitem}
+
+
+This work intends to supplement the toolbox of CubeSat manufacturers, by detailing a structured approach to \ac{FDIR} based on the \textbf{European \acs{ECSS} standards} and the work of the \textbf{\acs{SAVOIR}} initiative \footurl{https://savoir.estec.esa.int} of the European Space Industry. In the main matter, we will discuss how these ideas can be adapted to a low-scale CubeSat mission, presenting:
+\begin{itemize}
+	\item A structured method to investigate the possible failure modes of a satellite, and how they can be tackled
+	\item Software that can respond to and safely manage all critical in-orbit failures
+	\item A \textbf{configurable and modular} architecture that allows operators to easily modify the behaviour of the \acs{FDIR} system and tailor it for different environments.
+\end{itemize}
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}
+	[
+	ybar,
+	enlargelimits=0.15,
+	ylabel={Failed satellites}, % the ylabel must precede a # symbol.
+	xlabel={Failed subsystem},
+	symbolic x coords={ADCS, COMMS, Deployment, EPS, Payload, Thermal, OBDH, Launch, Unknown}, % these are the specification of coordinates on the x-axis.
+	xticklabels={ADCS, COMMS, Deployment, EPS, Payload, Thermal, OBDH, Launch, Unknown},
+	xtick=data,
+	nodes near coords, % this command is used to mention the y-axis points on the top of the particular bar.
+	nodes near coords align={vertical},
+	ymajorgrids={true},
+	width=11cm,
+	height=6cm,
+	x tick label style={rotate=45,anchor=east},
+	nodes near coords={\pgfmathprintnumber\pgfplotspointmeta\%}
+	]
+	\addplot coordinates {(ADCS, 16) (COMMS, 13) (Deployment, 10) (EPS, 9) (Payload, 8) (Thermal, 6) (OBDH, 2) (Launch, 2) (Unknown, 34) };
+	
+	\end{axis}
+	\end{tikzpicture}
+	\caption[Main CubeSat failure causes]{Main CubeSat failure causes (\(n=50\)) \autocite{bouwmeester_survey_implementation_2017}}
+	\label{fig:whyfail}
+\end{figure}
+
+The proposed \acs{FDIR} system aims to increase confidence during development, but also to quickly incorporate new information generated during testing, or even after launch.
+
+In addition to the presentation, analysis and commentary on the standards, this thesis focuses on the application of the aforementioned \acs{FDIR} structure to the \emph{AcubeSAT} nanosatellite, and includes an experimental implementation of the \acs{FDIR} suite in hardware \& software.
+
 \section{Thesis structure}
+
+This document begins with a summary of the AcubeSAT mission, which is the main motivation behind it (\Cref{cap:acubesat}). It then proceeds to an analysis of the main \acs{FDIR} standards and philosophy, focusing on the parts of particular importance to CubeSats and educational missions (\Cref{cap:savoir}). The next section discusses the application of the previous standards to the design of AcubeSAT, and analyses some design decisions and implementation details of \acs{FDIR} on the nanosatellites (\Cref{cap:acufdir}).
+
+The last chapter includes a practical demonstration of the proposed \acs{FDIR} on a simple two-sensor test system (\Cref{cap:practical}). The system is constructed so that it can detect and recover from all foreseen possible failures, using the libraries covering the \acs{ECSS} and \acs{FDIR} standards. After the system has been developed, a full test of its response to failures is performed. This simulation platform is configured to emulate the satellite system, including the microcontroller and the ground station.
 
 \chapter{Reliability Engineering in CubeSat Systems}
 \label{sec:fdir}
