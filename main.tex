@@ -300,51 +300,66 @@ This document begins with a summary of the AcubeSAT mission, which is the main m
 
 The last chapter includes a practical demonstration of the proposed \acs{FDIR} on a simple two-sensor test system (\Cref{cap:practical}). The system is constructed so that it can detect and recover from all foreseen possible failures, using the libraries covering the \acs{ECSS} and \acs{FDIR} standards. After the system has been developed, a full test of its response to failures is performed. This simulation platform is configured to emulate the satellite system, including the microcontroller and the ground station.
 
-\chapter{Reliability Engineering in CubeSat Systems}
-\label{sec:fdir}
-
-
-%\newthought{The pages} of a book are usually divided into three major
-%sections: the front matter (also called preliminary matter or prelim), the
-%main matter (the core text of the book), and the back matter (or end
-%matter).
-
-%\newthought{The front matter} of a book refers to all of the material that
-%comes before the main text.  The following table from shows a list of
-%material that appears in the front matter of
-%along with its page number.  Page numbers that appear in parentheses refer
-%to folios that do not have a printed page number (but they are still
-%counted in the page number sequence).
-
-
-
-\section{Introduction to space engineering}
-cubesat reliablity \autocite{durou_hierarchical_fault_2002}
-
-\section{Nanosatellites \& CubeSats}
-
-\section{CubeSat reliability}
-
-\acf{FDIR}
-
 \chapter{The AcubeSAT mission}
 
+\begin{marginfigure}
+    \includegraphics{acubesat_patch}
+    \caption{AcubeSAT mission patch}
+\end{marginfigure}
+
+\begin{marginfigure}
+    \centering
+    \includegraphics[width=.8\textwidth]{acubesat}
+    \caption{AcubeSAT nanosatellite render}
+\end{marginfigure}
+
+
+The implementation framework of this work is the \textbf{``AcubeSAT''} nanosatellite project, which, as of 2021, is under development by students of the Aristotle University of Thessaloniki, and aims to perform biology-centred research in space.
+
+The project was initiated in 2016. In February 2020, it became part of the \foothref{https://www.esa.int/Education/CubeSats_-_Fly_Your_Satellite}{``Fly Your Satellite!\ 3''} programme by the European Space Agency, aiming at a 2023 launch.
+
+AcubeSAT is 3 CubeSat units large (3U), measuring \SI[product-units = single]{10 x 10 x 34.05}{\centi\metre} and weighing \SI{4.26}{\kilo\gram}. Physically, the CubeSat contains the \textbf{experimental payload}, covering the bottom 2U, and the rest of the \textbf{spacecraft platform} which takes up the remaining 1U.
+
+The AcubeSAT project follows an \textbf{open-source philosophy}, making the software, developments and documentation available to the public under free licenses, at \url{https://gitlab.com/acubesat/}.
+
 \section{The mission}
-\draft{Here we write the history of the project and a description of the mission and the satellite...}
+
+AcubeSAT's main mission is the study of \textbf{eukaryotic cells} in \acl{LEO}, and more specifically the assessment of the effects of \emph{radiation} and \emph{microgravity} on 190 different strains of the yeast species \emph{Saccharomyces Cerevisiae}. The previous are achieved with a novel lab-on-a-chip construction, structured around a \textbf{microfluidic chip} (\Cref{fig:microfluidic_chip}) \autocite{volpetti_microfluidic_biodisplay_2017} that allows the regulation of gene expression to be monitored on an unprecedented scale.
+
+The results of the experiment are telemetered to Earth in the form of photographs, where the entirety of the microfluidic chip's chambers are depicted, and results are extracted acording to the \textbf{fluorescence level} produced in each chamber. The results in orbit are compared to a similar ground-based reference experiment.
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=.7\textwidth]{cubesat_exploded}
+	\caption{View of AcubeSAT's interior, showing the different subsystems and the experimental setup}
+\end{figure}
 
 \section{Subsystems}
 
 The AcubeSAT nanosatellite is technically and programmatically split into 11 different subteams or \textbf{subsystems}, each responsible for a different section of the satellite, and made up out of \SIrange{2}{9}{} dedicated members.
 
+\begin{marginfigure}
+	\includegraphics{microfluidic_chip}
+	\caption{Microfluidic chip engineering model}
+	\label{fig:microfluidic_chip}
+\end{marginfigure}
+
 In the following sections, a brief introduction on the function and design of each subsystem is presented. As the Systems Engineering and \acl{PA} process is inherently connected to the function of all subsystems, the details relevant to \acs{FDIR} are also mentioned. For more detailed information, the reader is encouraged to refer to \foothref{https://acubesat.spacedot.gr/subsystems/}{AcubeSAT's website}, or to the publicly available \foothref{https://gitlab.com/acubesat/documentation/cdr-public}{\ac{CDR} documents}.
 \subsection{\acf{ADCS}}
 \label{sec:adcs}
 
-The \ac{ADCS} subteam is responsible for controlling the \textbf{attitude} and orientation of the spacecraft in orbit. This is achieved using a series of \ac{COTS} control actuators (one 3-axis magnetorquer board, one 1-axis reaction wheel), sensors for attitude determination (1 gyroscope and 2 magnetometers), and filtering, determination \& control algorithms.\autocite{DDJF_AOCS}
+The \ac{ADCS} subteam is responsible for controlling the \textbf{attitude} and orientation of the spacecraft in orbit. This is achieved using a series of \ac{COTS} control actuators (one 3-axis magnetorquer board, one 1-axis reaction wheel), sensors for attitude determination (1 gyroscope and 2 magnetometers), and filtering, determination \& control algorithms \autocite{DDJF_AOCS}.
 
 The \ac{ADCS} can operate under different pointing profiles for different attitude needs:
 \begin{enumerate}
 	\item \textbf{Detumbling}, where the satellite is attempting to minimize its angular acceleration close to 0, to ensure a stable communications link, prevent detachment of parts and allow easier regaining of pointing.
+	
+	\begin{marginfigure}
+		\centering
+		\includegraphics[width=.7\textwidth]{AcubeSAT_reference_frame_cropped.pdf}
+		\caption{AcubeSAT reference frame}
+		\label{fig:frame}
+	\end{marginfigure}
 	
 	Detumbling mode is implemented in the simplest possible way, using only one of the 2 redundant magnetometers and a simple control algorithm. It is activated when there is no need to apply any of the specific pointing modes, or if the spacecraft angular rate is too high. In AcubeSAT, system-wide \emph{Safe Mode}, \emph{Commissioning Mode} and \emph{Science Mode} apply detumbling.
 	
@@ -369,7 +384,7 @@ The performance of the \ac{ADCS} system can be summarised using performance metr
 
 \subsection{\acf{COMMS}}
 
-The communications subsystem is responsible for transmitting data between the Earth and the spacecraft in orbit. The transmitted data is split into 3 different categories\autocite{DDJF_TTC}:
+The communications subsystem is responsible for transmitting data between the Earth and the spacecraft in orbit. The transmitted data is split into 3 different categories \autocite{DDJF_TTC}:
 \begin{itemize}
 	\item \textbf{\acf{TC}}: Commands from the Earth to the satellite. They can be used to request information, or to perform specific spacecraft actions.
 	\item \textbf{\acf{TM}}: Information sent from the satellite towards Earth, typically including vital information such as sensor values, system status, timestamps and events.
@@ -387,17 +402,10 @@ The main component of the \acs{COMMS} subsystem is the \textbf{SatNOGS COMMS boa
 
 Communication will take place using 2 frequency bands on the \acs{ISM} range, namely \SI{436.5}{\mega\hertz} and \SI{2.425}{\giga\hertz}, supported by a deployable turnstile and a directional patch antenna respectively. The use of \acs{ISM} frequencies allows easy radio-amateur access to the satellite. The first (\acs{UHF}) band also emits a periodic \textbf{beacon}, listing information about satellite status.
 
-The communications subsystem is also responsible for the \ac{EMC} analysis and interference mitigation, as well as the design and construction of the satellite \acl{GS}. The \acl{GS} will be part of \textbf{SatNOGS}\autocite{white_overview_satellite_2018}, a global network of satellite ground stations based on open technologies and open data.
+The communications subsystem is also responsible for the \ac{EMC} analysis and interference mitigation, as well as the design and construction of the satellite \acl{GS}. The \acl{GS} will be part of \textbf{SatNOGS} \autocite{white_overview_satellite_2018}, a global network of satellite ground stations based on open technologies and open data.
 
 \subsection{\acf{EPS}}
-The \ac{EPS} is the subsystem responsible for the generation, distribution and storage of electrical power of the spacecraft. It is a critical aspect of the spacecraft due to the direct dependence of all subsystems to the high power needs of many CubeSat subsystems, and is theorised to be the most common reason for CubeSat failure.\autocite{langer_reliability_cubesats_2016}
-
-AcubeSAT has opted for a \ac{COTS} subsystem approach for the \ac{EPS}:\autocite{DDJF_SYS}
-\begin{itemize}
-	\item \textbf{Solar panels} are procured from EnduroSat. Four 3U panels cover the \(X\) and \(Y\) faces of the satellite, and one 1U panel covers the \(-Z\) face.
-	\item The \textbf{\ac{PCDU}} is procured from NanoAvionics and offers 10 switched channels with overcurrent protection over 4 voltage rails, as well as 4 \ac{MPPT} converters.
-	\item The \textbf{battery pack}, also procured from NanoAvionics, contains 4 18650 Li-Ion cells in a 2S2P\footnote{2 series, 2 parallel} configuration.
-\end{itemize}
+The \ac{EPS} is the subsystem responsible for the generation, distribution and storage of electrical power of the spacecraft. It is a critical aspect of the spacecraft due to the direct dependence of all subsystems to the high power needs of many CubeSat subsystems, and is theorised to be the most common reason for CubeSat failure \autocite{langer_reliability_cubesats_2016}.
 
 \begin{margintable}
 	\caption{AcubeSAT nominal mode power budget}
@@ -415,13 +423,22 @@ AcubeSAT has opted for a \ac{COTS} subsystem approach for the \ac{EPS}:\autocite
 	\end{tabularx}
 \end{margintable}
 
+AcubeSAT has opted for a \ac{COTS} subsystem approach for the \ac{EPS} \autocite{DDJF_SYS}:
+\begin{itemize}
+	\item \textbf{Solar panels} are procured from EnduroSat. Four 3U panels cover the \(X\) and \(Y\) faces of the satellite, and one 1U panel covers the \(-Z\) face.
+	\item The \textbf{\ac{PCDU}} is procured from NanoAvionics and offers 10 switched channels with overcurrent protection over 4 voltage rails, as well as 4 \ac{MPPT} converters.
+	\item The \textbf{battery pack}, also procured from NanoAvionics, contains 4 18650 Li-Ion cells in a 2S2P\footnote{2 series, 2 parallel} configuration.
+\end{itemize}
+
+
+
 \FloatBarrier
 A dynamic approach is taken with regards to power budget calculation:
 \begin{compactenum}
 	\item The in-orbit power generation is calculated for the duration of the mission using the \textbf{STK} software, taking into account satellite orientation, pointing profiles and eclipse, with a \SI{1}{\minute} resolution.
 	\item The power consumption of the system is calculated on average for each different operational mode.
 	\item \acs{MPPT} efficiencies and battery charge level are calculated for each timepoint, assuming worst-case thermal and electrical conditions
-	\item A system-wide 10\% margin is applied to the results
+	\item A system-wide 10\% margin is applied to the results.
 \end{compactenum}
 
 We have created a Python library consolidating the above steps\footurl{https://gitlab.com/acubesat/eps/power-budget} and producing the necessary outputs to prove the adequacy of the design.
@@ -453,11 +470,11 @@ The \ac{OBC} board contains the main \ac{OBC} logic, and is based around a \foot
 	\label{fig:samv71}
 \end{marginfigure}
 
-AcubeSAT's data interface is using a cold-redundant \ac{CAN} bus to facilitate cross-subsystem communication, selected due to its robustness and reliability. \autocite{bouwmeester_survey_implementation_2017} AcubeSAT boards implement the PC/104 mechanical interface.\autocite{PC104}
+AcubeSAT's data interface is using a cold-redundant \ac{CAN} bus to facilitate cross-subsystem communication, selected due to its robustness and reliability \autocite{bouwmeester_survey_implementation_2017}. AcubeSAT boards implement the PC/104 mechanical interface \autocite{PC104}.
 
 \subsection{\acf{OBSW}}
 
-The \ac{OBSW} subsystem is responsible for the design and development of the nanosatellite's software. The language chosen to be used in the system's 4 \acp{MCU} is a reduced form of \textbf{C++}, and the code is guarded under a number of standards, static checkers and unit tests.\autocite{DDJF_OBSW} All software runs under the Free\acs{RTOS} operating system.
+The \ac{OBSW} subsystem is responsible for the design and development of the nanosatellite's software. The language chosen to be used in the system's 4 \acp{MCU} is a reduced form of \textbf{C++}, and the code is guarded under a number of standards, static checkers and unit tests \autocite{DDJF_OBSW}. All software runs under the Free\acs{RTOS} operating system.
 
 
 
@@ -499,7 +516,7 @@ During flight, AcubeSAT can remain within one of the following \textbf{system mo
 \end{table*}
 
 
-Each mode is associated with a \textbf{functional flow} diagram, showing a high-level description of the spacecraft operation during this mode.\autocite{acubesat_functional_2021}
+Each mode is associated with a \textbf{functional flow} diagram, showing a high-level description of the spacecraft operation during this mode \autocite{acubesatteam_acubesat_functional_2021}.
 
 \begin{figure}
 	\centering
@@ -511,18 +528,19 @@ Each mode is associated with a \textbf{functional flow} diagram, showing a high-
 
 \subsection{Structural}
 
-The Structural subsystem has taken over:
-\begin{itemize}
-	\item The analysis and configuration of the \ac{COTS} 3-unit structure (\Cref{fig:structure}) housing all the CubeSat's components. Vibration analyses are especially important, as they serve to investigate whether the CubeSat can withstand the launcher's loads.
-	\item The complete design, manufacturing and assembly of the \textbf{payload container} and its unibody, hosting the scientific experiment of the mission (\Cref{fig:container}).
-\end{itemize}
-
-\begin{marginfigure}
+\begin{marginfigure}[2cm]
 	\centering
 	\includegraphics[width=.5\textwidth]{structure}
 	\caption{The CubeSat's 3U \acs{COTS} structure}
 	\label{fig:structure}
 \end{marginfigure}
+
+
+The Structural subsystem has taken over:
+\begin{itemize}
+	\item The analysis and configuration of the \ac{COTS} 3-unit structure (\Cref{fig:structure}) housing all the CubeSat's components. Vibration analyses are especially important, as they serve to investigate whether the CubeSat can withstand the launcher's loads.
+	\item The complete design, manufacturing and assembly of the \textbf{payload container} and its unibody, hosting the scientific experiment of the mission (\Cref{fig:container}).
+\end{itemize}
 
 \subsection{\acf{SYE}}
 
@@ -531,19 +549,19 @@ The \acl{SYE} subteam serves as the technical authority for the satellite. It is
 Additionally, the \ac{SYE} team is responsible for some specific technical developments that do not belong in any of the other subsystems, such as \ac{RAMS}, \ac{FMEA}, harnessing and the \acl{MAIV} plan.
 
 \subsection{\acf{SU}}
+\begin{marginfigure}
+	\includegraphics{chipFluor}
+	\caption[Example mission image output]{Example mission image output \parencite{DDJF_PL}}
+	\label{fig:chip_fluor}
+\end{marginfigure}
 
 The \acl{SU} subteam is responsible for the conceptualisation and implementation of the mission's scientific payload, namely the high-throughput study of the effects of \ac{LEO} environments on yeast cells.
 
-The payload is composed of the following functional parts:\autocite{DDJF_PL}
+The payload is composed of the following functional parts \autocite{DDJF_PL}:
 \begin{compactitem}
 	\item The \textbf{payload container}, an almost 2U aluminum structure, pressurised at standard atmospheric pressure, and designed to host all the payload instrumentation. The container also accomodates a unibody which mechanically supports all \ac{SU} components.
 	\item A \textbf{microfluidic chip} based on \ac{PDMS}, hosting 384 chambers capable of probing 190 distinct strains of \emph{Saccharomyces Cerevisiae} for each subexperiment.
 	\item A \textbf{fluidic system} composed from 2 pumps, 8 latching solenoid valves, 6 non-latching solenoid valves, and 3 fluid medium containers
-	\begin{marginfigure}
-		\includegraphics{chipFluor}
-		\caption[Example mission image output]{Example mission image output (\parencite{DDJF_PL})}
-		\label{fig:chip_fluor}
-	\end{marginfigure}
 	\item An \textbf{imaging system} operating as a microscope, containing a camera and a series of lights, filters and a lens
 	\item A number of \textbf{heaters} to control component operational temperatures
 	\item A number of redundant \textbf{sensors} for environmental measurements
@@ -590,14 +608,22 @@ AcubeSAT's requirements do not dictate use of thrusters, meaning that the satell
 
 \begin{figure}
 	\includegraphics{GmatScreenShot_002}
-	\caption[Ground track of an example AcubeSAT orbit, generated using NASA's GMAT]{Ground track of an example AcubeSAT orbit, generated using NASA's \acl{GMAT}}
+	\caption[Ground track of an example AcubeSAT orbit, generated using NASA's GMAT]{Ground track of an example AcubeSAT orbit, generated using NASA's \acl{GMAT} \autocite{nasa_general_mission}}
 	\label{fig:gmat}
 \end{figure}
 
 % Maybe add some info about the sensitivity results and LTAN value?
 
 \section{Tools used}
-\draft{Here we write a small paragraph about OCDT and other MBSE tools and utilities used by AcubeSAT or developed in-house...}
+
+As a complex project, AcubeSAT uses a set of supporting utilities, ready-made or built built by the team, to fulfil its technical and organisational needs. The following tools play a crucial role in the organisation:
+\begin{compactitem}
+	\item \foothref{https://gitlab.com/acubesat}{GitLab}, for sharing code and organizing tasks
+	\item \foothref{https://ocdt.esa.int/}{Open Concurrent Design Tool}, a platform for sharing technical data and values for satellite components
+	\item \foothref{https://www.latex-project.org/}{\LaTeX} and \foothref{https://www.overleaf.com/}{Overleaf}, for writing technical literature and documentation
+	\item \foothref{https://acubesat.spacedot.gr/requirements-tree}{Requirements Tree}, an interactive view of the technical specifications of the satellite
+	\item \foothref{https://gitlab.com/acubesat/utilities/mattermost-documentation-bot}{Documentation List}, a platform for cataloguing and navigating the documents produced by the team
+\end{compactitem}
 
 \chapter{The SAVOIR \ac{FDIR} concept}
 
@@ -1292,29 +1318,7 @@ The \ac{YAMCS} platform was once again used to generate the wanted commands (\Cr
 
 \printindex
 
-\chapter{Source code}
-\label{sec:source_code}
 
-\setminted{
-	bgcolor={},
-	fontsize=\fontsize{9pt}{9pt}
-}
-
-%\begin{fullwidth}
-
-\section*{\texttt{main.cpp}}
-
-%\inputminted{cpp}{code/main.cpp}
-
-\newpage
-\section*{\texttt{xtce.xml}}
-\label{app:xtce}
-
-fixme
-
-%\inputminted{xml}{code/xtce.xml}
-
-%\end{fullwidth}
 
 \end{document}
 
