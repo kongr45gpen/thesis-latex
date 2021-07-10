@@ -626,18 +626,46 @@ As a complex project, AcubeSAT uses a set of supporting utilities, ready-made or
 \end{compactitem}
 
 \chapter{The SAVOIR \ac{FDIR} concept}
+\label{cap:savoir}
+
+In this section, we will briefly examine the combination of two philosophies used by European organisations active in the space domain. The first philosophy is linked to the \textbf{\texttt{ECSS-E-ST-70-41C} standard} \autocite{ECSS-E-ST-70-41C} developed by the \acf{ECSS}, which defines the basic set of telemetry (\acs{TM}) and telecommands (\acs{TC}) that a satellite platform needs, so that it can be fully controllable by ground operators.
+
+The second philosophy is based on the \textbf{\texttt{SAVOIR-HB-003} \acs{SAVOIR} \acs{FDIR} Handbook} \autocite{SAVOIR-HB-003} of the \textbf{\acf{SAVOIR}} initiative. This handbook is based on the functions of the aforementioned \texttt{ECSS-E-ST-70-41C} standard, and proposes a detailed methodology for the development of \ac{FDIR} in a space project. This handbook is \textbf{the basis of the philosophy} followed in the remainder of this thesis.
 
 \section{The \acs{ECSS} \acl{PUS}}
+\label{sec:pus}
+
+
+The \texttt{ECSS-E-ST-70-41C} standard, or \textbf{\acs{PUS}} for short (\acl{PUS}), defines a set of structured \textbf{telecommands} and \textbf{telemetry} that a spacecraft can use to communicate with a \acl{GS}. It can be likened to a 'language' that lets operators be fully aware of a satellite's status and control all of its operational aspects. At the same time, it strictly specifies the basic functions that an autonomous system must perform, and defines the concepts of \textbf{applications}, \textbf{parameters} and \textbf{events}.
+
+\begin{marginfigure}
+	\includegraphics{ECSS-rq}
+	\caption{The \ac{PUS} data transfer model}
+	\label{fig:pusmodel}
+\end{marginfigure}
 
 \subsection{The \acs{ECSS} services}
 
-\begin{figure}
-	\includegraphics{ECSS-rq}
-	\caption[][-1em]{The \ac{PUS} data transfer model}
-	\label{fig:pusmodel}
-\end{figure}
+This standard is intended for use in any space mission, complementing other standards for mission-specific operations, communications or file transfer. Its authors recommend \acs{PUS} users to tailor it to their needs, viewing it as a ``menu'' from where the applicable parts are selected for each specific mission. In summary, the following 20 distinct ``services'' are provided in the standard \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}:
 
-blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
+\marginnote{%
+	\textbf{Application Process}: Any physical (hardware) or logical (software) entity that can receive telecommands and generate telemetry in terms of the \acs{PUS}
+	
+	\textbf{Event}: Occurence of a set of conditions that can arise during the mission, such as:
+	\begin{compactitem}
+		\item Autonomous actions taken
+		\item Detected fault or anomaly
+		\item Predefined steps of a process
+	\end{compactitem}
+	
+	\textbf{Parameter}: Readable and modifiable data container that can represent:
+	\begin{itemize}
+		\item Basic system or component settings
+		\item Sensor measurements and other telemetry values
+		\item \acs{FDIR} results and diagnostics
+	\end{itemize}
+}
+
 
 \begin{compactitem}
 	\item \textbf{\texttt{ST[01]}: Request verification}
@@ -746,9 +774,84 @@ blablablab \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}
 \section{The SAVOIR standard}
 
 \begin{figure*}[h]
-	\includegraphics{../cdr/04 FMEA/media/FDIRpus}
-	\caption{blablabla}
+	\includegraphics{FDIRpus-en}
+	\caption{\acs{FDIR} data flow in the \acs{ECSS} services}
 \end{figure*}
+
+The \texttt{SAVOIR-HB-003} handbook describes in detail the processes and \acs{FDIR} methodology, based on results \& lessons learned from previous space missions. In this chapter, we will provide brief commentary on the parts concerning a low-cost CubeSat mission.
+
+\subsection{\acs{FDIR} process steps}
+
+The steps of the \acs{FDIR} process are defined as follows:
+\begin{enumerate}
+	\setcounter{enumi}{-1}
+	\item \textbf{Requirement specification}: Here, based on the needs of each mission, we analyse the requirements of the system for reliability \& availability, and extract the relevant technical \acs{FDIR} requirements, in functional and performance terms. In this stage, no solutions or design decisions are taken, but we define the problems that must be solved and the relevant success criteria.
+	\label{itm:fdir_reqs}
+
+	
+	Although the formulation of technical specifications for random events and failures is difficult, especially if there is a lack of reliability data, the handbook suggests a set of technical specifications \autocite[42]{SAVOIR-HB-003} that can be used by missions. A large set of these specifications are also met by the design presented in the following sections.
+	
+	\item \textbf{Concept definition}: This stage involves the comparison of the general \acs{FDIR} strategies that can solve the requirements of \cref{itm:fdir_reqs}. Solutions such as redundancy, cross-strapping, triple-redundant voting or inherently reliable (high-cost) components.
+	
+	
+	\label{itm:fdir_concept}
+
+	\item \textbf{Architecture}: This step defines the \acs{FDIR} design on a general level based on the system's capabilities, without implementation details, but with enough information for the system structure and the interfaces between elements.
+	
+	\item \textbf{Detailed design}: Before completing the full design of the \acs{FDIR}, we have to prepare the \textbf{\acf{FMEA}} \autocite{carlson_effective_fmeas_2012} for the system and its subsystems. The \acs{FMEA} is the \textbf{list of all possible failure modes} for satellite elements, where the severity and compensating provisions of each are listed in a standard way.
+	
+	\label{itm:fdir_cdr}
+	
+	
+	Then, for every feared event of the \acs{FMEA} catalogue, we perform the \textbf{\acf{HSIA}} \autocite{ECSS-Q-ST-30-02C}. In essence, this is where the \textbf{observed data} and \textbf{recovery \& isolation actions} are listed for each failure.
+	
+	Apart from the aforementioned, the exact operating method and flow of the \acs{FDIR} is detailed for every satellite mode, with special attention given to \emph{Safe Mode} (\Cref{itm:safe_mode}).
+	
+	\item \textbf{Implementation \& Verificaton}: At this stage, the \acs{FDIR} hardware and software are constructed, ready to detect and respond to satellite failures. Additionally, for every item in the \acs{HSIA}, \textbf{verification} is performed by analysis or testing. In particular, each feared event must be simulated, and the correct handling of it by the system must by ensured.
+	\label{itm:fdir_valid}
+	
+	\item \textbf{Validation}: In this stage we perform \textbf{system-level} tests of the \acs{FDIR} after assembly \& integration of the entire spacecraft, as part of the test campaign.\footnote{May contain functional system tests (ambient tests) or environmental tests}
+	
+	\item \textbf{In-operations preparation}: In the last step, final changes are made to the literature \& documentation to enhance the remote operability of the mission.
+\end{enumerate}
+
+Although all the above steps have high significance, "lean" missions need to especially focus on requirements (\Cref{itm:fdir_reqs}), concept definition (\Cref{itm:fdir_concept}), detailed design (\Cref{itm:fdir_cdr}) and verification (\Cref{itm:fdir_valid}). A simple example of an application of this process can be found in \Cref{cap:practical}.
+
+At this point, it should be made clear that the \acs{FDIR} design process and the system reliability analysis in general should be taken into account \textbf{throughout the lifetime} of a space project, and not only after the rest of the platform has been designed or implemented. The \ac{RAMS} domain is directly linked to all other subsystems, receiving the required inputs but also heavily influencing the rest of the design. In particular, young CubeSat projects tend to not pay the necessary attention to the reliability domain \autocite{langer_reliability_estimation_2017}.
+
+\subsection{Proposed architecture}
+
+The handbook proposes some principles for the architectural design of an \acs{FDIR} system, the first of which considers it as a \textbf{hierarchical} system, where minor failures are caused and corrected at component level, or are propagated as major failures to the rest of the system and require more impactful recovery actions.
+
+\begin{figure}
+	\includegraphics{FDIR-levels-en}
+	\caption[Suggested FDIR levels hierarchy]{Suggested FDIR levels hierarchy. Each mission can choose a different set of levels to simplify or refine the implementation.}
+	\label{fig:FDIR-levels}
+\end{figure}
+
+Moving on, a \textbf{configurable} implementation is proposed that takes advantage of the spacecraft's \textbf{database} in order to store the detection and recovery events. The database and communication tools from the \textbf{\acs{PUS} services} of \Cref{sec:pus} are utilised to fully meet these requirements. This logic entails the following:
+\begin{compactenum}
+	\item Reliability-related data are stored in \textbf{parameters} (e.g. sensor values, peripheral status
+	\item These parameters are \textbf{monitored} by the \emph{on-board monitoring} service. When a parameter gets out of bounds, a failure event is assumed.
+	\item Each out-of-bounds parameter creates an \textbf{event} that is telemetered to the ground segment.
+	\item Each event is associated with an \textbf{action}, stored in the \emph{event-action} service.
+	\item This action may contain one or more procedures to correct the failure.
+\end{compactenum}
+
+\begin{figure*}[h]
+	\includegraphics{FDIRpus-en}
+	\caption{Data flow for failure detection}
+	\label{fig:fdirpus}
+\end{figure*}
+
+The above logic is summarized in \Cref{fig:fdirpus}. Its importance lies in that it provides a \textbf{structured} way for the system to handle any of the predicted problems, but at the same time enables developers and operators to:
+\begin{compactitem}
+	\item Obtain all information on the operational status of components and sensor values.
+	\item Safely interfere entirely with the operation of the \acs{FDIR} without changing the source code.
+	\item Partially or completely disable \acs{FDIR} if necessary for diagnostic purposes.
+	\item Use a ready and tested \acs{ECSS} services software suite to implement all of the above, reducing cost and development time.
+	\item Avoid unconfigurable "hard-coding" of \acs{FDIR} procedures at various points in the code.
+\end{compactitem}
 
 \chapter{\ac{FDIR} in AcubeSAT}
 
