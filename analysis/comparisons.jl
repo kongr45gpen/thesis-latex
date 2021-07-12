@@ -14,13 +14,13 @@ R = 0:0.01:1;
 ## No-repair reliability
 reliability_single = R;
 reliability_dr = @. 1 - (1 - R)^2;
-#reliability_3r = @. 1 - (1 - R)^3;
+reliability_3r = @. 1 - (1 - R)^3;
 reliability_tmr = @. 3 * R^2 - 2 * R^3
 
 plot(
     R,
-    [reliability_single, reliability_dr, reliability_tmr],
-    label = ["Single component" "Dual redundancy" "Triple modular redundancy"],
+    [reliability_single, reliability_dr, reliability_tmr, reliability_3r],
+    label = ["Single component" "Dual redundancy" "Triple modular redundancy (naive)" "Triple modular redundancy (resilient)"],
     # title = "Resiliency to permanent failures",
     legend = :outerright,
     xlabel = "Component reliability",

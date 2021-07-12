@@ -301,6 +301,7 @@ This document begins with a summary of the AcubeSAT mission, which is the main m
 The last chapter includes a practical demonstration of the proposed \acs{FDIR} on a simple two-sensor test system (\Cref{cap:practical}). The system is constructed so that it can detect and recover from all foreseen possible failures, using the libraries covering the \acs{ECSS} and \acs{FDIR} standards. After the system has been developed, a full test of its response to failures is performed. This simulation platform is configured to emulate the satellite system, including the microcontroller and the ground station.
 
 \chapter{The AcubeSAT mission}
+\label{cap:acubesat}
 
 \begin{marginfigure}
     \includegraphics{acubesat_patch}
@@ -549,6 +550,7 @@ The \acl{SYE} subteam serves as the technical authority for the satellite. It is
 Additionally, the \ac{SYE} team is responsible for some specific technical developments that do not belong in any of the other subsystems, such as \ac{RAMS}, \ac{FMEA}, harnessing and the \acl{MAIV} plan.
 
 \subsection{\acf{SU}}
+\label{sec:su}
 \begin{marginfigure}
 	\includegraphics{chipFluor}
 	\caption[Example mission image output]{Example mission image output \parencite{DDJF_PL}}
@@ -853,22 +855,228 @@ The above logic is summarized in \Cref{fig:fdirpus}. Its importance lies in that
 	\item Avoid unconfigurable "hard-coding" of \acs{FDIR} procedures at various points in the code.
 \end{compactitem}
 
-\chapter{\ac{FDIR} in AcubeSAT}
+\chapter{\acs{FDIR} in AcubeSAT}
+\label{cap:acufdir}
 
-\section{\ac{FDIR} principles}
+In this chapter, a case study of the application of the above (\Cref{cap:savoir}) is performed, targetting the AcubeSAT mission (\Cref{cap:acubesat}). More specifically, we have analysed the design decisions taken, the implemented parts of the standards, and the specific actions that depend on the mission and experimental profiles of AcubeSAT \autocite{FMEA}.
 
-\draft{\begin{itemize}
-		\item The 7 AcubeSAT FDIR principles
-		\item SAVOIR FDIR requirements and compliance
-\end{itemize}}
 
-\section{Investigation on different architectures}
+\section{Basic principles}
+\label{sec:fdirbaspri}
+
+AcubeSAT's \acs{FDIR} requirements mostly stem from the mission requirements (\Cref{sec:su_fdir}) and the technical capabilities of a low-cost system (\Cref{cap:acubesat}. More specifically, the basic principles are:
+\begin{enumerate}
+	\item \textbf{Modularity:} \acs{FDIR} should not be hard-coded in software, but should allow for easy modifications based on a well-structured database.
+		\item \textbf{Autonomy:} The satellite should be able to survive in orbit for more than \SI{24}{} hours without communication with the \acs{GS}, and should be able to remain in any system mode, especially \emph{Science Mode}.
+		\item \textbf{Configurability}: It is very difficult to predict the exact thresholds and behaviour of the \acs{FDIR} system and all components in orbit. Therefore, the operators should be given the possibility to fully configure and tune the \acs{FDIR} if necessary. This configurability may include disabling checks, modifying erroneous limits, or even adding new monitoring definitions.
+		\item \textbf{Observability,} by offering a large amount of information to the ground station in order to diagnose problems.
+		\item \textbf{No assumptions} for correct equipment functionality. Any software error condition or invalid input should be considered probably.
+		\item \textbf{Availability:} AcubeSAT benefits from long operational times in orbit, since this allows downloading larger amounts of scientific data and observability-related telemetry. In addition, brief interruption of any subexperiment may inherently lead to its complete failure (\Cref{sec:su}) Therefore, AcubeSAT follows a \emph{fail-operational} rather than \emph{fail-safe} approach on non-critical aspects.
+		\item \textbf{Design} based on reliability. The team tries to implement design changes, to the extent possible by a low-cost CubeSat mission, before actual development or verification of the system.
+	\end{enumerate}
+	
+The above principles are covered by \acs{SAVOIR}'s logic (\Cref{cap:savoir}), which is also implemented in AcubeSAT.
+
+The levels of \acs{FDIR} in AcubeSAT are the following 3:
+\begin{enumerate}[label=Level \arabic*]
+	\item \textbf{Unit}/\textbf{Component}: Here, failures at component-level (e.g. temperature sensor) are detected and corrected. Simple failures at this level do not affect the next one, and can typically be corrected by simple actions (e.g. component power-cycle).
+	
+	This level is typically handled by the microcontroller of each subsystem. Although failures here may not be detected by other subsystems, the corresponding telemetry must be produced to provide to ensure observability from ground, or to predict other failures not detected by autonomously.
+	\item \textbf{Subsystem}: This includes serious failures affecting the entire operation of a subsystem (e.g. overheating, no response to pings, etc.). These failures do not necessarily halt the satellite's operations, but can be corrected by reboots or changes to the subsystem settings.
+	
+	Failures at subsystem level and above are handled by the \acf{OBC} microcontroller, which contains the software to detect and recover from them. However, in the event of a failure of the \acs{OBC}, the \ac{ADCS} takes over the responsibility of the \acs{FDIR}.
+	\item \textbf{System}: This includes failures which cannot be corrected au\-to\-nom\-ous\-ly by the system (e.g. insufficient power, excessive angular velocity). The recovery action for system-level failures is usually to enter \emph{safe mode}, where only the most basic and vital satellite operations are performed until the failure is repaired by \acl{GS} commands.
+\end{enumerate}
+
+\section{Reliable Architectures}
+\label{sec:theoretical}
+
+Before implementing the \acs{FDIR}, it makes sense to study the different architectural decisions that can be made during the design of a small satellite system. In particular, the following designs will be compared \autocite{birolini_reliability_engineering_2004}:
+
+\begin{enumerate}
+	\item \textbf{Single Component}
+	\item \textbf{Double Redundancy}, where two identical components perform the same function, and one can replace the other. This connectivity can follow the logic of \textbf{cold redundancy} or \textbf{hot redundancy}.
+	
+	In \textbf{cold redundancy}, only one of the components operates at a time, and an external circuit\footnote{or the components themselves, in the case of hot redundancy \autocite[20]{SAVOIR-HB-003}} checks which of the two is not in a fault state, so that control can be handed over to it.
+
+	In \textbf{hot redundancy}, both components are simultaneously functional, performing the same processes, and one component can take over the functional responsibilities of the other in the event of a failure.
+
+	\item \textbf{\acf{TMR}} with voting, where three components are performing the same computations continuously, and a voting circuit selects the output that has the majority amongst the three. Also known as \emph{majority logic}.
+\end{enumerate}
+
+Two types of failures will be applied to the aforementioned systems:
+
+\begin{marginfigure}
+\centering
+\includegraphics{RedunSchemes}
+\caption{Visual illustration of the different considered architectures}
+\acusepage{voter}
+\end{marginfigure}
+\begin{itemize}
+\item In \textbf{permanent failures}, we consider events (e.g. radiation, loss of memory) that cannot be corrected and result in loss of mission. The analysis here is based on the concept of \e{reliability} \( R(t) \), i.e. the probability that the system will survive within a period of time \( t \).
+\item In \textbf{temporary failures} we consider events (e.g. bit changes, software bugs, message transfer errors) that are transient and usually affect only one measurement, action or result. The analysis here revolves around the concept of the failure rate \( \lambda \), i.e. the occurence frequency of failures in time.
+\end{itemize}
+
+As there are no large-scale data available for component failures in the space industry \autocite{esatec-qqd_effective_reliability_2016}, this analysis will show results over a range of reliability values.
+
+As an example, failure rate of a device or unit due to radiation can range between \SIrange{1e-11}{1e-1}{} \(\frac{\text{failures}}{\text{second}}\), depending on the radiation environment, the severity of the failure, and the internals of each device \autocite[158-159]{gupta_analysis_single_2017}.
+
+% !!! Code for analysis.
+
+\subsection{Permanent failures (reliability analysis)}
+
+\paragraph{\textbf{Ideal voter}}\hspace{0pt}
+\acusepage{voter}
+
+
+Assuming that the reliability of a component is \(R\), the reliability of \emph{two components} connected in parallel is \autocite[31]{birolini_reliability_engineering_2004}:
+		\begin{equation}
+		R_2 = 2R - R^2 = 1 - (1 - R)^2 \label{eq:dual_redun}
+		\end{equation}
+	
+\marginnote{In all analyses, we assume that the redundant components are identical and have the same reliability characteristics.}
+	
+\eqref{eq:dual_redun} applies to both cold and hot redundancy, as we assume that the system can recover from permanent failures in both cases, moving control to the unaffected component.\footnote{Some cold-redundant systems may offer even higher reliability, if the unused component is not powered and is unaffected by the relevant failure cause.}
+
+The reliability of the \emph{triple modular redundancy} system is \autocite[31]{birolini_reliability_engineering_2004}:
+\begin{align}
+R_3 &= \sum_{i=k}^{n} \binom{n}{i} R^i (1-R)^{n-i}\nonumber\\
+&= \sum_{i=2}^{3} \binom{3}{i} R^i (1-R)^{3-i} \nonumber\\
+&= \binom{3}{2} R^2 (1-R) + \binom{3}{3} R^3 (1-R)^0 \nonumber\\
+&= 3R^2 - 3R^3 + R^3 = 3R^2 - 2R^3
+\label{eq:tmr}
+\end{align}
+
+It is worth noting that the \acs{TMR} system considers a simple voter, and in the case of \emph{permanent failure of both vulnerable components, the system is considered unable to recover.}
 
 \begin{figure}
 	\centering
-	\includegraphics[width=.5\textwidth]{demoplot}
-	\caption{\draft{Error rates}}
+	\includegraphics{analysis/reliability_norepair_en}
+	\caption[Resilience of a compound system to permanent failures (assuming an ideal voter)]{Resilience of a compound system to permanent failures (assuming an ideal voter --- higher \(R\) is better)}
+	\label{fig:reliability_norepair}
 \end{figure}
+
+The results of \eqref{eq:dual_redun} and \eqref{eq:tmr} are shown in \Cref{fig:reliability_norepair}. It can be observed that, compared to the single component, the use of two redundant components increases the reliability of the system to a certain extent, since failures of one component can be repaired, but failures in both are catastrophic. In contrast, \textbf{\acs{TMR} introduces more points of failure}. Since failure of any combination of 2 of the 3 components is catastrophic, triple redundancy is sometimes less reliable than dual redundancy.
+
+\paragraph{\textbf{Vulnerable Voter}}\hspace{0pt}
+\acusepage{voter}
+
+The study of a vulnerable voter circuit in \acs{TMR} is of particular interest. In the context of this analysis, we will consider the independent reliabiliy value \( R_v < 1 \) of the voter. From \autocite[31]{birolini_reliability_engineering_2004}, we have:
+\begin{align}
+R_{3+v} &= (3R^2 - 2R^3)R_v \\
+&= R_3R_v
+\end{align}
+and the reliability of the compound system is simply multiplied with the voter's reliability. The latter reduced the \acs{TMR} system reliability in a linear fashion.
+
+\begin{figure}
+	\centering
+	\includegraphics{analysis/reliability_norepair_voter_en}
+	\caption[Resilience of a compound system to permanent failures (assuming a vulnerable voter)]{Resilience of a compound system to permanent failures (assuming a vulnerable voter --- higher \(R\) is better)}
+	\label{fig:reliability_norepair_voter}
+\end{figure}
+
+\subsection{Temporary failures (failure rate analysis)}
+
+If \( \lambda \) is the failure rate of one component, the failure rate of a cold-redundant system is equivalent to \( \lambda \), since only one component is active at a time, and the deactivated one cannot fail.
+
+\marginnote{We assume that component failures are independent events.}
+
+In the case of hot redundancy, both components may fail, at a rate of \( \lambda \) each. We assume that component failures follow a Poisson distribution \autocite[35]{birolini_reliability_engineering_2004}. Then, the probability that \(k\) failures occur in a time interval is given by \autocite[60]{yates_probability_stochastic_2014}:
+	\begin{equation}
+	P(X=k) = \frac{\lambda^ke^{-\lambda}}{k!}
+	\end{equation}
+	
+\marginnote{It is interesting to locate the failure rate where the probability of 2 failures is equal to 1\% of the probability of 1 failure, i.e. \(P(X=2) = 0.01P(X=1) \implies \frac{\lambda^2e^{-\lambda}}{2} = 0.01 \lambda e^{-\lambda } \implies \lambda = 0.02 \). So for \( \lambda < \SI{2e-2}{} \) the hypothesis is valid.}
+
+To simplify the analysis, we will assume that only 1 failure can occur in the time interval defined by the parameter \( \lambda \). This assumption is safe, as we can study short time intervals (usually seconds), where it is extremely unusual for more than 1 failure to occur.
+	\begin{equation}
+	P = P(X) = \lambda e^{-\lambda}
+	\end{equation}
+	
+In hot dual redundancy, it is not always possible to identify the wrong and right output, so a failure in either component is considered a system failure. Thus, if \(X_1\) and \(X_2\) are the failure events of the 1\textsuperscript{th} and 2\textsuperscript{th} component respectively:
+\begin{align}
+P_2 = P(X_1\text{ or }X_2) &= 1 - (1 - P(X))^2 \nonumber\\
+&= 1 - \left(1 - \lambda e^{-\lambda} \right)^2 \nonumber\\
+&=  2 \lambda e^{-\lambda} -\lambda^2e^{-2\lambda} \label{eq:lambda}
+\end{align}
+	
+\marginnote{Alternatively, we can ignore the negligible 2\textsuperscript{nd} term of \eqref{eq:lambda}, and have \( P_2 = 2\lambda e^{-\lambda} \). Since \(e^x \approx 1\) very close to \(x=0\), \eqref{eq:lambbert_eqn} becomes:
+				\[
+				\lambda_2 = 2\lambda
+				\]
+				The above is also confirmed intuitively. After introducing 2 components, the error rate doubled.
+}%
+		
+\eqref{eq:lambda} does not follow the Poisson distribution, so it is not easy to directly derive the failure rate of the system. However, we can extract the \emph{average} failure rate, let \( \lambda_2 \), by trying to fit the Poisson distribution to the non-Poisson result:
+		\begin{align}
+		\lambda_2e^{-\lambda_2} = P_2 \label{eq:lambert_eqn}
+		\end{align}
+		
+	\eqref{eq:lambert_eqn} can be solved by using the Lambert W function \autocite{weisstein_lambert_wfunction} defined as follows:
+\begin{align}
+	\text{for } w,z \in \mathbb R:\quad we^w = z \iff w = W_k(z) \text{for some } k \in \mathbb Z
+\end{align}
+		
+Subsequently, we can compute \(\lambda_2\):
+\begin{align}
+	\lambda_2 = -W_k(-P_2)
+	\label{eq:l2}
+\end{align}
+
+
+\newthought{In the \acs{TMR} system}, the complete failure event is equivalent to the failure of at least 2 of the components. Therefore, similar to \eqref{eq:tmr}, we have:
+\begin{align}
+P_3 &= 3P^2 - 2P^3 \nonumber\\
+&= 3\left(\lambda e^{-\lambda}\right)^2 - 2\left(\lambda e^{-\lambda}\right)^3
+\end{align}
+and, following the same methodology as \eqref{eq:l2}:
+\begin{align}
+\lambda_3 = -W_k(-P_3)
+\label{eq:l3}
+\end{align}
+
+The above results can be calculated numerically, and are shown in \Cref{fig:reliability_repair}.
+
+\begin{figure}
+	\centering
+	\includegraphics{analysis/reliability_repair_en}
+	\caption[Resilience of a compound system to temporary errors]{Resilience of a compound system to temporary errors (assuming an ideal voter --- smaller \(\lambda\) is better)}
+		\label{fig:reliability_repair}
+	\end{figure}
+	
+	\subsection{Conclusion}
+	
+The results of \cref{fig:reliability_norepair,fig:reliability_repair} are summarised in \Cref{tab:calcuresults}, along with the implementation complexity of each architecture.
+	
+%	\FloatBarrier
+As shown, each solution comes with a different set of positives and negatives. The use of voting can overwhelmingly reduce the failure rate for temporary failures, while the use of pure redundancy improves the behaviour on permanent failures and allows recovery from catastrophic faults.
+	
+\begin{table*}[h]
+	\caption[][1ex]{Summary of reliable architecture analysis}
+	\label{tab:calcuresults}
+	\begin{tabular}{@{}rllX@{}}
+		\toprule
+		& \multicolumn{2}{l}{Tolerance to failures} & \\ \cmidrule{2-3}
+		Architecture & Permanent & Temporary & Complexity \\ \midrule
+		Single component & \color{MaterialGrey800} Normal & \color{MaterialGrey800} Normal & \color{MaterialGreen600} Low \\
+		Dual redundancy, cold & \color{MaterialGreen600} Very good & \color{MaterialGrey800} Normal & \color{MaterialOrange900} Medium\\
+		Dual redundancy, hot & \color{MaterialGreen600} Very good & \color{MaterialOrange900} Worse & \color{MaterialOrange900} Medium\\
+		\acl{TMR} & \color{MaterialTeal900} Better {\small(if \(R > 0.5\))} & \color{MaterialGreenA700} Excellent & \color{MaterialRed800} High
+	\end{tabular}
+\end{table*}
+
+
+
+The final choice of architecture depends on the requirements \& needs of each project. For example, in manned missions, it is common to use \acs{TMR} on the flight computer, so that no error can compromise the safety of the passengers.
+
+In the AcubeSAT mission, where vulnerable \acs{COTS} components are used, the emphasis is on \emph{avoidance of catastrophic effects}. Although temporary failures can potentially degrade the experimental results and system availability, they are considered less critical than permanent ones. Especially in CubeSat projects, the \textbf{complexity} of the chosen architecture must also be taken into account, firstly in relation to the available \textbf{resources} and \textbf{time} of implementation, but also because a complex architecture can itself reduce the reliability of the system if not implemented and tested properly.
+
+The architecture chosen in AcubeSAT is as follows:
+\begin{itemize}
+	\item In \textbf{sensor} networks (e.g. temperature, pressure, magnetic field), \emph{double redundancy} is applied, and the possibility of recovering from the loss of a sensor is given.
+	\item For components with \textbf{flight heritage} that have proven their functionality in other missions, it is assumed that the \( R \) value is high enough, and no form of redundancy is implemented.
+	\item Specifically for microcontrollers, the chosen option is to use a more expensive \textbf{radiation-resistant} microcontroller, with an inherently higher \( R \) (\Cref{sec:obdh}), rather than attempting to increase \( R \) using redundancy.
+\end{itemize}
 
 \FloatBarrier
 \section{Failure causes and recovery actions}
