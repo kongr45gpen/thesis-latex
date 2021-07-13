@@ -22,7 +22,7 @@ plot(
     R,
     [reliability_single, reliability_cold, reliability_dr, reliability_tmr, reliability_3r],
     label = ["Single component" "Dual redundancy (cold)" "Dual redundancy (hot)" "Triple modular redundancy (naive)" "Triple modular redundancy (resilient)"],
-    # title = "Resiliency to permanent failures",
+    # title = "Resilience to permanent failures",
     legend = :outerright,
     xlabel = "Component reliability",
     ylabel = "System reliability",

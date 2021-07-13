@@ -774,12 +774,6 @@ This standard is intended for use in any space mission, complementing other stan
 \end{compactitem}
 
 \section{The SAVOIR standard}
-
-\begin{figure*}[h]
-	\includegraphics{FDIRpus-en}
-	\caption{\acs{FDIR} data flow in the \acs{ECSS} services}
-\end{figure*}
-
 The \texttt{SAVOIR-HB-003} handbook describes in detail the processes and \acs{FDIR} methodology, based on results \& lessons learned from previous space missions. In this chapter, we will provide brief commentary on the parts concerning a low-cost CubeSat mission.
 
 \subsection{\acs{FDIR} process steps}
@@ -930,24 +924,117 @@ As an example, failure rate of a device or unit due to radiation can range betwe
 
 
 Assuming that the reliability of a component is \(R\), the reliability of \emph{two components} connected in parallel is \autocite[31]{birolini_reliability_engineering_2004}:
-		\begin{equation}
-		R_2 = 2R - R^2 = 1 - (1 - R)^2 \label{eq:dual_redun}
-		\end{equation}
+\begin{equation}
+R_2 = 2R - R^2 = 1 - (1 - R)^2 \label{eq:dual_redun}
+\end{equation}
 	
 \marginnote{In all analyses, we assume that the redundant components are identical and have the same reliability characteristics.}
 	
-\eqref{eq:dual_redun} applies to both cold and hot redundancy, as we assume that the system can recover from permanent failures in both cases, moving control to the unaffected component.\footnote{Some cold-redundant systems may offer even higher reliability, if the unused component is not powered and is unaffected by the relevant failure cause.}
+\eqref{eq:dual_redun} applies to \textbf{warm and hot redundancy}, as we assume that the system can recover from permanent failures by moving control to the unaffected component.
 
-The reliability of the \emph{triple modular redundancy} system is \autocite[31]{birolini_reliability_engineering_2004}:
+On the other hand, most \textbf{cold redundancy} architectures assume that the unused component is inactive or not powered, and therefore is not affected by some failure causes (e.g. \acsp{SEL}). Assuming that a component is completely powered off if not active, let:
+\begin{align*}
+T: & \text{ the time of failure of the 2-component system}\\
+T_1: & \text{ the time of failure of the 1\textsuperscript{st} component}\\
+T_2: & \text{ the time of failure of the 2\textsuperscript{nd} component, so that } T_1 + T_2 = T\\
+\end{align*}
+
+Then, the conditional probability of failure of the system, given the time of failure of the 1\textsuperscript{st} component is:
+\marginnote[2ex]{For some \(t,t_1 \geq 0 \)}
+\begin{align*}
+Pr\left( T > t \;\middle|\; T_1 = t_1 \right) &= Pr\left( T_1+T_2 > t \;\middle|\; T_1 = t_1  \right) \\
+&= Pr\left( T_2 > t - t_1 \;\middle|\; T_1 = t_1  \right) \\
+&= Pr\left(T_2 > t - t_1\right) \\
+&= R\left(t - t_1\right) \numberthis \label{eq:conditional}
+\end{align*}
+
+By the chain rule for probability, we can calculate the unconditional probability of system failure:
+\begin{equation}
+Pr(T>t) = \lim_{\Delta t \to 0} \sum_{\substack{t_1=0,\\\Delta t,\;2\Delta t,\\\dots}}^{\infty}
+Pr\left(T>t \;\middle|\; T_1\in(t_1,t_1+\Delta t) \right) \cdot Pr\left(T_1 \in (t_1,t_1+\Delta t)\right)
+\label{eq:prsum}
+\end{equation}
+
+\eqref{eq:prsum} uses a limit to work around the restriction imposed by the zero probability \( Pr(T_1 = t_1)\), which should be instead expressed instead of the probability density function \( f(t) \), so that:
+\begin{equation}
+R(t) = Pr(T > t) = \int_t^\infty f(\tau) \dd{\tau} \label{eq:pdf}
+\end{equation}
+
+Using \eqref{eq:pdf}, \eqref{eq:prsum} can be rewritten using a Riemann integral:
 \begin{align}
-R_3 &= \sum_{i=k}^{n} \binom{n}{i} R^i (1-R)^{n-i}\nonumber\\
-&= \sum_{i=2}^{3} \binom{3}{i} R^i (1-R)^{3-i} \nonumber\\
-&= \binom{3}{2} R^2 (1-R) + \binom{3}{3} R^3 (1-R)^0 \nonumber\\
-&= 3R^2 - 3R^3 + R^3 = 3R^2 - 2R^3
-\label{eq:tmr}
+Pr(T>t) &= \int_{0}^{\infty} Pr\left(T>t \;\middle|\; T_1= t_1 \right) \cdot f(t_1) \dd{t_1}
+\end{align}
+and, after applying \eqref{eq:conditional}:
+\begin{align}
+Pr(T>t) &= \int_{0}^{\infty} R(t-t_1) f(t_1) \dd{t_1} \label{eq:unfinishedint}
 \end{align}
 
-It is worth noting that the \acs{TMR} system considers a simple voter, and in the case of \emph{permanent failure of both vulnerable components, the system is considered unable to recover.}
+\eqref{eq:unfinishedint} cannot be further processed, since it depends on the exact form of the \(R\) reliability function.
+
+In order to provide some indicative results, we will assume a typical reliability function for all components:
+\begin{marginfigure}
+	\centering
+	\begin{tikzpicture}[scale=.7]
+	\begin{axis}[
+	axis lines = left,
+	xlabel = \(t\),
+	ylabel = \(R(t)\),
+	ymajorgrids=true,
+	xmajorgrids=true,
+	xminorgrids=true,
+	ymax=1.1,
+	xticklabels={,$0$},
+	]
+	\addplot[domain=-0.2:0.001, MaterialBlue500, ultra thick] {1};
+	\addplot[domain=0:2, MaterialBlue500, ultra thick,smooth] {exp(-2*x)};
+	\end{axis}
+	\end{tikzpicture}
+	\caption{The reliability function of \eqref{eq:typicalR}}
+\end{marginfigure}
+\begin{equation}
+R(t) = \begin{cases} e^{-at} &\text{ for } t \geq 0 \\ 1 & \text{ for } t < 0 \end{cases} \qquad \text{where } a>0 \label{eq:typicalR}
+\end{equation}
+with the associated probability density function:
+\begin{equation}
+f(t) = \dv{R(t)}{t} = ae^{-at} \label{eq:typicalf}
+\end{equation}
+
+Then, \eqref{eq:unfinishedint} can be solved further:
+\marginnote[16.5ex]{From \eqref{eq:pdf}} %TODO: Check OK distance
+\begin{align*}
+Pr(T>t) &= \int_{0}^{t} R(t-t_1) f(t_1) \dd{t_1} + \int_{t}^{\infty} R(t-t_1) f(t_1) \dd{t_1}
+\\ &= \int_0^t e^{-a(t-t_1)} \cdot ae^{-at_1} \dd{t_1} + \int_{t}^{\infty} f(t_1) \dd{t_1}
+\\ &= \int_0^t ae^{-at} \dd{t_1} + R(t)
+\\ &= ate^{-at} + R(t)
+\\ &= -\ln \left(R(t)\right) \cdot R(t) + R(t)
+\\ &= R(t) \cdot (1 - \ln R(t)) \numberthis
+\end{align*}
+
+ 
+\newthought{The reliability of} the \emph{\ac{TMR}} system depends on the implementation of the voter. We will distinguish 2 types of voters:
+\begin{enumerate}
+	\item \textbf{Naive voter}, where a permanent failure in any \emph{two} out of the three components leads to loss of the system.
+	
+	The reliability of the naive system is \autocite[31]{birolini_reliability_engineering_2004}:
+	\begin{align}
+	R_3 &= \sum_{i=k}^{n} \binom{n}{i} R^i (1-R)^{n-i}\nonumber\\
+	&= \sum_{i=2}^{3} \binom{3}{i} R^i (1-R)^{3-i} \nonumber\\
+	&= \binom{3}{2} R^2 (1-R) + \binom{3}{3} R^3 (1-R)^0 \nonumber\\
+	&= 3R^2 - 3R^3 + R^3 \nonumber\\
+	&= 3R^2 - 2R^3
+	\label{eq:tmr}
+	\end{align}
+	
+	\item \textbf{Complex voter}, where if two components fail, the voter can switch to the remaining one, via telecommand or autonomously. This logic rarely possible to implement, especially if mission-critical components are protected. Additionally, the increased voter complexity inherently reduces its reliability.
+	
+	For completeness purposes, we cite the reliability of the complex \acs{TMR} system, which stems from the probability that all 3 components fail within \( t \):
+
+	\begin{align}
+	R_{3c} &= 1 - (1 - R)^3
+	\label{eq:tmr_complex}
+	\end{align}
+\end{enumerate}
+
 
 \begin{figure}
 	\centering
@@ -971,7 +1058,7 @@ and the reliability of the compound system is simply multiplied with the voter's
 \begin{figure}
 	\centering
 	\includegraphics{analysis/reliability_norepair_voter_en}
-	\caption[Resilience of a compound system to permanent failures (assuming a vulnerable voter)]{Resilience of a compound system to permanent failures (assuming a vulnerable voter --- higher \(R\) is better)}
+	\caption[Resilience of the TMR system to permanent failures (assuming a vulnerable voter)]{Resilience of the \acs{TMR} system to permanent failures (assuming a vulnerable voter --- higher \(R\) is better)}
 	\label{fig:reliability_norepair_voter}
 \end{figure}
 
@@ -1046,23 +1133,24 @@ The above results can be calculated numerically, and are shown in \Cref{fig:reli
 	
 	\subsection{Conclusion}
 	
-The results of \cref{fig:reliability_norepair,fig:reliability_repair} are summarised in \Cref{tab:calcuresults}, along with the implementation complexity of each architecture.
+The results of \Cref{fig:reliability_norepair,fig:reliability_repair} are summarised in \Cref{tab:calcuresults}, along with the implementation complexity of each architecture.
 	
 %	\FloatBarrier
 As shown, each solution comes with a different set of positives and negatives. The use of voting can overwhelmingly reduce the failure rate for temporary failures, while the use of pure redundancy improves the behaviour on permanent failures and allows recovery from catastrophic faults.
 	
 \begin{table*}[h]
-	\caption[][1ex]{Summary of reliable architecture analysis}
+	\caption{Summary of reliable architecture analysis}
 	\label{tab:calcuresults}
-	\begin{tabular}{@{}rllX@{}}
+	\begin{tabular}{@{}rlll@{}}
 		\toprule
 		& \multicolumn{2}{l}{Tolerance to failures} & \\ \cmidrule{2-3}
 		Architecture & Permanent & Temporary & Complexity \\ \midrule
 		Single component & \color{MaterialGrey800} Normal & \color{MaterialGrey800} Normal & \color{MaterialGreen600} Low \\
-		Dual redundancy, cold & \color{MaterialGreen600} Very good & \color{MaterialGrey800} Normal & \color{MaterialOrange900} Medium\\
-		Dual redundancy, hot & \color{MaterialGreen600} Very good & \color{MaterialOrange900} Worse & \color{MaterialOrange900} Medium\\
-		\acl{TMR} & \color{MaterialTeal900} Better {\small(if \(R > 0.5\))} & \color{MaterialGreenA700} Excellent & \color{MaterialRed800} High
+		Dual redundancy, cold & \color{MaterialGreenA700} Very good & \color{MaterialGrey800} Normal & \color{MaterialOrange900} Medium\\
+		Dual redundancy, hot & \color{MaterialGreen600} Good & \color{MaterialOrange900} Worse & \color{MaterialOrange900} Medium\\
+		\acl{TMR} & \color{MaterialTeal900} Better {\small(if \(R > 0.5\))} & \color{MaterialGreenA700} Excellent & \color{MaterialRed800} High \\ \bottomrule
 	\end{tabular}
+	\vspace{1ex}
 \end{table*}
 
 
