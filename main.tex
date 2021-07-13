@@ -1347,23 +1347,43 @@ In order to emulate the most core functions of a spacecraft subsystem, we implem
 
 In order to justify implementing an \ac{FDIR} approach for this system, we will introduce a reliability requirement:
 \begin{quote}
-	\texttt{RQ-020}: No single failure on any measuring component shall lead to loss of system functionality
+	\texttt{RQ-020}: No single failure on any measuring component shall lead to loss of system functionality.
 \end{quote}
 
 The detailed design of this simple demonstration system is presented in the following sections, and was architected to match the functionality, interfaces, design and software of the AcubeSAT nanosatellite as much as possible.
 
+\begin{figure}
+	\includegraphics{test-system}\par
+	\vspace*{3ex}
+	\includegraphics{system_top}
+	\caption[The complete development system]{The complete development system. On the left is the blue development board of the \acs{MCU}. On the right is the breadboard housing the two temperature sensors. The cabling between the breadboard and the \acs{MCU} can also be discerned. The two bright \acsp{LED} show if the adjacent component is receiving power or not.}
+\end{figure}
+\acuse{LED}
+
 \subsection{Hardware}
 
+\begin{figure}
+      \centering
+      \includegraphics[width=.7\textwidth]{atsamv71xult}
+      \caption{Manufacturer's photo of the \texttt{ATSAMV71-XULT} development board}
+\end{figure}
+
+
 The centre of the demonstration system is the \ac{MCU} used to simulate the design and functionality of one of AcubeSAT's subsystems (\Cref{sec:obdh}). The selected \ac{MCU} is the Atmel \texttt{ATSAMV71Q21} hosted on the \foothref{https://www.microchip.com/Developmenttools/ProductDetails/ATSAMV71-XULT}{\texttt{ATSAMV71-XULT}} development board. This \ac{MCU} is functionally identical to the one that will be used in orbit, featuring a 32-bit ARM Cortex-M7 core with \SI{2}{\mebi\byte} of flash and \SI{384}{\kibi\byte} of \acs{SRAM} memory, and a maximum clock speed of \SI{300}{\mega\hertz}.
+
+\begin{marginfigure}
+	      \includegraphics{mcp9808}
+	      \caption{The MCP9808 temperature sensor, soldered onto the breakout \acs{PCB}}
+\end{marginfigure}
 
 The \ac{MCU} is accompanied by two \textbf{temperature sensors} which are used to simulate subsystem components which are prone to failure. The selected sensor is the Microchip \foothref{https://www.microchip.com/wwwproducts/en/MCP9808}{\texttt{MCP9808}} which offers an accurate and frequent temperature readout over an \ac{I2C} bus. The maximum acquisition interval for the sensor is \SI{250}{\milli\second}.
 
 \marginnote{%
-\textbf{Cold redundancy:} Only one component is operating, while the other is not.
+\textbf{Cold redundancy:} Only one component is operating, while the others are not.
 
-\textbf{Warm redundancy:} One component is operating fully, and the other is operating with reduced functionality.
+\textbf{Warm redundancy:} One component is operating fully, and the others are operating with reduced functionality.
 
-\textbf{Hot redundancy:} Two or more simultaneously active parts operate in parallel. \parencite{SAVOIR-HB-003}
+\textbf{Hot redundancy:} Two or more simultaneously active parts operate in parallel \autocite{SAVOIR-HB-003}.
 }
 
 The two sensors are wired in a \textbf{hot-redundant} configuration, due to their extremely low operating power. The two sensors are connected to different \ac{I2C} buses, so that the failure of one bus will not affect the operation of the other sensor.
@@ -1379,7 +1399,7 @@ As the \acs{UART} protocol does not offer packetisation facilities by default, \
 \end{figure*}
 
 \paragraph{Connections}
-The development board and sensors were laid out and connected directly. The sensor \acp{IC} were soldered on breakout \acp{PCB} which were manufactured based on Jaroslav Sýkora's design.\url{https://www.jsykora.info/2019/06/pcb-panel-\-of-smt-breakout-boards-soic-tssop-msop/}
+The development board and sensors were laid out and connected directly. The sensor \acp{IC} were soldered on breakout \acp{PCB} which were manufactured based on Jaroslav Sýkora's design.\footnote{\url{https://bit.ly/3vZwuh1}}
 
 \section{Software}
 
@@ -1390,6 +1410,23 @@ All \ac{FDIR} operations and functionality are developed using the \textbf{C++} 
 The \ac{FDIR} functionality is structured around the \textbf{ECSS-E-ST-70-41C \ac{PUS} implementation created by the AcubeSAT team}\footnote{\url{https://gitlab.com/acubesat/obc/ecss-services}}, which offers a modular implementation of the standard utilising modern C++.
 
 The \ac{MCU} software and business logic are built on \textbf{\foothref{https://www.freertos.org/}{Free\acs{RTOS}}}, a low-footprint real-time operating system targeted towards embedded devices. FreeRTOS provides the capability of safe concurrency, along with support for well-controlled tasks and a number of synchronisation primitives.
+
+\begin{table*}[h]
+	\centering
+	\caption[][5pt]{List of Free\acs{RTOS} tasks implementing the experimental setup}
+	\label{tab:rtos-tasks}
+	\renewcommand{\arraystretch}{1.5}
+	\begin{tabularx}{\textwidth}{@{}llX@{}}
+		\toprule
+		Name & Stack size & Description \\ \midrule
+		\texttt{Internal\_Temp} & \SI{2.5}{\kilo\byte} & Receives diagnostic measurements from the internal \acs{MCU} temperature sensoor, and blinks an \acs{LED} for observability purposes \\
+		\texttt{ECSS} & \SI{3}{\kilo\byte} & Executes the periodic processes dictated by the \acs{ECSS} services. This includes beacon transmission and evaluation of the on-board monitoring definitions. This task essentially implements \acs{FDIR}. \\
+		\texttt{\acs{UART}\_Tx} & \SI{3}{\kilo\byte} & Transmission of \acs{UART} messages to the computer. This task works as a ``gatekeeper task'', and is the only one that can send \acs{UART} messages. All other task communicate with this one via a Free\acs{RTOS} stack. \\
+		\texttt{\acs{UART}\_Rx} & \SI{6}{\kilo\byte} & Reception of \acs{UART} messages from the computer. For simplicity, this task is also responsible for the execution of such received commands. \\
+		\texttt{T1} & \SI{1.5}{\kilo\byte} & Communication with temperature sensor \#1 and update of relevant \acs{ECSS} parameters \\
+		\texttt{T2} & \SI{1.5}{\kilo\byte} & Communication with temperature sensor \#2 and update of relevant \acs{ECSS} parameters \\ \bottomrule
+	\end{tabularx}
+\end{table*}
 
 \begin{figure*}[h]
 	\includegraphics{SoftwareFlow}
@@ -1426,6 +1463,7 @@ All software developed in the scope of this thesis is available online, and list
 	\centering
 	\vspace{2em}
 	\caption[][5pt]{List of used "off-the-shelf" software libraries}
+	\renewcommand{\arraystretch}{1.5}
 	\label{tab:old_software}
 	\begin{tabularx}{\textwidth}{@{}lp{6cm}X@{}}
 		\toprule
@@ -1440,13 +1478,85 @@ All software developed in the scope of this thesis is available online, and list
  		\\
 		\href{https://github.com/cmcqueen/cobs-c}{\texttt{cobs-c}}  & Implementation of \ac{COBS} %\autocite{cheshire_consistent_overhead_1997}
 		 & \\
+		 \href{https://getmdl.io/}{Material Design Lite} & CSS style framework (for \acs{GS} interface) & \\
+		 \href{https://lodash.com/}{\texttt{lodash}} & Javascript utility functions (for \acs{GS} interface) & \\
 		\bottomrule
 	\end{tabularx}
 \end{table*}
 
-%\subsection{Space Segment}
 
-%\subsection{Ground Segment}
+\FloatBarrier
+\subsection{Software Size}
+
+Since we are developing an embedded system with limited resources, it makes sense to analyse the size of the generated code. The \texttt{gcc} compiler allows measuring the memory consumption of the software in detail. The total size of the software is shown in \Cref{tab:resusage}, and the C++ files with the largest footprint are shown in \Cref{tab:ramusage,tab:romusage}.\footnote{The data was generated using the \href{https://github.com/PromyLOPh/linkermapviz}{\texttt{linkermapviz}} library.}
+
+
+\begin{table}[h]
+	\centering
+	\caption{Generated code size with different compiler options}
+	\label{tab:resusage}
+	\begin{tabular}{@{}llll@{}}
+		\toprule
+		\multicolumn{4}{l}{No optimisation (\texttt{-O0})} \\ \midrule
+		Memory type &        Used & Total &  Percentage \\[1ex]
+		\acs{ROM}   &   \SI{254324}{\byte}   &    \SI{  2}{\mega\byte} &     12.13\% \\
+		\acs{RAM}   &   \SI{205992}{\byte}   &    \SI{384}{\kilo\byte} &     52.39\% \\ \midrule
+		\multicolumn{4}{l}{Optimise for size (\texttt{-Os})} \\ \midrule
+		Memory type &        Used & Total &  Percentage \\[1ex]
+		\acs{ROM}   &   \SI{228384}{\byte}   &    \SI{  2}{\mega\byte} &     10.89\% \\
+		\acs{RAM}   &   \SI{205992}{\byte}   &    \SI{384}{\kilo\byte} &     52.39\% \\ \bottomrule
+	\end{tabular}
+	\vspace{2ex}
+	\setfloatalignment{b}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption[List of files with highest ROM usage]{List of files with highest \acs{ROM} usage (excluding system libraries)}
+	\label{tab:romusage}
+	\begin{tabularx}{\textwidth}{@{}S[table-format=5.0]X@{}}
+		\toprule
+		\multicolumn{1}{s}{Size (\si{\byte})} & File \\ \midrule
+		22515 & \texttt{ServicePool.cpp} \\
+		12350 & \texttt{main.cpp} \\
+		9271 & \texttt{TimeBasedSchedulingService.cpp} \\
+		8684 & \texttt{SystemParameters.cpp} \\
+		7708 & \texttt{EventActionService.cpp} \\
+		6546 & \texttt{OnBoardMonitoringService.cpp} \\
+		5952 & \texttt{ECSSTask.cpp} \\
+		4451 & \texttt{FreeRTOS\_tasks.c} \\
+		4404 & \texttt{MCP9808-internal.cpp} \\
+		3281 & \texttt{Logger.cpp} \\
+		\bottomrule
+	\end{tabularx}
+	\vspace{2ex}
+	\setfloatalignment{b}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption[List of files with highest RAM usage]{List of files with highest \acs{RAM} usage (excluding system libraries)}
+	\label{tab:ramusage}
+	\begin{tabularx}{\textwidth}{@{}S[table-format=5.0]X@{}}
+		\toprule
+		\multicolumn{1}{s}{Size (\si{\byte})} & File \\ \midrule
+		131104 & \texttt{heap\_4.c} \\
+		38088 & \texttt{ServicePool.cpp} \\
+		11192 & \texttt{UARTTask.cpp} \\
+		1064 & \texttt{SystemParameterMonitoring.cpp} \\
+		340 & \texttt{UARTRXTask.cpp} \\
+		260 & \texttt{FreeRTOS\_tasks.c} \\
+		200 & \texttt{sys\_time.c} \\
+		188 & \texttt{SystemParameters.cpp} \\
+		50 & \texttt{main.cpp} \\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\vspace{2ex}
+
+Note that no attempts were made to manually optimise the memory consumption or the performance of the system. Also, note that due to the usage of the \acs{ETL} library and the ban on dynamic memory allocation, the values shown in \Cref{tab:ramusage} refer to the majority of runtime \acs{RAM} consumption. In fact, the stack used by all Free\acs{RTOS} is already listed as part of the \texttt{heap\_4.c} file.
+
 
 \subsection{\ac{I2C} Failure Detection}
 
@@ -1482,11 +1592,12 @@ It is of interest to investigate how the hardware \ac{I2C} peripheral provided b
 \begin{figure}[h]
 	\includegraphics[trim={0 10cm 0 1.8cm},clip]{scope_1}
 	\label{subfig:i2c_clean}
+	\caption[Clear I2C signal]{Clear \acs{I2C} signal. The green \acs{SCL} waveform has a shape where it is easy to identify each clock pulse, and the data of the yellow \acs{SDA} signal can be easily cross-referenced with the clock. The amplitude of the signals is approximately \SI{3.3}{\volt}.}
 \end{figure}
 
 \begin{figure}[h]
 	\includegraphics[trim={0 10cm 0 1.8cm},clip]{scope_5}
-	\caption{blablabla}
+	\caption[Faulty I2C signal]{Faulty \acs{I2C} signal, when there is a large capacitive load on the \acs{I2C} network. The rise time of both signals is prohibitively high, and communication in this case is not possible. The signal does not reach the \SI{3.3}{\volt} value. In this case, it is not possible to transmit data in the bus, and the component is considered to have failed.}
 	\label{subfig:i2c_dirty}
 \end{figure}
 
@@ -1498,7 +1609,7 @@ The ground segment desktop computer needs to parse received packets and send com
 
 The \acs{YAMCS} \autocite{sela_yamcs_lightweight_2012} framework was selected to cover the aforementioned needs, and has been tailored to provide the capabilities needed for this demonstration.
 
-The \ac{ECSS} protocol\autocite{ECSS-E-ST-70-41C} is not supported by \acs{YAMCS} by default. However, the necessary commands have been integrated into the system using the supported \ac{XTCE} specification.\autocite{simon_xtce_standard_2004} The source code of the integration can be found in \Cref{app:xtce}.
+The \ac{ECSS} protocol \autocite{ECSS-E-ST-70-41C} is not supported by \acs{YAMCS} by default. However, the necessary commands have been integrated into the system using the supported \ac{XTCE} specification \autocite{simon_xtce_standard_2004}. The source code of the integration can be found in \Cref{app:xtce}.
 
 \begin{figure}[h]
 	\includegraphics{screenshots/yamcs_replay}
@@ -1506,9 +1617,17 @@ The \ac{ECSS} protocol\autocite{ECSS-E-ST-70-41C} is not supported by \acs{YAMCS
 \end{figure}
 
 \subsection{\acs{PUS} database}
+The \acs{YAMCS} suite does not provide built-in support for monitoring and controlling the satellite's \acs{PUS} database. This means that there is no convenient way to view \emph{events}, \emph{parameters}, \emph{monitoring} definitions and \emph{event-action} definitions.
 
-In 
+\begin{figure*}[h]
+	\includegraphics{screenshots/pus_viewer}
+	\caption[The ``PUS database viewer'' interface]{The ``\acs{PUS} database viewer'' interface. On the left is the list of monitoring definitions, on the top right is the list of transitions, and on the bottom right is the list of event-action definitions.}
+		\label{fig:pusviewer}
+\end{figure*}
+	
+To allow for a quick overview of the \acs{FDIR} status, we implemented an online interface showing the above (\Cref{fig:pusviewer}). The interface is updated in real-time via the \acs{YAMCS} \acs{HTTP} \acs{API}, and displays both \acs{FDIR} definitions and live status.
 
+The application was written in HTML and Javascript, taking advantage of the WebSocket technology, and its GUI is based on the Material Design Lite library.\footnote[]{\url{https://getmdl.io/}} It is located in the\foothref{https://github.com/kongr45gpen/fdir-demo-yamcs/tree/master/ecss-interface}{\texttt{fdir-demo-yamcs}} repository, along with the other parts of the demo \acl{GS}.
 
 \section{\ac{FDIR} setup}
 
