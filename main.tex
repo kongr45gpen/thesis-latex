@@ -1167,16 +1167,157 @@ The architecture chosen in AcubeSAT is as follows:
 \end{itemize}
 
 \FloatBarrier
-\section{Failure causes and recovery actions}
+\section{Detailed \acs{FDIR} Actions}
 
-\subsection{Failure causes}
+The following section presents a list of the implemented methods to detect, prevent and recover from errors occurring on the satellite. For each possible failure identified in \acs{FMEA} \autocite{retselis_acubesat_fmea_2020}, one or more detection and correction methods are selected from these tables, and tailored to the respective element.
 
-\subsection{Preventive actions}
 
+\clearpage
+\subsection{Detection Actions}
+\begin{table*}[h]
+	\centering
+	\caption[][10pt]{AcubeSAT \acs{FDIR} failure detection methods}
+	\label{tab:fdir_detect}
+	\renewcommand{\arraystretch}{1.3}
+	\begin{tabularx}{\textwidth}{@{}cL{5cm}X@{}}
+		\toprule
+		Level & Method & Description \\midrule
+		Unit & \textbf{Self-test does not return a correct value} & Connected peripherals may have self-test capabilities or may have stored default values that cannot be changed. \\
+		Unit & \textbf{Value out of range} & Unexpected sensor values may indicate actually dangerous environmental conditions, or simply faulty (e.g. \acs{SEFI}) sensors. Double or triple redundancy can increase observability in this case. \\
+		Unit & \textbf{Sampled sensor values very different} & \\
+		Unit & \textbf{No response or incoherent values} & The unit or interface may be faulty. \\
+		Unit & \textbf{Abnormally high current consumption} & May be observed in units suffering from short circuits or \acs{SEL}. \\
+		Unit & \textbf{Scrubbing error} & Error correction and detection algorithms can indicate bit flips. \\
+		Subsystem & \textbf{No response to \acs{CAN} commands} & May be due to failure of the subsystem, or the \acs{CAN} transceiver. \\
+		System & \textbf{No \acs{TC} have been received for some time} & The \acs{GS} sends periodic "refresh" commands to the satellite on each pass. Failure to receive means loss of communication. \\
+		Software & \textbf{Hardware exception} & May be due to division by 0, attempting to access inaccessible memory, etc. \\
+		Software & \textbf{Assertion failed} & C \texttt{assert} function \\
+		Software & \textbf{Unexpected microcontroller reset} & \\
+		Software & \textbf{\acs{TMR} variables wrong} & \\ \bottomrule
+	\end{tabularx}
+\end{table*}
+
+\clearpage
+\subsection{Preventive Actions}
+
+\begin{table*}[h]
+	\centering
+	\caption[][10pt]{AcubeSAT \acs{FDIR} failure prevention methods}
+	\label{tab:fdir_preventive}
+	\renewcommand{\arraystretch}{1.5}
+	\begin{tabularx}{\textwidth}{@{}lcX@{}}
+		\toprule
+		\# & Level & Action \\ \midrule
+		1 & Hardware & Radiation-tolerant microcontroller \\
+		2 & Hardware & Microcontroller watchdogs \parencite{beningo_review_watchdog_2010} \\
+		3 & Hardware & System-level wathcdogs \\
+		4 & Hardware & Hardware error correction \& detection algoritmhs \\
+		5 & Hardware & Dual in software memory \\
+		6 & Hardware & Current-limiting circuits \\
+		7 & Hardware & Subsystem overvoltage and overcurrent protection \\
+		8 & Hardware & Use of radiation-resistant \acs{MRAM} memory \\
+		9 & Hardware & Dual redundancy in sensors \\
+		10 & Hardware & Derating in power electronics \\
+		11 & Hardware & Placement of vulnerable components close to the centre to reduce the effect of radiation \\
+		12 & Hardware & Selection of components with available radiation test results \\
+		13 & Hardware & Double redundancy on the \acs{CAN} bus \\
+		14 & Hardware & Parity bit in the \acs{CAN} messages \\
+		15 & Software & Software error detection \& correction algorithms \\
+		16 & Software & Failure and power loss tolerant filesystem \\
+		17 & Software & Input filtering \acs{ADCS} \\
+		18 & Operational & Automatic periodic restarts \\
+		19 & Operational & Avoidance of dangerous operations in areas with high radiation levels \\
+		20 & Operational & Evaluation of available resources \& budgets before starting a subexperiment \\ \bottomrule
+	\end{tabularx}
+\end{table*}
+
+\clearpage
 \subsection{Corrective actions}
 
-\section{\ac{FDIR} operating modes}
+\begin{table*}[h]
+	\centering
+	\caption[][10pt]{AcubeSAT \acs{FDIR} failure correction methods}
+	\label{tab:fdir_correction}
+	\renewcommand{\arraystretch}{1.5}
+	\begin{tabularx}{\textwidth}{@{}lL{3cm}X@{}}
+		\toprule
+		Level & Action & Description \\ \midrule
+		& \textbf{None} & Many problems are corrected automatically, or there is no way to correct them (and they do not significantly affect the operation of the rest of the satellite). \\
+		Unit & \textbf{Restart unit} & This recovery method is associated with temporary faults that may occur in the software or hardware of a device. Such faults may result from design errors (bugs) that were not extensively tested, or from radiation-induced \acsp{SEFI}. \\
+		Unit & \textbf{Power-cycle unit} & Some errors cannot be corrected until the power to the affected unit is cut off. Radiation-induced \acsp{SEL} are the main reason for this. \\
+		Module & \textbf{Isolate unit} & If a module cannot be repaired, the next step is to ignore its values and/or to disconnect its power supply, so that the rest of the system is not affected by its erroneous outputs. \\
+		Subsystem & \textbf{Power-cycle subsystem} & Radiation or other failures can lead a subsystem into an unexpected state, from which it can only escape by restarting. \\
+		Subsystem & \textbf{Reconfigure subsystem} & If a permanent failure cannot be corrected by a reboot, the spacecraft should attempt to resume normal operation. This can be done by changing the default configuration of a subsystem, e.g. by selecting different sensors, by changing the functionality of the subsystem, or by delegating its tasks to another module. \\
+		System & \textbf{Abort current function} & The currently running process (e.g. experiment initialisation, \acs{TM} transmission) can be interrupted, as long as this action does not affect the safety of the system. \\
+		System & \textbf{Enter safe mode} & This is the last step in the corrective efforts. The satellite enters safe mode to prevent further propagation of the fault, when all other actions have failed to resolve the issue. \\ \bottomrule
+	\end{tabularx}
+\end{table*}
+
+\clearpage
+\section{\acs{FDIR} functional flow}
 \label{sec:fdir_operating_modes}
+
+This section presents the flows and processes of \acs{FDIR} that are executed in orbit. Although the exact process for each component and subsystem is different, a general hierarchical rule is followed that starts at the lowest level (unit/component), and proceeds to system-level, if the relevant failure has not been resolved.
+
+Once the recovery actions are completed, the responsibility shifts to the operators, who must identify the root cause of the problem, and take the necessary actions, if any, to permanently resolve it.
+
+\begin{figure*}[h]
+	\includegraphics{FDIRgeneric}
+	\caption{Generic flow of \acs{FDIR} in all operational modes of the satellite}
+	\label{fig:generalflow}
+\end{figure*}
+
+The typical flow shown in \Cref{fig:generalflow} describes the usual process of resolving a failure on the satellite. More specifically:
+\begin{enumerate}
+	\item If an observed parameter is out of bounds, a fix is first attempted at the unit level with \textbf{simple actions} (e.g. reset, power-cycle).
+	\item If the failure persists, then a subsystem-level resolution is attempted. For critical components, this may mean restarting the entire subsystem; otherwise, it may mean simply powering down the unit.
+	
+	\marginnote{An alternative method of implementation is to define a parameter indicating the state or current step of \acs{FDIR} for each module, and have monitoring definitions triggered according to the value of this parameter.}
+	In technical terms, the separation between the component and subsystem levels is achieved by appropriate usage of the \textbf{\texttt{ST[12]} on-board monitoring service} (\Cref{sec:pus}). Using the \textbf{repetition number} parameter, the operator can set the failure duration thresholds, which are then used to differentiate between the type of recovery actions applied. For example, \( 2 \) out-of-limits measurements lead to a sensor restart, while 5 out-of-limits measurements can lead to complete isolation/deactivation.
+	\item If the failure persists but is not critical, the unit and its \acs{FDIR} are permanently disabled, and the subsystem is reconfigured if necessary.
+	
+	At this point it should be emphasised that the disabled unit should not contribute to any of the satellite's operations. The \texttt{ST[12]} service allows the use of \textbf{check validity conditions}, which can disable a check if it refers to a disabled device or other conditions that prevent it.
+	\item If the failure persists, is critical, and there is no other way to correct it, the system enters \textbf{Safe Mode}.
+\end{enumerate}
+
+All of the above are executed in the background of each microcontroller as an \acs{RTOS} process. The utilisation of the \acs{PUS} services enables all of the above to be modified in orbit.
+
+\subsection{Safe Mode}
+\label{itm:safe_mode}
+
+\begin{figure*}[h]
+	\includegraphics{FDIRsafe}
+	\caption{\acs{FDIR} flow in safe mode}
+	\label{fig:safeflow}
+\end{figure*}
+
+
+The goal of \emph{Safe Mode} is to provide a robust, well-tested and deterministic state where the satellite can operate autonomously, until the operators can remedy the mission-threatening failure. The \acs{FDIR} in Safe Mode also follows the \acs{PUS} principles and AcubeSAT's requirements (\Cref{sec:fdirbaspri}), continuing to allow on-the-fly modifications by operators.
+
+The generic architecture for \acs{FDIR} during Safe Mode is shown in \Cref{fig:safeflow}. Recovery actions include:
+\begin{itemize}
+	\item Disabling entire \textbf{problematic} subsystems. In the case of \acs{ADCS} and \acs{OBC}, this action is accompanied by significantly reduced spacecraft functionality, but does not prevent control of the spacecraft from the ground. ON the other hand, disabling the \acs{COMMS} and \acs{EPS} subsystems prevents any communication between the \acl{GS} and the CubeSat. In any case, the only action that can be taken is to attempt to restart the subsystems after a predetermined time delay, waiting until the satellite reaches more favourable environmental conditions.
+	\item Isolating components and reconfiguring subsystems accordingly. The smaller number of active components in Safe Mode translates to a safer design and testing process.
+\end{itemize}
+
+AcubeSAT's operators are responsible for determining the cause of the failure and required actions as soon as they receive the telemetry announcing the failure, and must intervene immediately after a safe course of action has been decided. Exit from Safe Mode can \emph{only} be made after \acs{TC}, and only after the initial fault has been corrected and no other faults are evident (e.g. due to fault propagation).
+
+The actions that operators can take to recover from failures are:
+\begin{compactitem}
+	\item Modify the satellite configuration via the \acs{ECSS} services.
+	\item More often, changing the satellite's \textbf{software}, by uploading updated binary images\footnote{This process requires the execution of a full software test campaign on the ground, and a reliable process of reprogramming the satellite in orbit \autocite[45]{DDJF_OBSW}.}
+	\item Permanently deactivate all defective units
+	\item Wait until the satellite is in favourable connditions
+	\item None, if the fault was detected by mistake, or corrected automatically
+\end{compactitem}
+
+
+\section{Next steps}
+The combination of \acs{FMEA} and \acs{HSIA} of AcubeSAT contains 928 potential failures, of which 185 are considered critical items \autocite{retselis_acubesat_fmea_2020}.
+
+After formulating the architecture and design of the \acs{FDIR}, its implementation follows. For this purpose, the team has developed a library that implements the \acs{PUS}\footurl{https://gitlab.com/acubesat/obc/ecss-services} services and can meet the needs of this section.
+
+Verification of \acs{FDIR} is the last part of the process, and involves checking for any feared event through hardware or software simulation.
 
 \chapter{Practical demonstration of \ac{FDIR}}
 
