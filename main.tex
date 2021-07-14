@@ -789,7 +789,7 @@ The steps of the \acs{FDIR} process are defined as follows:
 	
 	Although the formulation of technical specifications for random events and failures is difficult, especially if there is a lack of reliability data, the handbook suggests a set of technical specifications \autocite[42]{SAVOIR-HB-003} that can be used by missions. A large set of these specifications are also met by the design presented in the following sections.
 	
-	\item \textbf{Concept definition}: This stage involves the comparison of the general \acs{FDIR} strategies that can solve the requirements of \cref{itm:fdir_reqs}. Solutions such as redundancy, cross-strapping, triple-redundant voting or inherently reliable (high-cost) components.
+	\item \textbf{Concept definition}: This stage involves the comparison of the general \acs{FDIR} strategies that can solve the requirements of \Cref{itm:fdir_reqs}. Solutions such as redundancy, cross-strapping, triple-redundant voting or inherently reliable (high-cost) components.
 	
 	
 	\label{itm:fdir_concept}
@@ -2002,8 +2002,8 @@ The following methods were used to simulate each failure:
 		\textbf{\texttt{F-020}} & Permanent loss of function & Ignore sensor 1 values & \textbf{Hardware}: Permanent cable disconnection \\
 		\textbf{\texttt{F-030}} & Short Circuit between pins & Ignore sensor 1 values & \emph{Same as \texttt{F-020}}  \\
 		\textbf{\texttt{F-040}} & Temporary Value Shift & Power-cycle sensor 1 & \textbf{Software}: Emulation of large value (temporarily)\newline \textbf{Hardware}: Increase temperature difference (temporarily)\\
-		\textbf{\texttt{F-050}} & Permanent Value Shift & Ignore sensor 1 & \textbf{Software}: Emulation of large value (permanently)\newline\textbf{Hardware}: Increase temperature difference (permanently) \\
-		\textbf{\texttt{F-060}} & \acs{I2C} bus pin output stuck & Ignore sensor 1 & \textbf{Hardware}: Connect \acs{I2C} pin to ground
+		\textbf{\texttt{F-050}} & Permanent Value Shift & Ignore sensor 1 values & \textbf{Software}: Emulation of large value (permanently)\newline\textbf{Hardware}: Increase temperature difference (permanently) \\
+		\textbf{\texttt{F-060}} & \acs{I2C} bus pin output stuck & Ignore sensor 1 values & \textbf{Hardware}: Connect \acs{I2C} pin to ground
 		\\ \midrule
 		\multicolumn{4}{l}{MCP9808 Temperature Sensor \#2} \\ \midrule
 		
@@ -2082,7 +2082,7 @@ In \Cref{fig:yamcsparametersnominal}, the temperature and status values during n
 
 After update the parameter values, the \emph{\texttt{ST[12]} on-board monitoring} service and its monitoring definitions (\Cref{fig:pusf010tran,tab:f010tran}) are next. The following steps are taken in order:
 \begin{enumerate}
-	\item As soon as the sensor is disconnected, definitions 4, 6, 7, 9, and 10 (\cref{tab:demo_monitoring}) acquire an \invalid state. This happens after deactivation of the \textbf{check validity condition} for these definitions. If sensor 1 is disabled,\footnote{either due to a problem or a command} its values should not be used for any on-board functionality.
+	\item As soon as the sensor is disconnected, definitions 4, 6, 7, 9, and 10 (\Cref{tab:demo_monitoring}) acquire an \invalid{} state. This happens after deactivation of the \textbf{check validity condition} for these definitions. If sensor 1 is disabled,\footnote{either due to a problem or a command} its values should not be used for any on-board functionality.
 	
 	Therefore, all definitions associated with sensor 1 are disabled and cannot trigger any reaction. This is done immediately.
 	\item After two measurements and time \( 2 \cdot 500 = \SI{1000}{\milli\second} \), monitoring definition 0 confirms that the parameter \emph{Temperature Status 1} has an unexpected value. As a result, the monitoring definition is switched to the \unexpected{} state, therefore triggering the entire fault reporting and recovery process. The sensor failure has now been detected, and the \acs{FDIR} system is now in action.
