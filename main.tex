@@ -203,7 +203,7 @@ Despite the above-mentioned difficulties, modern technology has advanced enough 
 
 Given the above, this thesis is focused on the increasingly popular \textbf{nanosatellite} technology \autocite{sweeting_modern_small_2018a}. \textbf{CubeSats}, the most popular class of nanosatellite, were introduced as a concept in 1999. Their low cost and size, as well as their relatively low complexity, have allowed universities and organizations worldwide to launch over \SI{1530}{} CubeSats by 2021 \autocite{swartwout_cubesat_database_2021}.
 	
-CubeSats are designed using ``building blocks'' sized at \SI[product-units = single]{10 x 10 x 10}{\centi\metre} called \textbf{Units}. Typical satellite sizes are obtained by "stacking" these units, resulting in satellites of 1U, 1.5U, 2U, 3U, 6U and 12U. Each unit can weigh up to \SI{2}{\kilogram} \autocite{CDS14}. Internally,  CubeSats use low-cost commercial electronic components, henceforth referred to as \textbf{\acf{COTS}} components. CubeSats are typically launched in Low Earth Orbits (\acs{LEO}) \autocite{anthopoulos_orbital_analysis_2020,riebeek_catalog_earth_2009}, deployed as secondary payloads in larger satellite launches (``piggyback launches''), and remain active for periods of about 1 to 3 years.
+CubeSats are designed using ``building blocks'' sized at \SI[product-units = single]{10 x 10 x 10}{\centi\metre} called \textbf{Units}. Typical satellite sizes are obtained by ``stacking'' these units, resulting in satellites of 1U, 1.5U, 2U, 3U, 6U and 12U. Each unit can weigh up to \SI{2}{\kilogram} \autocite{CDS14}. Internally,  CubeSats use low-cost commercial electronic components, henceforth referred to as \textbf{\acf{COTS}} components. CubeSats are typically launched in Low Earth Orbits (\acs{LEO}) \autocite{anthopoulos_orbital_analysis_2020,riebeek_catalog_earth_2009}, deployed as secondary payloads in larger satellite launches (``piggyback launches''), and remain active for periods of about 1 to 3 years.
 
 \pagebreak[4]
 \section{Thesis goals \& contribution}
@@ -719,7 +719,7 @@ This standard is intended for use in any space mission, complementing other stan
 	
 	\item \textbf{\texttt{ST[11]}: Time-based scheduling}
 	
-	Allows the operators to \textbf{"time-tag"} telecommands for execution at future timestamps, instead of immediately.
+	Allows the operators to \textbf{``time-tag''} telecommands for execution at future timestamps, instead of immediately.
 	
 	\item \textbf{\texttt{ST[12]}: On-board monitoring}
 	
@@ -743,7 +743,7 @@ This standard is intended for use in any space mission, complementing other stan
 	
 	\item \textbf{\texttt{ST[17]}: Test}
 	
-	This service allows performing on-board connection and "are-you-alive" checks.
+	This service allows performing on-board connection and ``are-you-alive'' checks.
 	
 	\item \textbf{\texttt{ST[18]}: On-board operations procedure}
 	
@@ -813,7 +813,7 @@ The steps of the \acs{FDIR} process are defined as follows:
 	\item \textbf{In-operations preparation}: In the last step, final changes are made to the literature \& documentation to enhance the remote operability of the mission.
 \end{enumerate}
 
-Although all the above steps have high significance, "lean" missions need to especially focus on requirements (\Cref{itm:fdir_reqs}), concept definition (\Cref{itm:fdir_concept}), detailed design (\Cref{itm:fdir_cdr}) and verification (\Cref{itm:fdir_valid}). A simple example of an application of this process can be found in \Cref{cap:practical}.
+Although all the above steps have high significance, ``lean'' missions need to especially focus on requirements (\Cref{itm:fdir_reqs}), concept definition (\Cref{itm:fdir_concept}), detailed design (\Cref{itm:fdir_cdr}) and verification (\Cref{itm:fdir_valid}). A simple example of an application of this process can be found in \Cref{cap:practical}.
 
 At this point, it should be made clear that the \acs{FDIR} design process and the system reliability analysis in general should be taken into account \textbf{throughout the lifetime} of a space project, and not only after the rest of the platform has been designed or implemented. The \ac{RAMS} domain is directly linked to all other subsystems, receiving the required inputs but also heavily influencing the rest of the design. In particular, young CubeSat projects tend to not pay the necessary attention to the reliability domain \autocite{langer_reliability_estimation_2017}.
 
@@ -848,7 +848,7 @@ The above logic is summarized in \Cref{fig:fdirpus}. Its importance lies in that
 	\item Safely interfere entirely with the operation of the \acs{FDIR} without changing the source code.
 	\item Partially or completely disable \acs{FDIR}, if necessary for diagnostic purposes.
 	\item Use a ready and tested \acs{ECSS} services software suite to implement all of the above, reducing cost and development time.
-	\item Avoid unconfigurable "hard-coding" of \acs{FDIR} procedures at various points in the code.
+	\item Avoid unconfigurable ``hard-coding'' of \acs{FDIR} procedures at various points in the code.
 \end{compactitem}
 
 \chapter{\acs{FDIR} in AcubeSAT}
@@ -1191,7 +1191,7 @@ The following section presents a list of the implemented methods to detect, prev
 		Unit & \textbf{Abnormally high current consumption} & May be observed in units suffering from short circuits or \acs{SEL}. \\
 		Unit & \textbf{Scrubbing error} & Error correction and detection algorithms can indicate bit flips. \\
 		Subsystem & \textbf{No response to \acs{CAN} commands} & May be due to failure of the subsystem, or the \acs{CAN} transceiver. \\
-		System & \textbf{No \acs{TC} have been received for some time} & The \acs{GS} sends periodic "refresh" commands to the satellite on each pass. Failure to receive means loss of communication. \\
+		System & \textbf{No \acs{TC} have been received for some time} & The \acs{GS} sends periodic ``refresh'' commands to the satellite on each pass. Failure to receive means loss of communication. \\
 		Software & \textbf{Hardware exception} & May be due to division by 0, attempting to access inaccessible memory, etc. \\
 		Software & \textbf{Assertion failed} & C \texttt{assert} function \\
 		Software & \textbf{Unexpected microcontroller reset} & \\
@@ -1298,7 +1298,7 @@ The goal of \emph{Safe Mode} is to provide a robust, well-tested and determinist
 
 The generic architecture for \acs{FDIR} during Safe Mode is shown in \Cref{fig:safeflow}. Recovery actions include:
 \begin{itemize}
-	\item Disabling entire \textbf{problematic} subsystems. In the case of \acs{ADCS} and \acs{OBC}, this action is accompanied by significantly reduced spacecraft functionality, but does not prevent control of the spacecraft from the ground. ON the other hand, disabling the \acs{COMMS} and \acs{EPS} subsystems prevents any communication between the \acl{GS} and the CubeSat. In any case, the only action that can be taken is to attempt to restart the subsystems after a predetermined time delay, waiting until the satellite reaches more favourable environmental conditions.
+	\item Disabling entire \textbf{problematic} subsystems. In the case of \acs{ADCS} and \acs{OBC}, this action is accompanied by significantly reduced spacecraft functionality, but does not prevent control of the spacecraft from the ground. On the other hand, disabling the \acs{COMMS} and \acs{EPS} subsystems prevents any communication between the \acl{GS} and the CubeSat. In any case, the only action that can be taken is to attempt to restart the subsystems after a predetermined time delay, waiting until the satellite reaches more favourable environmental conditions.
 	\item Isolating components and reconfiguring subsystems accordingly. The smaller number of active components in Safe Mode translates to a safer design and testing process.
 \end{itemize}
 
@@ -1442,7 +1442,7 @@ To ensure high reliability and a low resource footprint of the software, the fol
 	\item Dynamic memory allocation\footnote{Use of \texttt{malloc}, \texttt{new} etc.} is banned completely from the code.
 	\label{itm:malloc}
 	\item \Cref{itm:malloc} means that standard C++ containers cannot be used. Instead, the \foothref{https://www.etlcpp.com/}{\acf{ETL}} is integrated in the software.
-	\item "Expensive" features such as Run-Time Type Inference, Dynamic Casts or exceptions are also prohibited.
+	\item ``Expensive'' features such as Run-Time Type Inference, Dynamic Casts or exceptions are also prohibited.
 \end{compactenum}
 
 The \foothref{https://www.microchip.com/en-us/development-tools-tools-and-software/embedded-software-center/mplab-harmony-v3}{MPLAB Harmony} \ac{HAL} and configurator are used to interface with all the \acs{MCU}'s peripherals. \foothref{https://www.jetbrains.com/clion/}{CLion} has been selected as the \acs{IDE}, along with the \foothref{https://cmake.org/}{CMake} build system.
@@ -1465,7 +1465,7 @@ All software developed in the scope of this thesis is available online, and list
 \begin{table*}[h]
 	\centering
 	\vspace{2em}
-	\caption[][5pt]{List of used "off-the-shelf" software libraries}
+	\caption[][5pt]{List of used ``off-the-shelf'' software libraries}
 	\renewcommand{\arraystretch}{1.5}
 	\label{tab:old_software}
 	\begin{tabularx}{\textwidth}{@{}lp{6cm}X@{}}
@@ -1569,7 +1569,7 @@ It is of interest to investigate how the hardware \ac{I2C} peripheral provided b
 	\item \textbf{Microcontroller peripheral errors}
 	
 	\marginnote{To ensure detection of peripheral errors, it is important to make sure that the error status of the peripheral is not discarded after every operation. Interrupts and the \href{https://en.cppreference.com/w/cpp/language/attributes/nodiscard}{\mintinline{cpp}{[[nodiscard]]}} C++ feature are used to ensure that all errors are caught.}
-	The microcontroller's \ac{I2C} peripheral is capable of generating an error whenever \emph{the communicating peripheral does not set the "acknowledge" bit}. Failure to set this bit might be a result of disconnection of the clock or data lines, failure of the bus, or non-operation of the peripheral itself.
+	The microcontroller's \ac{I2C} peripheral is capable of generating an error whenever \emph{the communicating peripheral does not set the ``acknowledge'' bit}. Failure to set this bit might be a result of disconnection of the clock or data lines, failure of the bus, or non-operation of the peripheral itself.
 	
 	\item \textbf{Response timeout}
 	
@@ -1634,7 +1634,7 @@ The application was written in HTML and Javascript, taking advantage of the WebS
 
 \section{\ac{FDIR} setup}
 
-The purpose of the test setup is to observe the response of the system to any failure of the two "vulnerable" temperature sensors. For this purpose, we will attempt to simulate every failure mode of each sensor, and design an \ac{FDIR} implementation that anticipates all those failures.
+The purpose of the test setup is to observe the response of the system to any failure of the two ``vulnerable'' temperature sensors. For this purpose, we will attempt to simulate every failure mode of each sensor, and design an \ac{FDIR} implementation that anticipates all those failures.
 
 \marginnote{Double failures are not investigated in the scope of this document, as they are mostly considered only for launchers and manned missions \parencite{SAVOIR-HB-003}.}
 As a required input for the \ac{FDIR} detailed design, a \ac{FMEA} analysis needs to be prepared for the system. All \ac{FMEA} performed follows the requirements of the ECSS-Q-ST-30-02C standard.\autocite{ECSS-Q-ST-30-02C} The analysis is based on the \ac{FMEA} performed for the AcubeSAT nanosatellite,\autocite{retselis_acubesat_fmea_2020} and can be seen in \Cref{tab:fmea} for the reduced system. All expected failure modes for the two sensors are investigated, as well as a failure mode for the entire system that can be detected by correctly-operating sensors. Each of those failure modes will be later verified by injecting software or hardware modifications.
@@ -1987,7 +1987,7 @@ The following methods were used to simulate each failure:
 	\item For small changes in temperature, a hot air gun or other hot air source was pointed towards each sensor. Care was taken to not exceed the rated temperatures of the affected components.
 	\item For changes in temperature which were impractical to simulate, the failure was injected in software, by manually modifying the variable.
 	
-	The two buttons present on the development board were used as a simple interface to "inject" extreme temperature values.
+	The two buttons present on the development board were used as a simple interface to ``inject'' extreme temperature values.
 \end{itemize}
 
 \begin{table*}
@@ -2563,7 +2563,7 @@ The importance of \textbf{verification} and \textbf{tests} of the developed impl
 Despite the potential offered by such a system, we noted the following implementation details that require attention:
 \begin{itemize}
 	\item A hasty implementation of \acs{FDIR} can lead to a large increase in complexity, and difficulty managing all reliability definitions. Complexity increases the possibility of human error, undetected errors, and system malfunction. In non-critical systems, it is suggested that the number of definitions be limited to a manageable number, preventing over-design. In our example, monitoring of the \(\Delta\) difference of temperatures could be skipped, in favour of triggering a system restart only when both sensors are out of range.
-	\item The different types of parameter variables (\mintinline{cpp}{uint16_t}, \mintinline{cpp}{uint32_t}, \mintinline{cpp}{float} etc.) pose technical challenges in type-safe environments (such as that of C++), and it may be necessary to use more "unsafe" structures and pointers, rather than a templated implementation.
+	\item The different types of parameter variables (\mintinline{cpp}{uint16_t}, \mintinline{cpp}{uint32_t}, \mintinline{cpp}{float} etc.) pose technical challenges in type-safe environments (such as that of C++), and it may be necessary to use more ``unsafe'' structures and pointers, rather than a templated implementation.
 	\item It is important to consider the correlations between monitoring definitions, and to ensure that one definition does not cause another to trigger faster or slower (e.g. due to a sensor restart that resets all other definitions).
 	\item The \texttt{ECSS-E-ST-70-41C} standard does not provide flexibility in defining ``smart'' parameters, and data such as the \emph{difference between values} must be manually defined in the code. In addition, there is reduced flexibility in defining multiple event-action definitions, as each event can be associated with only one configurable reaction.
 \end{itemize}
