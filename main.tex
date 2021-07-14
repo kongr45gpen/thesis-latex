@@ -2419,7 +2419,7 @@ The level of reconfigurability possible is defined by requirements listed in \pa
 	\end{tabularx}
 \end{table*}
 
-The \ac{YAMCS} platform was once again used to generate the wanted commands (\Cref{fig:yamcs_commands}).
+The \ac{YAMCS} platform was once again used to generate the wanted commands (\Cref{fig:yamcs_commands}). This section will analyse how \acs{ECSS} \acsp{TC} can be used to perform the required modifications.
 
 \begin{figure}[h]
 	\includegraphics{screenshots/yamcs_commands.png}
@@ -2428,8 +2428,124 @@ The \ac{YAMCS} platform was once again used to generate the wanted commands (\Cr
 \end{figure}
 
 
+\paragraph{\textbf{\texttt{RC-010} \acs{FDIR} observability}}
+The degree of observability required, in real and non-real time, is achieved using the interface presented in \Cref{sec:pusinterface}. The ready-made telemetry structures implemented by the \acs{PUS} standard are \autocite{ECSS-E-ST-70-41C}:
+\begin{compactitem}
+	\item \texttt{TM[3,25]}: Periodic parameter value reporting (beacon)
+	\item \texttt{TM[5,1]} to \texttt{TM[5,4]}: Event reports at the time of occurrence
+	\item \texttt{TM[12,9]}: List of tracking definitions
+	\item \texttt{TM[12,12]}: Periodic reporting of state transitions in monitoring definitions\footnote{In simpler terms, we are informed when a parameter goes out of bounds, and when it returns to nominal state}
+	\item \texttt{TM[19,7]} and \texttt{TM[19,11]}: List of event-action definitions
+	\item \texttt{TM[20,2]}: Reporting of the value of any parameter in the system
+\end{compactitem}
+
+With the above set of telemetry, downlinked either periodically or after \acs{TC}, operators are able to examine the state of the system and its \acs{FDIR} in detail. All results in \Cref{sec:simul} were extracted using the above telemetry structures.
+
+\paragraph{\textbf{\texttt{RC-020} Enabling/Disabling \acs{FDIR}}}
 
 
+The features implemented and tested that allow controlling \acs{FDIR} functions are as follows:
+\begin{itemize}
+	\item \texttt{TC[12,16]}: \emph{disable the parameter monitoring function}
+	
+	This telecommand is defined in the \acs{PUS} standard and allows to completely disable the parameter monitoring function, and by extension, \textbf{completely disable the \acs{FDIR}}. After it is sent, any failure in the system is not detected, and no recovery operations are performed.
+	
+	It can be understood that such a command is fairly dangerous for the satellite system, as an incorrect execution will greatly reduce the possibility of recovery from a failure.\footnote{Critical commands such as this one are suggested to typically require two sub-commands to be sent in series (ARM--EXECUTE logic)} Nevertheless, it is useful if the \acs{FDIR} experiences problems such as spurious triggers that pose a higher risk to the mission.
+	
+	We note here that this command does not prevent status queries or configuration changes in the on-board monitoring service.
+	
+	\item \texttt{TC[12,15]}: \emph{enable the parameter monitoring function}
+	
+	All \acsp{TC} to disable a function are followed by their ``enable'' counterpart. For example, this telecommand enables the parameter monitoring to be re-enabled if it was previously disabled.
+
+	\item \texttt{TC[12,2]}: \emph{disable parameter monitoring definitions}
+	
+	In addition to disabling the entire \acs{FDIR} function, the standard allows the possibility to disable only specific pieces of it (in singles or in bulk).
+	
+	\begin{figure}[h]
+		\includegraphics{screenshots/yamcs_send_disablepmon.png}
+		\caption[View the \acs{YAMCS} command execution screen]{View the \acs{YAMCS} command execution screen. The user is prompted to enter the single argument to the \texttt{TC[12,1]} command, which is the monitoring definition that they wish to disable.}
+		\label{fig:yamcssenddisablepmon}
+	\end{figure}
+	
+	This feature is particularly useful when it appears that \acs{FDIR} is too strict for a component.
+	
+	\item \texttt{TC[12,1]}: \emph{enable parameter monitoring definitions}
+	
+	\item \texttt{TC[19,5]}: \emph{disable event-action definitions}
+	
+	In addition to disabling the entire \acs{FDIR} for a component, it is possible to disable only the ``IR''\footnote{\textcolor{MaterialGrey400}{Detection, }Isolation \& Recovery} part of it. This means that while failures are detected, no attempt is made to isolate or repair them. In this way, we can disable the \acs{FDIR}, but maintain observability of parameters and bound violations.
+
+	In technical terms, this command disables the event-action definitions for specific events. The behaviour of a typical failure after executing this command is shown in \Cref{tab:eaofftr}.
+
+\begin{table*}[h]
+	\centering
+	\caption[Transition table with event-actions disabled]{Transition table with event-actions disabled. The sensors are not disabled by the \acs{FDIR}, but the event-action definitions go out of bounds one-by-one.}
+	\label{tab:eaofftr}
+	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
+		\toprule
+		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c}{Parameter} & Transition \\ \midrule
+		0 & 4 & Temp. \(\Delta\) & = & 110.625 & \ok \ar \hilim \\
+		1.5 & 7 & Temp. \( \Delta \) & = & 110.6875 & \ok \ar \hilim \\
+		2 & 6 & Temp. \( \Delta \) & = & -79.9375 & \ok \ar \lolim \\
+		4.5 & 9 & Temp. \( \Delta \) & = & -79.875 & \ok \ar \lolim \\
+		5 & 10 & Temp. \( \Delta \) & = & 110.625 & \ok \ar \hilim \\
+		\bottomrule
+	\end{tabularx}
+	\vspace{10pt}
+\end{table*}
+
+\item \texttt{TC[19,4]}: \emph{enable event-action definitions}
+	
+\end{itemize}
+
+\paragraph{\textbf{\texttt{RC-030} Addition/Deletion of monitoring definitions}}\hspace{0pt}
+	
+	The ability to delete and add new \acs{FDIR} definitions is provided via the \emph{\texttt{ST[12]} on-board monitoring} service \acsp{TC}:
+	
+	\begin{itemize}
+	\item \texttt{TC[12,5]}: \emph{add parameter monitoring definitions}
+	
+	Through \texttt{TC[12,5]} we can provide the satellite with all the data needed to create a monitoring definition, for any type of parameter, value check and check validity condition.
+	
+	\begin{figure}[h]
+		\includegraphics{tc125}
+		\caption{The \texttt{TC[12,5]} telecommand, exactly as shown in \autocite{ECSS-E-ST-70-41C}}
+	\end{figure}
+	
+	The arguments to this command can be given from within the \acs{YAMCS} interface (\Cref{fig:yamcs_add_definition}).
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\textwidth]{screenshots/yamcs_add_definition}
+		\caption{Add tracking definition environment from \acs{YAMCS}}
+		\label{fig:yamcs_add_definition}
+	\end{figure}
+	
+	Note that using this command presents some difficulties, due to the many different possible types of parameters and controls, leading to different message formats. For this reason, in this example we only implemented the \mintinline{cpp}{uint64_t} type for expected value checks, and \mintinline{cpp}{float} for limit checks. Definitions with the previous datatypes were coded so as to be compatible with all other numerical parameters in the space segment code.
+		
+	\item \texttt{TC[12,6]}: \emph{delete parameter monitoring definitions}
+		
+		This command can delete monitoring definitions, and, when used with \texttt{TC[12,5]}, can modify monitoring definitions.
+		
+		Note that modification via \emph{delete-and-add} is not recommended by \acs{SAVOIR} \autocite{SAVOIR-HB-003}, as it runs the risk that one of the two commands will not be executed, and the system will be in an undesirable state. \emph{\texttt{TC[12,7]} modify parameter monitoring definitions} can be used to remedy this issue, which was however not implemented for this demonstration.
+		
+	\end{itemize}
+	
+	\paragraph{\textbf{\texttt{RC-040} Addition/Deletion of event-action definitions}}\hspace{0pt}
+	
+	Similar to the aforementioned \acsp{TC}, operators can modify the list of event-action definitions, or even link them to specific monitoring definitions, by taking advantage of the \emph{\texttt{ST[19]} eventaction} service functions. In all of the following functions, the definitions are accessed based on the Application Process ID and the event ID.
+	
+
+		
+	\begin{itemize}
+		\item \texttt{TC[19,1]}: \emph{add event-action definitions}
+		
+		Note that the \emph{action} part is defined by the user as a \textbf{nested \acs{TC} packet}. Thus, by providing arbitrary telecommand, operators can instruct the satellite to perform virtually any action after a failure.
+		
+		\item \texttt{TC[19,2]}: \emph{delete event-action definitions}
+		
+	\end{itemize}
 
 \chapter{Conclusions and Future Work}
 
