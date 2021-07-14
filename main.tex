@@ -2183,6 +2183,7 @@ This failure is similar to \texttt{F-010}, but it presumes that the component ca
 		5.5 & 2 & Temp. Status 1 & = & \texttt{DISABLED} & \unexpected \ar \ok \\
 		\bottomrule
 	\end{tabularx}
+	\vspace{10pt}
 \end{table*}
 
 In this test, the system normally recognizes the sensor failure as expected, and, as shown in \Cref{tab:f020tr}, tries to correct it twice:
@@ -2224,6 +2225,7 @@ The means we used insert false values is to press\textbf{one of the two buttons}
 		1.5 & 4 & Temp. 1 & = & 29.5625 & \hilim \ar \ok \\
 		\bottomrule
 	\end{tabularx}
+	\vspace{10pt}
 \end{table*}
 
 In this example, only one tracking definition goes out of bounds. As soon as the out-of-bounds is detected, the sensor is restarted, and the fault is corrected.
@@ -2238,7 +2240,165 @@ The logic we used in the \acs{FDIR} architecture means that the remaining defini
 	\label{fig:yamcsf040trend}
 \end{figure*}
 
+\clearpage
+\paragraph{\textbf{\texttt{F-050}: Permanent Value Shift}}\hspace{0pt}
 
+This fault is similar to \texttt{F-040}, but with sensor repair being impossible.
+
+The means we used insert false values is to press\textbf{one of the two buttons} on the development board.\footnote{Alternatively, test telecommands can be used.} More specifically, by pressing \emph{button 0}, the value \SI{80}{\celsius} is added to temperature 1. By pressing \emph{button 1}, the same happens for temperature 2.
+
+\subparagraph{Procedure}
+\begin{compactenum}
+	\item Hold down \emph{button 0} until the 1\textsuperscript{st} \acs{LED} is turned off.
+\end{compactenum}
+
+\subparagraph{Visual indications} The 1\textsuperscript{st} \acs{LED} light flashes once, stays on, and then turns off permanently.
+
+\subparagraph{Results}
+\begin{table*}[h]
+	\centering
+	\caption{Monitoring definition transitions table (\texttt{F-050} failure)}
+	\label{tab:f050tran}
+	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
+		\toprule
+		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c}{Parameter} & Transition \\ \midrule
+		0 & 4 & Temp. 1 & = & 109.4375 & \ok \ar \hilim \\
+		1.5 & 7 & Temp. 1 & = & 109.4375 & \ok \ar \hilim \\[1ex]
+		\multicolumn{6}{c}{\textcolor{MaterialGrey500}{Failure isolation}}\\[1ex]
+		1.5 & 9 & Temp. \( \Delta \) & = & -79.9375 & \ok \ar \invalid \\
+		1.5 & 10 & Temp. 1 & = & 109.4375 & \ok \ar \invalid \\
+		2 & 4 & Temp. 1 & = & 109.4375 & \hilim \ar \invalid \\
+		2 & 6 & Temp. \( \Delta \) & = & -79.9375 & \ok \ar \invalid \\
+		2 & 7 & Temp. 1 & = & 109.4375 & \hilim \ar \invalid \\
+		\bottomrule
+	\end{tabularx}
+	\vspace{10pt}
+\end{table*}
+
+The \acs{FDIR} process is again two-stepped:
+\begin{enumerate}
+	\item After the first detection (definition \texttt{4}), the sensor is power-cycled, and the \acs{LED} blinks. The issue is however still not resolved.
+	\item After \SI{1.5}{\second}, definition \texttt{7} takes over. Since the value of the sensor is still beyond limits, the action taken is to disable the sensor. This is how the failure is isolated.
+	
+	After isolation, where the status of the sensor is set to \texttt{DISABLED}, the defitions that depend on the peripheral are also disabled (\invalid). As expected, isolation is now complete.
+\end{enumerate}
+
+The isolation \& recovery steps are the same as the ones from failure \texttt{F-020}, and operator intervention is once again required before any other measure is taken.
+
+
+\clearpage
+\paragraph{\textbf{\texttt{F-040} and \texttt{F-050}: Differential measurement}}\hspace{0pt}
+
+The \texttt{F-040} and \texttt{F-050} failures involve an auxiliary detection method: The \emph{large difference between 2 sensor measurement values}. Given the small threshold defined \Cref{tab:hsia} (\(\lVert \Delta \rVert \leq \SI{5}{\celsius}\)), this test is performed in hardware, by heating one of the two sensors.
+
+\subparagraph{Procedure}
+\begin{compactenum}
+	\item Warm up one of the sensors with a heating element. Make sure to not increase the temperature too much (\(T < \SI{50}{\celsius}\)), and that the other sensor is heated as little as possible.
+\end{compactenum}
+
+\subparagraph{Visual indications (temporary failure)} Both \acs{LED} lights simultaneously flash once and stay on.
+\subparagraph{Visual indications (permanent failure)} Both \acs{LED} lights simultaneously flash once, stays on, and then turn off permanently.
+
+\subparagraph{Results}
+\begin{table*}[h]
+	\centering
+	\caption{Monitoring definition transitions table (temporary failure \texttt{F-040}, differential)}
+	\label{tab:f040dtran}
+	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
+		\toprule
+		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c}{Parameter} & Transition \\ \midrule
+		0 & 6 & Temp. \( \Delta \) & = & -6.1875 & \ok \ar \lolim \\[1ex]
+		\multicolumn{6}{c}{\textcolor{MaterialGrey500}{Failure recovery}}\\[1ex]
+		7.5 & 6 & Temp. \( \Delta \) & = & -4.8125 & \lolim \ar \ok \\
+		\bottomrule
+	\end{tabularx}
+	\vspace{10pt}
+\end{table*}
+
+The differential case recovery actions are similar to the single case (\texttt{F-040}, \texttt{F-050}), with the distinction that is not known to the \acs{MCU} which of the 2 sensors has failed. The architecture here follows a \emph{fail-safe} approach, and disables both sensors. As a consequence, all 7 monitoring definitions that depend on temperature values are disabled (\invalid).
+
+\begin{table*}[h]
+	\centering
+	\caption{Monitoring definition transitions table (permanent failure \texttt{F-050}, differential)}
+	\label{tab:f050dtran}
+	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
+		\toprule
+		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c}{Parameter} & Transition \\ \midrule
+		0 & 6 & Temp. \( \Delta \) & = & -5.8125 & \ok \ar \lolim \\
+		2.5 & 9 & Temp. \( \Delta \) & = & -6 & \ok \ar \lolim \\[1ex]
+		\multicolumn{6}{c}{\textcolor{MaterialGrey500}{Failure isolation}}\\[1ex]
+		2.5 & 10 & Temp. 1 & = & 38.3125 & \ok \ar \invalid \\
+		2.5 & 11 & Temp. 2 & = & 32.3125 & \ok \ar \invalid \\
+		3 & 4 & Temp. 1 & = & 38.3125 & \ok \ar \invalid \\
+		3 & 5 & Temp. 2 & = & -32.3125 & \ok \ar \invalid \\
+		3 & 6 & Temp. \( \Delta \) & = & -6 & \ok \ar \invalid \\
+		3 & 7 & Temp. 1 & = &38.3125 & \ok \ar \invalid \\
+		3 & 8 & Temp. 2 & = & 32.3125 & \ok \ar \invalid \\
+		3 & 9 & Temp. \( \Delta \) & = & -6 & \ok \ar \invalid \\
+		\bottomrule
+	\end{tabularx}
+	\vspace{10pt}
+\end{table*}
+
+\FloatBarrier
+\paragraph{\textbf{\texttt{F-060}: \acs{I2C} bus pin output stuck}}\hspace{0pt}
+
+This failure is simulated by connecting an extra cable. Generally, in cases of cable harness modifications, care must be taken so that connections that can harm the test system (e.g. short circuits) are avoided, especially if there are no suitable protection circuits.
+
+\subparagraph{Procedure}
+\begin{compactenum}
+	\item Connect one of the \acs{SDA}, \acs{SCL} pins to ground using an extra jumper wire.\footnote{As the \acs{I2C} bus follows an open drain logic, connecting one of the prots to ground will not cause any further issues to the electronics.}
+\end{compactenum}
+
+\subparagraph{Results}
+We observe that the results are identical to the ones of the \texttt{F-020} failure (permanent loss of function). This is expected, as we have essentially damaged the \acs{I2C} bus.
+
+\paragraph{\textbf{\texttt{F-070} to \texttt{F-120}: Sensor 2}}\hspace{0pt}
+
+The above tests were repeated for the 2\textsuperscript{nd} sensor. The test results are identical to the ones of the 1\textsuperscript{st} sensor, as the components follow the same specifications and \acs{FDIR} design.
+
+At this point we note that even when the design and the software are identical, it is still necessary to repeat the testing procedures in cases such as this one, as the possibility of hardware errors, wrong connections, misconfigurations and bugs is not eradicated.
+
+\clearpage
+\paragraph{\textbf{\texttt{F-130}: Overheating}}\hspace{0pt}
+
+In this test we do not investigate the failure of one of the sensors, but the failure of the subsystem itself, which is assumed to have overheated. To ease execution of this test, we used a virtual temperature increase via software.
+
+\subparagraph{Procedure}
+\begin{compactenum}
+	\item Call the \texttt{bogus\_temp} \acs{ECSS} function via \acs{TC}. This function causes a gradual increase of the temperature by \SI{90}{\celsius} at maximum.
+\end{compactenum}
+\marginnote{
+Alternatively, a hot air gun or another heat source can be used so that both sensors are heated to \SI{50}{\celsius}. In this case, we need to pay attention to have a uniform temperature increase, so as to not trigger the differential check.
+}
+
+\subparagraph{Visual indications} The \acs{MCU} status \acs{LED} stops blinking for a while, and then continues blinking normally. The sensor \acsp{LED} blink once.
+
+\subparagraph{Results}
+\begin{table*}[h]
+	\centering
+	\caption{Monitoring definition transitions table (\texttt{F-130} failure)}
+	\label{tab:f130tran}
+	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
+		\toprule
+		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c}{Parameter} & Transition \\ \midrule
+		0 & 10 & Temp. 1 & = & 92.288 & \ok \ar \hilim \\
+		\multicolumn{6}{l}{\cellcolor{MaterialYellow300}\textcolor{black}{Autonomous \acs{MCU} restart}}\\
+		\bottomrule
+	\end{tabularx}
+	\vspace{10pt}
+\end{table*}
+
+In this example, only the monitoring definition connected with the \SI{50}{\celsius} is activated. Once the system spends some time in this temperature, an \acs{MCU} restart takes place immediately. This restart would continue to occur repeatedly, if the temperature remained out of bounds.
+
+This failure essentially belongs to subsystem level, and not unit (sensor) level. We also note that due to the large amount of time between restarts, operators have enough time to receive \acsp{TM} and transmit the necessary \acsp{TC} to deal with the issue.
+
+\begin{figure*}
+	\includegraphics{screenshots/yamcs_f130_parameters}
+	\caption[Temperature measurements with bogus values added, as seen in YAMCS]{Temperature measurements with bogus values added, as seen in \acs{YAMCS}. The temperature reaches \SI{90}{\celsius}, until the \acs{MCU} restarts, at which point the temperature is restored to nominal levels.}
+\end{figure*}
+
+\clearpage
 \subsection{Real-time modification of \ac{FDIR}}
 
 The power of \acs{SAVOIR}'s \ac{FDIR} approach lies in the fact that the entire \ac{FDIR} concept can be safely modified via \ac{TC} without requiring any modifications or reuploads of the spacecraft's software. The application of the \acs{ECSS} services paradigm allows customising all on-board \ac{FDIR} functions and associated services using predefined \ac{TC} structures. In this section, \acs{ECSS} commands will be executed to demonstrate these capabilities and their control from the Ground Station.
