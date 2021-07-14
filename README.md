@@ -16,11 +16,11 @@ Space is not a welcoming environment; while the aerospace engineering community 
 
 | File                  | Language | Description                                       |
 |-----------------------|----------|---------------------------------------------------|
-| **`main.tex`**            | English  | Source code of thesis in LaTeX (Work In Progress) |
-| **`main.pdf`**            | English  | Thesis text (Work In Progress)                    |
-| **`main-el.tex`**         | Greek    | Source code of thesis in LaTeX                    |
-| **`main-el.pdf`**         | Greek    | Thesis text                                       |
-| **`presentation-el.pdf`** | Greek    | Thesis presentation                               |
+| **`main.tex`**            | English  | Source code of thesis in LaTeX                |
+| **`main.pdf`**            | English  | Thesis text                                   |
+| **`main-el.tex`**         | Greek    | Source code of thesis in LaTeX                |
+| **`main-el.pdf`**         | Greek    | Thesis text                                   |
+| **`presentation-el.pdf`** | Greek    | Thesis presentation                           |
 
 ### Software repositories
 
