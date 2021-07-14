@@ -174,9 +174,9 @@ Space is not a welcoming environment; while the aerospace engineering community 
 	\label{fig:satellite_types}
 \end{marginfigure}
 
-This thesis investigates Aerospace Engineering, focusing on satellite manufacturing and operation. The first artificial satellite \e{``Sputnik 1''} was launched in 1957, and by 2021 about \SI{8900}{} satellites have been launched, of which about \SI{4000}{} are currently operational and in orbit \autocite{unionofconcernedscientists_satellite_database_2021,kelso_norad_twoline,wood_visualizing_all_2020}.
+This thesis involves satellite design and operations, parts of the Aerospace Engineering disciplines. The first artificial satellite \e{``Sputnik 1''} was launched in 1957, and by 2021 about 8900 satellites have been launched, of which about 4000 are currently operational and in orbit \autocite{unionofconcernedscientists_satellite_database_2021,kelso_norad_twoline,wood_visualizing_all_2020}.
 
-Artificial satellites can perform a number of different functions, which typically include telecommunications, earth observation, navigation (\acs{GNSS}), scientific research, technology demonstration, and other purposes, excluding manned missions, missions beyond Earth orbit, and space stations. The data generated using space technology have long been an integral part of modern civilisation, having influenced transportation, weather forecasting, and technology.
+Artificial satellites can perform a number of different functions, which typically include telecommunications, earth observation, navigation (\acs{GNSS}), scientific research, technology demonstration, and other purposes, excluding manned missions, missions beyond Earth orbit, and space stations. The data generated using space technology have long been an integral part of modern civilisation, having influenced transportation, weather forecasting, and technology in general.
 
 \begin{figure}
 	\centering
@@ -186,14 +186,14 @@ Artificial satellites can perform a number of different functions, which typical
 				\setfloatalignment{t}
 			\end{figure}
 			
-After launch, satellites typically remain in space until the completion of their mission after some years, at which point they can either return to Earth and burn up in the atmosphere, or remain in space as space junk.
+After launch, satellites typically remain in space until the completion of their mission after some years, at which point they can either return to Earth and burn up in the atmosphere, or remain in space as ``space junk''.
 
 \begin{marginfigure}
 	\includegraphics{cool_satellite}
 	\caption[Artistic view of the Jason-3 satellite]{Artistic view of the \href{https://www.flickr.com/photos/noaasatellites/16979948568}{Jason-3} satellite} %The image shows the solar panels, the two directional antennas and the thermal insulation of the satellite.
 \end{marginfigure}
 
-Space technology developments present a significant degree of difficulty, which stems from the highly increased reliability requirements in the harsh environment of space. In particular, the long distances, extreme temperatures, mechanical launch loads, high-energy radiation, vacuum, and the inability to repair damage, have raised a wide range of challenges in space exploration. As such, aerospace projects are integrally linked to a number of engineering disciplines such as systems engineering, product assurance, reliability engineering, and assembly, integration and verification. This thesis focuses on \textbf{\acf{FDIR}}, i.e. the ability of space systems to automatically detect and recover from faults and operational failures.%\acusepage{reliability}
+Space technology developments present a significant degree of difficulty, which stems from the highly increased reliability requirements in the harsh environment of space. In particular, the long distances, extreme temperatures, mechanical launch loads, high-energy radiation, vacuum, and the inability to repair damage, have raised a wide range of challenges in space exploration. As such, aerospace projects are integrally linked to a number of engineering disciplines such as systems engineering, product assurance, reliability engineering, and Assembly, Integration and Verification. This thesis focuses on \textbf{\acf{FDIR}}, i.e.\ the ability of space systems to automatically detect and recover from faults and operational failures.%\acusepage{reliability}
 	
 Despite the above-mentioned difficulties, modern technology has advanced enough to make space a commercial target. As part of the ``NewSpace'' philosophy, more and more commercial or non-profit entities are taking advantage of the possibilities offered beyond the limits of our planet \autocite{denis_new_space_2020}. Start-ups, satellite constellations, educational missions and commercial services are concepts that have already become commonplace in the 21\textsuperscript{st} century, with more countries around the world obtaining access to space or even launch capabilities.
 	
@@ -203,9 +203,9 @@ Despite the above-mentioned difficulties, modern technology has advanced enough 
 	\label{fig:cubesat}
 \end{marginfigure}
 
-Given the above, this thesis is focused on the increasingly popular \textbf{nanosatellite} technology \autocite{sweeting_modern_small_2018a}. \textbf{CubeSats}, the most popular class of nanosatellite, were introduced as a concept in 1999. Their low cost and size, as well as their relatively low complexity, have allowed universities and organizations worldwide to launch over \SI{1530}{} CubeSats by 2021 \autocite{swartwout_cubesat_database_2021}.
+Given the above, this thesis is focused on the increasingly popular \textbf{nanosatellite} technology \autocite{sweeting_modern_small_2018a}. \textbf{CubeSats}, the most popular class of nanosatellite, were introduced as a concept in 1999. Their low cost and size, as well as their relatively low complexity, have allowed universities and organizations worldwide to launch over 1530 CubeSats by 2021 \autocite{swartwout_cubesat_database_2021}.
 	
-CubeSats are designed using ``building blocks'' sized at \SI[product-units = single]{10 x 10 x 10}{\centi\metre} called \textbf{Units}. Typical satellite sizes are obtained by ``stacking'' these units, resulting in satellites of 1U, 1.5U, 2U, 3U, 6U and 12U. Each unit can weigh up to \SI{2}{\kilogram} \autocite{CDS14}. Internally,  CubeSats use low-cost commercial electronic components, henceforth referred to as \textbf{\acf{COTS}} components. CubeSats are typically launched in Low Earth Orbits (\acs{LEO}) \autocite{anthopoulos_orbital_analysis_2020,riebeek_catalog_earth_2009}, deployed as secondary payloads in larger satellite launches (``piggyback launches''), and remain active for periods of about 1 to 3 years.
+CubeSats are designed using ``building blocks'' sized at \SI[product-units = single]{10 x 10 x 10}{\centi\metre} called \textbf{Units}. Typical satellite sizes are obtained by ``stacking'' these units, resulting in satellites of 1U, 1.5U, 2U, 3U, 6U and 12U. Each unit can weigh up to \SI{2}{\kilogram} \autocite{CDS14}. Internally,  CubeSats use low-cost commercial electronic components, henceforth referred to as \textbf{\acf{COTS}} components. CubeSats are typically launched in Low Earth Orbits (\acs{LEO}) \autocite{anthopoulos_orbital_analysis_2020,riebeek_catalog_earth_2009}, deployed as secondary payloads in larger satellite launches (``piggyback launches''), and often remain active for periods of about 1 to 3 years.
 
 \pagebreak[4]
 \section{Thesis goals \& contribution}
@@ -246,10 +246,13 @@ CubeSats are designed using ``building blocks'' sized at \SI[product-units = sin
 			\caption[CubeSat mission status from independent manufacturers]{CubeSat mission status from ``hobbyists'' (scientific and other research/educational projects) \autocite{swartwout_cubesat_database_2021}}
 			\label{fig:cubesat_status_hobbyist}
 		\end{marginfigure}
+	
+% Some breathing space after the figures
+\marginpar{\vspace{1cm}}
 
-This work is dedicated to improving the reliability of nanosatellites and CubeSat systems. Although the majority of large satellite launches have completed their missions, even partially \autocite{kattakuri_failures_spacecraft_2019,jacklin_smallsatellite_mission_2019}, 39.6\% of launched CubeSats have failed to complete their mission or did not operate at all. This number can be increased to 57.0\% if we focus on the subset of CubeSats launched as the first space mission of an organisation lacking the expertise of major manufaturers and space entities.
+This work is dedicated to improving the reliability of nanosatellites and CubeSat systems. Although the majority of large satellite launches have completed their missions even partially \autocite{kattakuri_failures_spacecraft_2019,jacklin_smallsatellite_mission_2019}, 39.6\% of launched CubeSats have failed to complete their mission or did not operate at all. This number can be increased to 57.0\% if we focus on the subset of CubeSats launched as the first space mission of an organisation lacking the expertise of major manufaturers and space entities.
 
-The reasons explaining the high failure rate of CubeSats are mainly related to the compressed manufacturing schedule, which leads to errors and problems that aren't detected during design. Sources of failures such as environmental degradation (thermal cycles, radiation), lack of safety margins in power and telecommunications, and software problems, combined with the general lack of experience and haphazard procedures followed by new manufacturers, reduce the overall reliability of nanosatellites \autocite{swartwout_cubesat_mission_2019,langer_reliability_estimation_2017}.
+The reasons explaining the high failure rate of CubeSats are mainly related to the compressed manufacturing schedule, which leads to errors and problems that are not detected during design. Sources of failures such as environmental degradation (thermal cycles, radiation), lack of safety margins in power and telecommunications, and software problems, combined with the general lack of experience and haphazard procedures followed by new manufacturers, reduce the overall reliability of nanosatellites \autocite{swartwout_cubesat_mission_2019,langer_reliability_estimation_2017}.
 
 The approaches taken to increase CubeSat reliability include:
 \begin{compactitem}
@@ -259,7 +262,7 @@ The approaches taken to increase CubeSat reliability include:
 \end{compactitem}
 
 
-This work intends to supplement the toolbox of CubeSat manufacturers, by detailing a structured approach to \ac{FDIR} based on the \textbf{European \acs{ECSS} standards} and the work of the \textbf{\acs{SAVOIR}} initiative \footurl{https://savoir.estec.esa.int} of the European Space Industry. In the main matter, we will discuss how these ideas can be adapted to a low-scale CubeSat mission, presenting:
+This work intends to supplement the toolbox of CubeSat manufacturers, by detailing a structured approach to \ac{FDIR} based on the \textbf{European \acs{ECSS} standards} and the work of the \textbf{\acs{SAVOIR}} initiative\footurl{https://savoir.estec.esa.int} of the European Space Industry. In the main matter, we will discuss how these ideas can be adapted to a low-scale CubeSat mission, presenting:
 \begin{itemize}
 	\item A structured method to investigate the possible failure modes of a satellite, and how they can be tackled
 	\item Software that can respond to and safely manage all critical in-orbit failures
@@ -302,7 +305,7 @@ In addition to the presentation, analysis and commentary on the standards, this 
 
 This document begins with a summary of the AcubeSAT mission, which is the main motivation behind it (\Cref{cap:acubesat}). It then proceeds to an analysis of the main \acs{FDIR} standards and philosophy, focusing on the parts of particular importance to CubeSats and educational missions (\Cref{cap:savoir}). The next section discusses the application of the previous standards to the design of AcubeSAT, and analyses some design decisions and implementation details of \acs{FDIR} on the nanosatellites (\Cref{cap:acufdir}).
 
-The last chapter includes a practical demonstration of the proposed \acs{FDIR} on a simple two-sensor test system (\Cref{cap:practical}). The system is constructed so that it can detect and recover from all foreseen possible failures, using the libraries covering the \acs{ECSS} and \acs{FDIR} standards. After the system has been developed, a full test of its response to failures is performed. This simulation platform is configured to emulate the satellite system, including the microcontroller and the ground station.
+The last chapter includes a practical demonstration of the proposed \acs{FDIR} on a simple two-sensor test system (\Cref{cap:practical}). The system is constructed so that it can detect and recover from all foreseen possible failures, using software libraries covering the \acs{ECSS} and \acs{FDIR} standards. After the system has been developed, a full test of its response to failures is performed. This simulation platform is configured to emulate the satellite system, including the microcontroller and the ground station.
 
 \chapter{The AcubeSAT mission}
 \label{cap:acubesat}
@@ -1954,7 +1957,7 @@ It is of particular interest to examine the state of the \acs{FDIR} system durin
 	\label{fig:pus_boot}
 \end{figure}
 
-In this example, we can observe that all 12 checks transition from the \unchecked state to the \ok state. This happens because, upon system startup, all monitoring definitions are in the initial state \unchecked, indicating that they have never been executed. After the repetition count \emph{times} the monitoring period of each definition has passed, the variable is considered to have a value within bounds, and the definition is \ok.
+In this example, we can observe that all 12 checks transition from the \unchecked{} state to the \ok{} state. This happens because, upon system startup, all monitoring definitions are in the initial state \unchecked, indicating that they have never been executed. After the repetition count \emph{times} the monitoring period of each definition has passed, the variable is considered to have a value within bounds, and the definition is \ok.
 
 The different transition time of each definition is attributed to the different \textbf{repetition count} of the definitions. To register the transition, the parameter must have been measured as many times as the repetition count.
 
