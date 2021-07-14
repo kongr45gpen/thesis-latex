@@ -321,7 +321,7 @@ The implementation framework of this work is the \textbf{``AcubeSAT''} nanosatel
 
 The project was initiated in 2016. In February 2020, it became part of the \foothref{https://www.esa.int/Education/CubeSats_-_Fly_Your_Satellite}{``Fly Your Satellite!\ 3''} programme by the European Space Agency, aiming at a 2023 launch.
 
-AcubeSAT is 3 CubeSat units large (3U), measuring \SI[product-units = single]{10 x 10 x 34.05}{\centi\metre} and weighing \SI{4.26}{\kilo\gram}. Physically, the CubeSat contains the \textbf{experimental payload}, covering the bottom 2U, and the rest of the \textbf{spacecraft platform} which takes up the remaining 1U.
+AcubeSAT is three CubeSat units large (3U), measuring \SI[product-units = single]{10 x 10 x 34.05}{\centi\metre} and weighing \SI{4.26}{\kilo\gram}. Physically, the CubeSat contains the \textbf{experimental payload}, covering the bottom 2U, and the rest of the \textbf{spacecraft platform} which takes up the remaining 1U.
 
 The AcubeSAT project follows an \textbf{open-source philosophy}, making the software, developments and documentation available to the public under free licenses, at \url{https://gitlab.com/acubesat/}.
 
@@ -364,7 +364,7 @@ The \ac{ADCS} can operate under different pointing profiles for different attitu
 		\label{fig:frame}
 	\end{marginfigure}
 	
-	Detumbling mode is implemented in the simplest possible way, using only one of the 2 redundant magnetometers and a simple control algorithm. It is activated when there is no need to apply any of the specific pointing modes, or if the spacecraft angular rate is too high. In AcubeSAT, system-wide \emph{Safe Mode}, \emph{Commissioning Mode} and \emph{Science Mode} apply detumbling.
+	Detumbling mode is implemented in the simplest possible way, using only one of the 2 redundant magnetometers and a simple control algorithm. It is activated when there is no need to apply any of the specific pointing modes, or if the spacecraft angular rate is too high. In AcubeSAT, system-wide \emph{Safe Mode}, \emph{Commissioning Mode} and \emph{Science Mode} adopt detumbling.
 	
 	\item \textbf{Nadir pointing}, where the satellite points the \(+X\) side towards the Earth. This profile is used during \emph{Nominal Mode} on passes over the \acl{GS}, where the directional patch antenna needs direct visibility.
 	
@@ -408,7 +408,7 @@ Communication will take place using 2 frequency bands on the \acs{ISM} range, na
 The communications subsystem is also responsible for the \ac{EMC} analysis and interference mitigation, as well as the design and construction of the satellite \acl{GS}. The \acl{GS} will be part of \textbf{SatNOGS} \autocite{white_overview_satellite_2018}, a global network of satellite ground stations based on open technologies and open data.
 
 \subsection{\acf{EPS}}
-The \ac{EPS} is the subsystem responsible for the generation, distribution and storage of electrical power of the spacecraft. It is a critical aspect of the spacecraft due to the direct dependence of all subsystems to the high power needs of many CubeSat subsystems, and is theorised to be the most common reason for CubeSat failure \autocite{langer_reliability_cubesats_2016}.
+The \ac{EPS} is the subsystem responsible for the generation, distribution and storage of electrical power of the spacecraft. It is a critical aspect of the spacecraft due to the direct dependence of all subsystems to it, and is theorised to be one of the most common reason for CubeSat failure \autocite{langer_reliability_cubesats_2016,bouwmeester_survey_implementation_2017}.
 
 \begin{margintable}
 	\caption{AcubeSAT nominal mode power budget}
@@ -464,7 +464,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 
 The \ac{OBDH} subsystem is responsible for the design of the spacecraft's data interfaces, as well as the design of the \textbf{\acf{OBC}} board, tasked with controlling the basic spacecraft functions.\autocite{DDJF_OBDH}
 
-The \ac{OBC} board contains the main \ac{OBC} logic, and is based around a \foothref{https://www.microchip.com/wwwproducts/en/SAMV71Q21RT}{Microchip SAMV71Q21RT} radiation-tolerant microcontroller and an \acs{MRAM} memory, used to store critical data. The board also hosts the in-house implemented components of the \ac{ADCS} subsystem, as a space-saving measure.
+The \ac{OBC} board contains the main \ac{OBC} logic, and is based around a \foothref{https://www.microchip.com/wwwproducts/en/SAMV71Q21RT}{Microchip SAMV71Q21RT} radiation-tolerant microcontroller and an \acs{MRAM} memory, used to store critical data. The board also hosts the in-house components of the \ac{ADCS} subsystem, as a space-saving measure.
 
 \begin{marginfigure}
 	\centering
@@ -489,7 +489,7 @@ During flight, AcubeSAT can remain within one of the following \textbf{system mo
 \begin{itemize}
 	\item \textbf{Launch/Off mode}: During this mode, the satellite is turned completely off, and no subsystems are energised. This is used to represent the state of the spacecraft inside the deployer, where no electronics are allowed to be energised,\autocite[req. 3.3.3]{CDS13} and the CubeSat is in a completely dormant state.
 	
-	\item \textbf{Commissioning mode}: This mode is initiated as soon as the CubeSat exits the deployer, meaning that launch is complete. It contains the initial startup actions of the spacecraft, including detumbling and antenna deployment. No science takes place during commissioning mode.
+	\item \textbf{Commissioning mode}: This mode is initiated as soon as the CubeSat exits the deployer, meaning that launch is complete. It contains the initial boot actions of the spacecraft, including detumbling and antenna deployment. No science takes place during commissioning mode.
 	
 	\item \textbf{Nominal mode}: This mode represents the state where the CubeSat will spend most of the time on. Apart from the necessary autonomy functions and battery charging, the CubeSat will also downlink telemetry and science data. No science takes place during nominal mode, except for health checks commanded from the ground. Nominal mode is also the only mode where the satellite performs nadir or sun pointing (\Cref{sec:adcs}).
 	
@@ -497,7 +497,7 @@ During flight, AcubeSAT can remain within one of the following \textbf{system mo
 	
 	AcubeSAT has split science mode into \textbf{3 distinct occurrences}, termed sub-experiments \(\alpha\), \(\beta\) and \(\gamma\), lasting 72 hours each, and taking place at different points of the mission to investigate the time-dependence of the observed results.
 	
-	\item \textbf{Safe mode}: It is common for spacecraft systems to include a \emph{safe mode},\autocite[385]{aguirre_introduction_space_2013} where the spacecraft switches off all non-essential systems and function, in order to respond to major malfunctions that cannot be corrected by autonomous procedures. Safe mode is intended as a well-defined and well-tested mode which is easy to maintain and reduces risk of any malfunction.
+	\item \textbf{Safe mode}: It is common for spacecraft systems to include a \emph{Safe Mode},\autocite[385]{aguirre_introduction_space_2013} where the spacecraft switches off all non-essential systems and function, in order to respond to major malfunctions that cannot be corrected by autonomous procedures. Safe mode is intended as a well-defined and well-tested mode which is easy to maintain and reduces risk of any malfunction.
 	
 	On AcubeSAT, spacecraft functionality is significantly reduced, and the attitude profile includes pointing only. However, \ac{UHF} communication and beacon transmission are still active for observability purposes.
 \end{itemize}
@@ -620,7 +620,7 @@ AcubeSAT's requirements do not dictate use of thrusters, meaning that the satell
 
 \section{Tools used}
 
-As a complex project, AcubeSAT uses a set of supporting utilities, ready-made or built built by the team, to fulfil its technical and organisational needs. The following tools play a crucial role in the organisation:
+As a complex project, AcubeSAT uses a set of supporting utilities, ready-made or built by the team, to fulfil its technical and organisational needs. The following tools play a crucial role in the organisation:
 \begin{compactitem}
 	\item \foothref{https://gitlab.com/acubesat}{GitLab}, for sharing code and organizing tasks
 	\item \foothref{https://ocdt.esa.int/}{Open Concurrent Design Tool}, a platform for sharing technical data and values for satellite components
@@ -703,7 +703,7 @@ This standard is intended for use in any space mission, complementing other stan
 	
 	\item \textbf{\texttt{ST[07]}: Task management} \emph{(deprecated)}
 	
-	Allows stopping, suspending or resuming software tasks in case of contingency. This service has been removed from the standard and is only mentioned as a reference.
+	Allows stopping, suspending or resuming software tasks in case of a contingency. This service has been removed from the standard and is only mentioned as a reference.
 	
 	\item \textbf{\texttt{ST[08]}: Function management}
 	
@@ -846,7 +846,7 @@ The above logic is summarized in \Cref{fig:fdirpus}. Its importance lies in that
 \begin{compactitem}
 	\item Obtain all information on the operational status of components and sensor values.
 	\item Safely interfere entirely with the operation of the \acs{FDIR} without changing the source code.
-	\item Partially or completely disable \acs{FDIR} if necessary for diagnostic purposes.
+	\item Partially or completely disable \acs{FDIR}, if necessary for diagnostic purposes.
 	\item Use a ready and tested \acs{ECSS} services software suite to implement all of the above, reducing cost and development time.
 	\item Avoid unconfigurable "hard-coding" of \acs{FDIR} procedures at various points in the code.
 \end{compactitem}
@@ -860,7 +860,7 @@ In this chapter, a case study of the application of the above (\Cref{cap:savoir}
 \section{Basic principles}
 \label{sec:fdirbaspri}
 
-AcubeSAT's \acs{FDIR} requirements mostly stem from the mission requirements (\Cref{sec:su_fdir}) and the technical capabilities of a low-cost system (\Cref{cap:acubesat}. More specifically, the basic principles are:
+AcubeSAT's \acs{FDIR} requirements mostly stem from the mission requirements (\Cref{sec:su_fdir}) and the technical capabilities of a low-cost system (\Cref{cap:acubesat}). More specifically, the basic principles are:
 \begin{enumerate}
 	\item \textbf{Modularity:} \acs{FDIR} should not be hard-coded in software, but should allow for easy modifications based on a well-structured database.
 		\item \textbf{Autonomy:} The satellite should be able to survive in orbit for more than \SI{24}{} hours without communication with the \acs{GS}, and should be able to remain in any system mode, especially \emph{Science Mode}.
@@ -1027,7 +1027,7 @@ Pr(T>t) &= \int_{0}^{t} R(t-t_1) f(t_1) \dd{t_1} + \int_{t}^{\infty} R(t-t_1) f(
 	\label{eq:tmr}
 	\end{align}
 	
-	\item \textbf{Complex voter}, where if two components fail, the voter can switch to the remaining one, via telecommand or autonomously. This logic rarely possible to implement, especially if mission-critical components are protected. Additionally, the increased voter complexity inherently reduces its reliability.
+	\item \textbf{Complex voter}, where if two components fail, the voter can switch to the remaining one, via telecommand or autonomously. This logic is rarely possible to implement, especially if mission-critical components are protected. Additionally, the increased voter complexity inherently reduces its reliability.
 	
 	For completeness purposes, we cite the reliability of the complex \acs{TMR} system, which stems from the probability that all 3 components fail within \( t \):
 
@@ -1103,7 +1103,7 @@ P_2 = P(X_1\text{ or }X_2) &= 1 - (1 - P(X))^2 \nonumber\\
 		
 	\eqref{eq:lambert_eqn} can be solved by using the Lambert W function \autocite{weisstein_lambert_wfunction_2003} defined as follows:
 \begin{align}
-	\text{for } w,z \in \mathbb R:\quad we^w = z \iff w = W_k(z) \text{for some } k \in \mathbb Z
+	\text{for } w,z \in \mathbb R:\quad we^w = z \iff w = W_k(z) \text{ for some } k \in \mathbb Z
 \end{align}
 		
 Subsequently, we can compute \(\lambda_2\):
@@ -1183,7 +1183,7 @@ The following section presents a list of the implemented methods to detect, prev
 	\renewcommand{\arraystretch}{1.3}
 	\begin{tabularx}{\textwidth}{@{}cL{5cm}X@{}}
 		\toprule
-		Level & Method & Description \\midrule
+		Level & Method & Description \\ \midrule
 		Unit & \textbf{Self-test does not return a correct value} & Connected peripherals may have self-test capabilities or may have stored default values that cannot be changed. \\
 		Unit & \textbf{Value out of range} & Unexpected sensor values may indicate actually dangerous environmental conditions, or simply faulty (e.g. \acs{SEFI}) sensors. Double or triple redundancy can increase observability in this case. \\
 		Unit & \textbf{Sampled sensor values very different} & \\
@@ -1223,7 +1223,7 @@ The following section presents a list of the implemented methods to detect, prev
 		11 & Hardware & Placement of vulnerable components close to the centre to reduce the effect of radiation \\
 		12 & Hardware & Selection of components with available radiation test results \\
 		13 & Hardware & Double redundancy on the \acs{CAN} bus \\
-		14 & Hardware & Parity bit in the \acs{CAN} messages \\
+		14 & Software & Parity bit in the \acs{CAN} messages \\
 		15 & Software & Software error detection \& correction algorithms \\
 		16 & Software & Failure and power loss tolerant filesystem \\
 		17 & Software & Input filtering \acs{ADCS} \\
@@ -1245,7 +1245,7 @@ The following section presents a list of the implemented methods to detect, prev
 		\toprule
 		Level & Action & Description \\ \midrule
 		& \textbf{None} & Many problems are corrected automatically, or there is no way to correct them (and they do not significantly affect the operation of the rest of the satellite). \\
-		Unit & \textbf{Restart unit} & This recovery method is associated with temporary faults that may occur in the software or hardware of a device. Such faults may result from design errors (bugs) that were not extensively tested, or from radiation-induced \acsp{SEFI}. \\
+		Unit & \textbf{Restart unit} & This recovery method is associated with temporary faults that may occur in the software or hardware of a device. Such faults may result from bugs that were missed during testing, or from radiation-induced \acsp{SEFI}. \\
 		Unit & \textbf{Power-cycle unit} & Some errors cannot be corrected until the power to the affected unit is cut off. Radiation-induced \acsp{SEL} are the main reason for this. \\
 		Module & \textbf{Isolate unit} & If a module cannot be repaired, the next step is to ignore its values and/or to disconnect its power supply, so that the rest of the system is not affected by its erroneous outputs. \\
 		Subsystem & \textbf{Power-cycle subsystem} & Radiation or other failures can lead a subsystem into an unexpected state, from which it can only escape by restarting. \\
