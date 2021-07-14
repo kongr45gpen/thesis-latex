@@ -579,6 +579,7 @@ The payload is composed of the following functional parts \autocite{DDJF_PL}:
 	\label{fig:container}
 \end{marginfigure}
 
+\phantomsection\label{sec:su_fdir}
 There is a number of constraints that the payload imposes on \ac{FDIR} design:
 \begin{enumerate}
 	\item \textbf{Interruption} of one of the three 72-hour subexperiments during execution may mean complete loss of the subexperiment. The impact of such an event depends on the duration and timepoint of its occurence. In any case, adequate observability will allow the ground-control experiment to mimic the in-orbit conditions as much as possible.
@@ -1089,7 +1090,7 @@ P_2 = P(X_1\text{ or }X_2) &= 1 - (1 - P(X))^2 \nonumber\\
 &=  2 \lambda e^{-\lambda} -\lambda^2e^{-2\lambda} \label{eq:lambda}
 \end{align}
 	
-\marginnote{Alternatively, we can ignore the negligible 2\textsuperscript{nd} term of \eqref{eq:lambda}, and have \( P_2 = 2\lambda e^{-\lambda} \). Since \(e^x \approx 1\) very close to \(x=0\), \eqref{eq:lambbert_eqn} becomes:
+\marginnote{Alternatively, we can ignore the negligible 2\textsuperscript{nd} term of \eqref{eq:lambda}, and have \( P_2 = 2\lambda e^{-\lambda} \). Since \(e^x \approx 1\) very close to \(x=0\), \eqref{eq:lambert_eqn} becomes:
 				\[
 				\lambda_2 = 2\lambda
 				\]
@@ -1447,7 +1448,7 @@ To ensure high reliability and a low resource footprint of the software, the fol
 
 The \foothref{https://www.microchip.com/en-us/development-tools-tools-and-software/embedded-software-center/mplab-harmony-v3}{MPLAB Harmony} \ac{HAL} and configurator are used to interface with all the \acs{MCU}'s peripherals. \foothref{https://www.jetbrains.com/clion/}{CLion} has been selected as the \acs{IDE}, along with the \foothref{https://cmake.org/}{CMake} build system.
 
-All software developed in the scope of this thesis is available online, and listed in \Cref{tab:new_software}. The most critical parts of the developed software are expanded in \Cref{sec:source_code}. A summary of used libraries can also be found in \Cref{tab:old_software}.
+All software developed in the scope of this thesis is available online, and listed in \Cref{tab:new_software}. A summary of used libraries can also be found in \Cref{tab:old_software}.
 
 \begin{table*}[h]
 	\centering
@@ -1612,7 +1613,7 @@ The ground segment desktop computer needs to parse received packets and send com
 
 The \acs{YAMCS} \autocite{sela_yamcs_lightweight_2012} framework was selected to cover the aforementioned needs, and has been tailored to provide the capabilities needed for this demonstration.
 
-The \ac{ECSS} protocol \autocite{ECSS-E-ST-70-41C} is not supported by \acs{YAMCS} by default. However, the necessary commands have been integrated into the system using the supported \ac{XTCE} specification \autocite{simon_xtce_standard_2004}. The source code of the integration can be found in \Cref{app:xtce}.
+The \ac{ECSS} protocol \autocite{ECSS-E-ST-70-41C} is not supported by \acs{YAMCS} by default. However, the necessary commands have been integrated into the system using the supported \ac{XTCE} specification \autocite{simon_xtce_standard_2004}.
 
 \begin{figure}[h]
 	\includegraphics{screenshots/yamcs_replay}
@@ -1620,6 +1621,7 @@ The \ac{ECSS} protocol \autocite{ECSS-E-ST-70-41C} is not supported by \acs{YAMC
 \end{figure}
 
 \subsection{\acs{PUS} database}
+\label{sec:pusinterface}
 The \acs{YAMCS} suite does not provide built-in support for monitoring and controlling the satellite's \acs{PUS} database. This means that there is no convenient way to view \emph{events}, \emph{parameters}, \emph{monitoring} definitions and \emph{event-action} definitions.
 
 \begin{figure*}[h]
@@ -1713,7 +1715,7 @@ The above information is listed in the \acf{HSIA} table, which links each failur
 
 For the purposes of this demonstration, we will consider that all \ac{FMEA} items can lead to \emph{feared events}, i.e. that \ac{FDIR} will anticipate all identified possible failures.
 
-The \ac{HSIA} adds the following significant pieces of information to the \ac{FMEA}:\autocite{ECSS-Q-ST-30-02C}
+The \ac{HSIA} adds the following significant pieces of information to the \ac{FMEA} \autocite{ECSS-Q-ST-30-02C}:
 \begin{itemize}
 	\item The \textbf{monitored parameters} and the \textbf{conditions} that trigger the recovery action.
 	
@@ -2290,7 +2292,7 @@ The isolation \& recovery steps are the same as the ones from failure \texttt{F-
 \clearpage
 \paragraph{\textbf{\texttt{F-040} and \texttt{F-050}: Differential measurement}}\hspace{0pt}
 
-The \texttt{F-040} and \texttt{F-050} failures involve an auxiliary detection method: The \emph{large difference between 2 sensor measurement values}. Given the small threshold defined \Cref{tab:hsia} (\(\lVert \Delta \rVert \leq \SI{5}{\celsius}\)), this test is performed in hardware, by heating one of the two sensors.
+The \texttt{F-040} and \texttt{F-050} failures involve an auxiliary detection method: The \emph{large difference between 2 sensor measurement values}. Given the small threshold defined \Cref{tab:hsia} (\(\lvert \Delta \rvert \leq \SI{5}{\celsius}\)), this test is performed in hardware, by heating one of the two sensors.
 
 \subparagraph{Procedure}
 \begin{compactenum}
@@ -2424,7 +2426,7 @@ The \ac{YAMCS} platform was once again used to generate the wanted commands (\Cr
 
 \begin{figure}[h]
 	\includegraphics{screenshots/yamcs_commands.png}
-	\caption{List of commands in the \acs{YAMCS} interface. These commands can initiate spacecraft actions, enable/disable sensors, or reconfigure the on-board \acs{ECSS} services databases. The list of commands is provided programmatically in \ac{XTCE} format (\Cref{app:xtce}).}
+	\caption{List of commands in the \acs{YAMCS} interface. These commands can initiate spacecraft actions, enable/disable sensors, or reconfigure the on-board \acs{ECSS} services databases. The list of commands is provided programmatically in \ac{XTCE} format.}
 	\label{fig:yamcs_commands}
 \end{figure}
 
