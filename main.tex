@@ -915,7 +915,7 @@ Two types of failures will be applied to the aforementioned systems:
 
 As there are no large-scale data available for component failures in the space industry \autocite{esatec-qqd_effective_reliability_2016}, this analysis will show results over a range of reliability values.
 
-As an example, failure rate of a device or unit due to radiation can range between \SIrange{1e-11}{1e-1}{} \(\frac{\text{failures}}{\text{second}}\), depending on the radiation environment, the severity of the failure, and the internals of each device \autocite[158-159]{gupta_analysis_single_2017}.
+As an example, failure rate of a device or unit due to radiation can range between \(10^{-11}\) to \(10^{-1}\) \(\frac{\text{failures}}{\text{second}}\), depending on the radiation environment, the severity of the failure, and the internals of each device \autocite[158-159]{gupta_analysis_single_2017}.
 
 % !!! Code for analysis.
 
@@ -1322,6 +1322,7 @@ After formulating the architecture and design of the \acs{FDIR}, its implementat
 Verification of \acs{FDIR} is the last part of the process, and involves checking for any feared event through hardware or software simulation.
 
 \chapter{Practical demonstration of \ac{FDIR}}
+\label{cap:practical}
 
 As a proof of concept for AcubeSAT's \ac{FDIR} implementation, a practical setup to simulate the satellite's behaviour was prepared (\Cref{fig:block}). Key elements of the setup are:
 \begin{compactitem}
@@ -2547,15 +2548,51 @@ The features implemented and tested that allow controlling \acs{FDIR} functions 
 		
 	\end{itemize}
 
-\chapter{Conclusions and Future Work}
+\chapter{Conclusion and Future Work}
+\label{cap:conclusion}
 
-% Suggestions for standard:
-% hard to play with parameters
-% two validity conditions: safe mode etc. how to manage?
-% derived parameters (e.g. Δ between sensors)
-% event-action definition ID
+\begin{fullwidth}
+This thesis presented the architecture and implementation of a method to detect, isolate and recover from failures in low-cost space systems. In \Cref{cap:acubesat}, the AcubeSAT mission was presented, along with details related to its reliability. In \Cref{cap:savoir}, the \texttt{ECSS-E-ST-70-41C} and \texttt{SAVOIR-HB-003} standards were presented, showing their proposed methods for a structured programmatic framework and a modular fault correction architecture. The 7 steps of the \acs{FDIR} implementation were also presented, starting with requirements definition, continuing with design, and ending with implementation and verification. Furthermore, the concept of \acf{FMEA} and its coupling with software was presented. In \Cref{cap:acufdir}, the previous information was made more concrete through its application to the design of the AcubeSAT nanosatellite. More specifically, the \acs{FDIR} principles were set, and a theoretical analysis of different architectures was performed. Finally, the pool of all possible fault detection, prevention and recovery actions available on the nanosatellite was presented, along with flowcharts showing the specific procedures in every system mode.
+
+In \Cref{cap:practical}, the 7 steps of the \acs{FDIR} process were applied to a mock satellite system. The hardware setup made of an \acs{MCU} and two temperature sensors was supplemented with implementations of the aforementioned standards, as well as a \acl{GS} simulation platform. The design of the \acs{FDIR} for this application was based on a complete \acs{FMEA} of the system, based on which the monitored parameters, value thresholds and corrective actions were extracted. This procedure was carried out for all possible failures of the system. Each of those failures was then simulated in hardware or in software, and it was shown that the system could recover in each case. Finally, the ability to parameterise the \acs{FDIR} in orbit without software modifications was demonstrated.
+
+The result of the above study and tests shows that it is possible to apply the \acs{SAVOIR} method to repair faults on a nanosatellite. The proposed logic can be supported by a low-resource microcontroller, and the developed software can be used ``as-is'' for any vulnerable system, which is possible thanks to the scalable proposed architecture. The use of such a structured approach is believed to greatly increase the survival chances of a CubeSat in orbit, but also to reduce the development time of a mission, as proven standards and available software can be used. All the libraries that were employed are open source and available for use, but could also be freely replaced with counterparts offering the same functionality.
+
+The importance of \textbf{verification} and \textbf{tests} of the developed implementation must be further stressed. The closer the test conditions are to the actual in-orbit conditions, the higher the confidence in the implemented mechanisms. In our own tests we found a significant number of deficiencies, edge cases and race conditions that were not obvious during the design and naive tests, but appeared directly in the tests of each individual failure.
+
+Despite the potential offered by such a system, we noted the following implementation details that require attention:
+\begin{itemize}
+	\item A hasty implementation of \acs{FDIR} can lead to a large increase in complexity, and difficulty managing all reliability definitions. Complexity increases the possibility of human error, undetected errors, and system malfunction. In non-critical systems, it is suggested that the number of definitions be limited to a manageable number, preventing over-design. In our example, monitoring of the \(\Delta\) difference of temperatures could be skipped, in favour of triggering a system restart only when both sensors are out of range.
+	\item The different types of parameter variables (\mintinline{cpp}{uint16_t}, \mintinline{cpp}{uint32_t}, \mintinline{cpp}{float} etc.) pose technical challenges in type-safe environments (such as that of C++), and it may be necessary to use more "unsafe" structures and pointers, rather than a templated implementation.
+	\item It is important to consider the correlations between monitoring definitions, and to ensure that one definition does not cause another to trigger faster or slower (e.g. due to a sensor restart that resets all other definitions).
+	\item The \texttt{ECSS-E-ST-70-41C} standard does not provide flexibility in defining ``smart'' parameters, and data such as the \emph{difference between values} must be manually defined in the code. In addition, there is reduced flexibility in defining multiple event-action definitions, as each event can be associated with only one configurable reaction.
+\end{itemize}
 
 \section{Future work}
+
+This thesis presented only a case study and an experimental setup to verify a subset of the \acs{FDIR} functionality. This next steps of the process still need to be applied during the development of AcubeSAT's engineering and flight models, during assembly and integration of the AcubeSAT nanosatellite, and during the subsystem-level and system-level verification campaigns. Finally, in-orbit results about the performance of the \acs{FDIR} can be extracted after the possible AcubeSAT launch.
+
+In addition to the continued implementation of \acs{FDIR} on the nanosatellite, some more specific objectives are:
+\begin{itemize}
+	\item Continuation of the implementation of the \acs{ECSS} services. Code development implementing:
+	\begin{compactitem}
+		\item Modification of monitoring definitions
+		\item Monitoring of multiple variables with \texttt{OR} or \texttt{AND} conditions (``functional monitoring definitions'')
+		\item Support of arbitrary data types for parameters
+		\item Preparation of unit tests for software-level verification
+	\end{compactitem}
+	\item Completion of the Mission Control software for the central \acl{GS}, and integration with the \acs{ECSS} service database 
+	\item Extension of the detailed \acs{FDIR} design to Safe Mode
+	\item Comparison with other satellite control architectures and \acs{FDIR} philosophies typically used in the industry \parencite{NASA-HDBK-1002,zolghadri_advanced_modelbased_2012}
+	\item Extension of the theoretical analyses (\Cref{sec:theoretical}) and incorporation of parameters such as cost \parencite{chang_development_reliabilitycorrected_2013}, complexity, past experience and further architectures
+	\item Study of modern reliability assessment techniques and their application to the nanosatellite, during design or in orbit
+	\item Planning of tests to extract actual component reliability results (e.g. heavy ion radiation tests)
+\end{itemize}
+
+
+
+
+\end{fullwidth}
 
 %\backmatter
 \appendix
