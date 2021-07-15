@@ -11,8 +11,8 @@
 	\hyper@normalise\foothref@
 }
 \DeclareRobustCommand*{\foothref}[1][]{%
-	\begingroup
-	\global\def\hyper@punct{#1}
+	\begingroup%
+	\global\def\hyper@punct{#1}%
 	\@ifnextchar\bgroup\Hy@foothref{\hyper@normalise\foothref@}%
 }
 \makeatother

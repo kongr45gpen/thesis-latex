@@ -1394,7 +1394,7 @@ The centre of the demonstration system is the \ac{MCU} used to simulate the desi
 	      \caption{The MCP9808 temperature sensor, soldered onto the breakout \acs{PCB}}
 \end{marginfigure}
 
-The \ac{MCU} is accompanied by two \textbf{temperature sensors} which are used to simulate subsystem components that are prone to failure. The selected sensor is the Microchip \foothref{https://www.microchip.com/wwwproducts/en/MCP9808}{\texttt{MCP9808}} which offers an accurate and frequent temperature readout over an \ac{I2C} bus. The maximum acquisition interval for the sensor is \SI{250}{\milli\second}.
+The \ac{MCU} is accompanied by two \textbf{temperature sensors} which are used to simulate subsystem components that are prone to failure. The selected sensor is the Microchip \href{https://www.microchip.com/wwwproducts/en/MCP9808}{\texttt{MCP9808}}\footnote[][3ex]{\url{https://www.microchip.com/wwwproducts/en/MCP9808}} which offers an accurate and frequent temperature readout over an \ac{I2C} bus. The maximum acquisition interval for the sensor is \SI{250}{\milli\second}.
 
 \marginnote{%
 \textbf{Cold redundancy:} Only one component is operating, while the others are not.
@@ -1922,7 +1922,7 @@ In this section, we present the verification and validation actions of the \acs{
 
 \subsection{Nominal operation}
 
-During nominal operation, no failures are simulated. The system is connected to power and outputs \ac{ECSS} telemetry (\Cref{fig:yamcshousekeeping}), which includes parameter values parsed by (\Cref{fig:yamcsparameter}). Additionally, a log file is kept for diagnostic purposes (\Cref{fig:lognominal}). The system is compliant with its requirements (\Cref{sec:tsvcd}) and can transmit the temperature to the ground station as expected.
+During nominal operation, no failures are simulated. The system is connected to power and outputs \acs{ECSS} telemetry (\Cref{fig:yamcshousekeeping}), which includes parameter values parsed by (\Cref{fig:yamcsparameter}). Additionally, a log file is kept for diagnostic purposes (\Cref{fig:lognominal}). The system is compliant with its requirements (\Cref{sec:tsvcd}) and can transmit the temperature to the \acl{GS} as expected.
 
 \begin{figure}
 	\centering
@@ -1966,7 +1966,7 @@ Monitoring status types \autocite{ECSS-E-ST-70-41C}:
 \end{compactitem}
 }
 
-It is of particular interest to examine the state of the \acs{FDIR} system during microcontroller startup. The first \acs{ECSS} data we see is shown in \Cref{fig:pus_boot}. The image shows the \textbf{transitions} of the \emph{\texttt{ST[12]} on-board monitoring} service, as shown in the interface we developed (\Cref{sec:pusinterface}). In practice, this view shows the \textbf{outcome} of each check, and if the value is within bounds, out of bounds, or if the check is disabled.
+It is of particular interest to examine the state of the \acs{FDIR} system during microcontroller boot. The first \acs{ECSS} data we receive are shown in \Cref{fig:pus_boot}. The image shows the \textbf{transitions} of the \emph{\texttt{ST[12]} on-board monitoring} service, as shown in the interface we developed (\Cref{sec:pusinterface}). In practice, this view shows the \textbf{result} of each check, and if the value is within bounds, out of bounds, or if the check is disabled.
 
 \begin{figure}
 	\includegraphics{screenshots/pus_boot}
@@ -1974,7 +1974,7 @@ It is of particular interest to examine the state of the \acs{FDIR} system durin
 	\label{fig:pus_boot}
 \end{figure}
 
-In this example, we can observe that all 12 checks transition from the \unchecked{} state to the \ok{} state. This happens because, upon system startup, all monitoring definitions are in the initial state \unchecked, indicating that they have never been executed. After the repetition count \emph{times} the monitoring period of each definition has passed, the variable is considered to have a value within bounds, and the definition is \ok.
+In this example, we can observe that all 12 checks transition from the \unchecked{} state to the \ok{} state. This happens because, upon system startup, all monitoring definitions are in the initial state \unchecked, indicating that they have never been executed. After the repetition count \textsl{times} the monitoring period of each definition has passed, the variable is considered to have a value within bounds, and the definition is \ok.
 
 The different transition time of each definition is attributed to the different \textbf{repetition count} of the definitions. To register the transition, the parameter must have been measured as many times as the repetition count.
 
@@ -1992,7 +1992,7 @@ As long as the transitions lead to a state within bounds, no other report is gen
 		\label{fig:pus_eventaction}
 \end{figure}
 		
-At startup, an \emph{\texttt{ST[05]} event reporting} event is generated, which announces the microcontroller startup (\Cref{fig:yamcsmcustart}).
+At startup, an \emph{\texttt{ST[05]} event reporting} event is also generated, which announces the microcontroller startup (\Cref{fig:yamcsmcustart}).
 			
 \begin{figure}[h]
 	\centering
@@ -2011,7 +2011,7 @@ The following methods were used to simulate each failure:
 	\item For small changes in temperature, a hot air gun or other hot air source was pointed towards each sensor. Care was taken to not exceed the rated temperatures of the affected components.
 	\item For changes in temperature which were impractical to simulate, the failure was injected in software, by manually modifying the variable.
 	
-	The two buttons present on the development board were used as a simple interface to ``inject'' extreme temperature values.
+	The two buttons present on the development board were used as a simple interface to ``inject'' extreme temperature values. Custom test \acsp{TC} were also used for more complex simulations
 \end{itemize}
 
 \begin{table*}
@@ -2026,9 +2026,9 @@ The following methods were used to simulate each failure:
 		\textbf{\texttt{F-010}} & Temporary loss of function & Power-cycle sensor 1 & \textbf{Hardware}: Temporary cable disconnection \\
 		\textbf{\texttt{F-020}} & Permanent loss of function & Ignore sensor 1 values & \textbf{Hardware}: Permanent cable disconnection \\
 		\textbf{\texttt{F-030}} & Short Circuit between pins & Ignore sensor 1 values & \emph{Same as \texttt{F-020}}  \\
-		\textbf{\texttt{F-040}} & Temporary Value Shift & Power-cycle sensor 1 & \textbf{Software}: Emulation of large value (temporarily)\newline \textbf{Hardware}: Increase temperature difference (temporarily)\\
-		\textbf{\texttt{F-050}} & Permanent Value Shift & Ignore sensor 1 values & \textbf{Software}: Emulation of large value (permanently)\newline\textbf{Hardware}: Increase temperature difference (permanently) \\
-		\textbf{\texttt{F-060}} & \acs{I2C} bus pin output stuck & Ignore sensor 1 values & \textbf{Hardware}: Connect \acs{I2C} pin to ground
+		\textbf{\texttt{F-040}} & Temporary Value Shift & Power-cycle sensor 1 & \textbf{Software}: Emulation of large value (temporarily)\newline \textbf{Hardware}: Increase in temperature difference (temporarily)\\
+		\textbf{\texttt{F-050}} & Permanent Value Shift & Ignore sensor 1 values & \textbf{Software}: Emulation of large value (permanently)\newline\textbf{Hardware}: Increase in temperature difference (permanently) \\
+		\textbf{\texttt{F-060}} & \acs{I2C} bus pin output stuck & Ignore sensor 1 values & \textbf{Hardware}: Connection of \acs{I2C} pin to ground
 		\\ \midrule
 		\multicolumn{4}{l}{MCP9808 Temperature Sensor \#2} \\ \midrule
 		
@@ -2042,14 +2042,16 @@ The following methods were used to simulate each failure:
 \end{table*}
 
 \clearpage
+The following paragraphs will describe the simulation procedure and results for each failure of \Cref{tab:testfailures}.
+
 \paragraph{\textbf{\texttt{F-010}: Temporary loss of function (full demo)}}\hspace{0pt}
 
-The first failure we will simulate will be the loss of the \acs{I2C} bus or peripheral. The simulation is done in hardware via \emph{temporary cable disconnection}.
+The first failure we will simulate is the loss of the \acs{I2C} bus or peripheral. The simulation is done in hardware via \emph{temporary cable disconnection}.
 
 \subparagraph{Procedure}
 \begin{compactenum}
-	\item Disconnect the \acs{SDA} or \acs{SCL} cable from the breadboard
-	\item After 2 seconds, reconnect the cable to reproduce the temporary nature of the failure
+	\item Disconnect the \acs{SDA} or \acs{SCL} cable from the breadboard.
+	\item After 2 seconds, reconnect the cable to reproduce the temporary nature of the failure.
 \end{compactenum}
 
 \subparagraph{Visual indications} The 1\textsuperscript{st} \acs{LED} light flashes once, and stays on.
@@ -2057,7 +2059,7 @@ The first failure we will simulate will be the loss of the \acs{I2C} bus or peri
 \subparagraph{Results}
 For this analysis, all the \acs{FDIR} steps and processes will be shown in detail, including the visual information provided to the operators. However, subsequent failure modes will have only an overview presented, centred around the transition tables.
 
-Before studying the failure and \acs{FDIR} results, we will look at the \acs{ECSS} parameters and their values.
+Before studying the failure and \acs{FDIR} results, we will look at the \textbf{\acs{ECSS} parameters} and their values.
 
 \begin{figure}[h]
 	\centering
@@ -2073,7 +2075,7 @@ Before studying the failure and \acs{FDIR} results, we will look at the \acs{ECS
 	\label{fig:yamcsparametersf010}
 \end{figure}
 
-In \Cref{fig:yamcsparametersnominal}, the temperature and status values during nominal operation are shown. The values are received normally and the sensors are sending data. The moment the cable is unplugged, the system sets the status value to \texttt{TIMEOUT}\footnote{This process is performed by the peripheral's driver, and not by the implementation of the \acs{ECSS} services.} as it recognizes the connection failure (\Cref{fig:yamcsparametersf010}). Simultaneously, the temperature value becomes \emph{0}, as there is no active measurement.\footnote{In a real system, it would make sense to keep the previous temperature value. In our case, the value was set to 0 to confirm that a failed peripheral returning incorrect values cannot negatively affect the rest of the system.}
+In \Cref{fig:yamcsparametersnominal}, the \textbf{temperature} and \textbf{status} values during nominal operation are shown. The values are received normally and the sensors are sending data. The moment the cable is unplugged, the system sets the status value to \texttt{TIMEOUT}\footnote{This process is performed by the peripheral's driver, and not by the implementation of the \acs{ECSS} services.} as it recognizes the connection failure (\Cref{fig:yamcsparametersf010}). Simultaneously, the temperature value becomes \emph{0}, as there is no active measurement.\footnote{In a real system, it would make sense to keep the previous temperature value. In our case, the value was set to 0 to confirm that a failed peripheral returning incorrect values cannot negatively affect the rest of the system.}
 
 \begin{figure}[h]
 	\centering
@@ -2091,9 +2093,9 @@ In \Cref{fig:yamcsparametersnominal}, the temperature and status values during n
 		\multicolumn{1}{l}{Time (ms)} & \acs{PMON} & \multicolumn{3}{c}{Parameter} & Transition \\ \midrule
 		0 & 4 & Temp. 1 & = & 0  & \ok \ar \invalid \\
 		0 & 6 & Temp. \(\Delta\) & = & 25.6875 & \ok \ar  \\
-		0 & 7 & Temp. 1 & = & 0 & \ok \ar \invalid \invalid \\
-		0 & 9 & Temp. \(\Delta\) & = & 25.6875 & \ok \ar \invalid \invalid \\
-		0 & 10 & Temp. 1 & = & 0 & \ok \ar \invalid \invalid \\
+		0 & 7 & Temp. 1 & = & 0 & \ok \ar \invalid \\
+		0 & 9 & Temp. \(\Delta\) & = & 25.6875 & \ok \ar \invalid \\
+		0 & 10 & Temp. 1 & = & 0 & \ok \ar \invalid \\
 		1000 & 0 & Temp. Status 1 & = & \texttt{TIMEOUT} & \ok \ar \unexpected \\[1ex]
 		\multicolumn{6}{c}{\textcolor{MaterialGrey500}{Failure recovery}} \\[1ex]
 		2500 & 0 & Temp. Status 1 & = & \texttt{NOMINAL} & \unexpected \ar \ok \\
@@ -2105,23 +2107,23 @@ In \Cref{fig:yamcsparametersnominal}, the temperature and status values during n
 	\end{tabularx}
 \end{table*}
 
-After update the parameter values, the \emph{\texttt{ST[12]} on-board monitoring} service and its monitoring definitions (\Cref{fig:pusf010tran,tab:f010tran}) are next. The following steps are taken in order:
+After updating the parameter values, the \emph{\texttt{ST[12]} on-board monitoring} service and its monitoring definitions (\Cref{fig:pusf010tran,tab:f010tran}) are next. The following steps are taken in order:
 \begin{enumerate}
-	\item As soon as the sensor is disconnected, definitions 4, 6, 7, 9, and 10 (\Cref{tab:demo_monitoring}) acquire an \invalid{} state. This happens after deactivation of the \textbf{check validity condition} for these definitions. If sensor 1 is disabled,\footnote{either due to a problem or a command} its values should not be used for any on-board functionality.
+	\item \emph{Immediately} after the sensor is disconnected, definitions 4, 6, 7, 9, and 10 (\Cref{tab:demo_monitoring}) acquire an \invalid{} state. This happens after deactivation of the \textbf{check validity condition} for these definitions. If sensor 1 is disabled,\footnote[][4ex]{either due to a problem or a command} its values should not be used for any on-board functionality.
 	
 	Therefore, all definitions associated with sensor 1 are disabled and cannot trigger any reaction. This is done immediately.
-	\item After two measurements and time \( 2 \cdot 500 = \SI{1000}{\milli\second} \), monitoring definition 0 confirms that the parameter \emph{Temperature Status 1} has an unexpected value. As a result, the monitoring definition is switched to the \unexpected{} state, therefore triggering the entire fault reporting and recovery process. The sensor failure has now been detected, and the \acs{FDIR} system is now in action.
+	\item After two measurements and \( 2 \cdot 500 = \SI{1000}{\milli\second} \) of time, monitoring definition 0 confirms that the parameter \emph{Temperature Status 1} has an unexpected value. As a result, the monitoring definition is switched to the \unexpected{} state, therefore triggering the entire fault reporting and recovery process. The sensor failure has now been detected, and the \acs{FDIR} system is now in action.
 	\item The monitoring definitions do not change status until the failure is corrected, at which point they return to the \ok{} state. The system has repaired the fault without operator intervention, and has returned to its original state.
 \end{enumerate}
 
 \begin{figure}
 \centering
-\caption[Full list of monitoring definitions during the \texttt{F-010} failure]{Full list of monitoring definitions during the \texttt{F-010} failure, as shown in the \acs{PUS} interface. Definition \emph{0} is enabled while it is pending confirmation of the component's failure, while other sensor-dependent definitions are disabled (\invalid)}.
+\caption[Full list of monitoring definitions during the \texttt{F-010} failure]{Full list of monitoring definitions during the \texttt{F-010} failure, as shown in the \acs{PUS} interface. Definition \emph{0} is enabled while it is pending confirmation of the component's failure, while other sensor-dependent definitions are disabled (\invalid).}
 \label{fig:pusf010moni}
 \includegraphics[width=.8\textwidth]{media/screenshots/pus_f010_moni}
 \end{figure}
 
-After the failure is detected, the corresponding \textbf{event} is generated and sent to the{operators (\Cref{fig:yamcsf010event}).
+After the failure is detected, the corresponding \textbf{event} is generated and sent to the operators (\Cref{fig:yamcsf010event}).
 		
 \begin{figure*}
 \centering
@@ -2130,7 +2132,7 @@ After the failure is detected, the corresponding \textbf{event} is generated and
 \label{fig:yamcsf010event}
 \end{figure*}
 
-After the event has been reported, the event-action mechanism is triggered. The action associated with the temporary failure of the sensor is to call the \texttt{restart\_sensor} function.\footnote{\emph{\texttt{ST[08]} function management} service} with an argument value of ``\texttt{1}'', which signals the restart of the 1\textsuperscript{st} sensor. On human observers, the indicator light \textbf{flashes} as the system power-cycles the sensor. This was the first attempt to fix the problem}
+After the event has been reported, the event-action mechanism is triggered. The action associated with the temporary failure of the sensor is to call the \texttt{restart\_sensor} function\footnote{\emph{\texttt{ST[08]} function management} service} with an argument value of ``\texttt{1}'', which signals the restart of the 1\textsuperscript{st} sensor. On human observers, the indicator light \textbf{flashes} as the system power-cycles the sensor. This was the first attempt to fix the problem.
 	
 At this point, as part of the test procedure, the experimenter reconnects the remote sensor, thus simulating the ``fix'' of the problem. The attempts to communicate with the sensor are now successful, and the system assumes that the fault has been repaired.
 	
@@ -2173,7 +2175,7 @@ Received TM [82]
 3622859 [debug  ] T [T1]: 0.00
 ...
 	\end{cminted}
-	\caption[Microcontroller diagnostic output during the \texttt{F-010} failure]{Microcontroller diagnostic output during the \texttt{F-010} failure. Once the cable is disconnected, the \acs{MCU} detects the fault on the \acs{I2C} bus, and the read temperature value becomes zero. The state of the monitoring definitions changes on the corresponding clock pulse. Simultaneously, the beacon (\texttt{[3,25]}) and transition reporting \acs{TM} (\texttt{ST[12,12]}) are generated. This diagnostic data is provided in plain-text format by the microcontroller, and will not be available in orbit.}
+	\caption[Microcontroller diagnostic output during the \texttt{F-010} failure]{Microcontroller diagnostic output during the \texttt{F-010} failure. Once the cable is disconnected, the \acs{MCU} detects the fault on the \acs{I2C} bus, and the read temperature value becomes zero. The state of the monitoring definitions changes on the corresponding clock pulse. Simultaneously, the beacon (\texttt{TM[3,25]}) and transition reporting \acs{TM} (\texttt{TM[12,12]}) are generated. This diagnostic data is provided in plain-text format by the microcontroller, and will not be available in orbit.}
 \end{figure}
 
 \clearpage
@@ -2183,7 +2185,7 @@ This failure is similar to \texttt{F-010}, but it presumes that the component ca
 
 \subparagraph{Procedure}
 \begin{compactenum}
-	\item Disconnect the \acs{SDA} or \acs{SCL} cable from the breadboard
+	\item Disconnect the \acs{SDA} or \acs{SCL} cable from the breadboard.
 \end{compactenum}
 
 \subparagraph{Visual indications} The 1\textsuperscript{st} \acs{LED} light flashes once, stays on, and then turns off permanently.
@@ -2191,7 +2193,7 @@ This failure is similar to \texttt{F-010}, but it presumes that the component ca
 \subparagraph{Results}
 \begin{table*}[h]
 	\centering
-	\caption[][10pt]{Monitoring definition transitions table (\texttt{F-020} failure)}
+	\caption[]{Monitoring definition transitions table (\texttt{F-020} failure)}
 	\label{tab:f020tr}
 	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
 		\toprule
@@ -2219,7 +2221,7 @@ In this test, the system normally recognizes the sensor failure as expected, and
 Using this method, the fault is isolated and cannot affect the rest of the system. All \acs{FDIR} definitions associated with the sensor are disabled. The \acl{GS} is aware of the sensor's status via telemetry, and does not take into account its erroneous temperature readings.
 \end{enumerate}
 
-At this point, the inactive sensor can only be reset by \acs{TC}, or by rebooting the system. Through the \acs{YAMCS} interface, the user can send the \mintinline{cpp}{/fdirdemo/Set_Temp1_Status(Temperature_Status: "Nominal")} command, thus reactivating the sensor.\footnote[][2ex]{Internally, this command calls the \emph{\texttt{ST[20]} parameter management} service, and sets the \emph{Temperature 1 Status} parameter to \texttt{NOMINAL}}. After recovery, any sensor failure will repeat the same \acs{FDIR} process again.
+At this point, the inactive sensor can only be reset by \acs{TC}, or by rebooting the system. Through the \acs{YAMCS} interface, the user can send the \mintinline{cpp}{/fdirdemo/Set_Temp1_Status(Temperature_Status: "Nominal")}\linebreak[4] command, thus reactivating the sensor.\footnote[][-3ex]{Internally, this command calls the \emph{\texttt{ST[20]} parameter management} service, and sets the \emph{Temperature 1 Status} parameter to \texttt{NOMINAL}.} After recovery, any sensor failure will repeat the same \acs{FDIR} process again.
 
 More generally, we observe that the \acs{FDIR} service does not cause any degradation of the rest of the system, as it is executed as a separate \acs{RTOS} process.
 
@@ -2228,7 +2230,7 @@ More generally, we observe that the \acs{FDIR} service does not cause any degrad
 
 This fault requires the temperature value to be changed for a short period of time. As the temperature must drop below \SI{-40}{\celsius} or rise above \SI{100}{\celsius} to trigger the \acs{FDIR} mechanism (\Cref{tab:hsia}), the only practical method to simulate this failure is to \textbf{insert a false value via software}.
 
-The means we used insert false values is to press\textbf{one of the two buttons} on the development board.\footnote{Alternatively, test telecommands can be used.} More specifically, by pressing \emph{button 0}, the value \SI{80}{\celsius} is added to temperature 1. By pressing \emph{button 1}, the same happens for temperature 2.
+The means we used insert false values is to press \textbf{one of the two buttons} on the development board.\footnote{Alternatively, test telecommands can be used.} More specifically, by pressing \emph{button 0}, the value \SI{80}{\celsius} is added to temperature 1. By pressing \emph{button 1}, the same happens for temperature 2.
 
 \subparagraph{Procedure}
 \begin{compactenum}
@@ -2237,14 +2239,15 @@ The means we used insert false values is to press\textbf{one of the two buttons}
 
 \subparagraph{Visual indications} The 1\textsuperscript{st} \acs{LED} light flashes once and stays on.
 
-\subparagraph{Results}
+\subparagraph{Results}\hspace{0pt}
+
 \begin{table*}[h]
 	\centering
 	\caption{Monitoring definition transitions table (\texttt{F-040} failure)}
 	\label{tab:f040tran}
 	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
 		\toprule
-		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c}{Parameter} & Transition \\ \midrule
+		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c@{\hskip 3em}}{Parameter} & Transition \\ \midrule
 		0 & 4 & Temp. 1 & = & 109.4375 & \ok \ar \hilim \\[1ex]
 		\multicolumn{6}{c}{\textcolor{MaterialGrey500}{Failure recovery}}\\[1ex]
 		1.5 & 4 & Temp. 1 & = & 29.5625 & \hilim \ar \ok \\
@@ -2255,7 +2258,7 @@ The means we used insert false values is to press\textbf{one of the two buttons}
 
 In this example, only one tracking definition goes out of bounds. As soon as the out-of-bounds is detected, the sensor is restarted, and the fault is corrected.
 
-The logic we used in the \acs{FDIR} architecture means that the remaining definitions continue to monitor the sensor's temperature value, without attaining an \invalid{} value. To avoid any conflict between the definitions, the number of iterations of their measurements should be greater than the one triggered currently. Indeed, in this experiment, no other definition status was changed before and after the failure-related actions.\footnote{Alternatively, utilisation of the \emph{check validity conditions} can ensure that the value does not violate the bounds of another definition.}
+The logic we used in the \acs{FDIR} architecture means that the remaining definitions continue to monitor the sensor's temperature value, without attaining an \invalid{} value. To avoid any conflict between the definitions, the number of iterations of their measurements should be larger than the one triggered currently. Indeed, in this experiment, no other definition status was changed before and after the failure-related actions.\footnote{Alternatively, appropriate utilisation of the \emph{check validity conditions} can ensure that the value does not violate the bounds of another definition.}
 
 
 \begin{figure*}[h]
@@ -2268,9 +2271,7 @@ The logic we used in the \acs{FDIR} architecture means that the remaining defini
 \clearpage
 \paragraph{\textbf{\texttt{F-050}: Permanent Value Shift}}\hspace{0pt}
 
-This fault is similar to \texttt{F-040}, but with sensor repair being impossible.
-
-The means we used insert false values is to press\textbf{one of the two buttons} on the development board.\footnote{Alternatively, test telecommands can be used.} More specifically, by pressing \emph{button 0}, the value \SI{80}{\celsius} is added to temperature 1. By pressing \emph{button 1}, the same happens for temperature 2.
+This fault is similar to \texttt{F-040}, but with sensor repair being impossible. Button presses were once again used to simulate the fault in software.
 
 \subparagraph{Procedure}
 \begin{compactenum}
@@ -2279,21 +2280,22 @@ The means we used insert false values is to press\textbf{one of the two buttons}
 
 \subparagraph{Visual indications} The 1\textsuperscript{st} \acs{LED} light flashes once, stays on, and then turns off permanently.
 
-\subparagraph{Results}
+\subparagraph{Results}\hspace{0pt}
+
 \begin{table*}[h]
 	\centering
 	\caption{Monitoring definition transitions table (\texttt{F-050} failure)}
 	\label{tab:f050tran}
 	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
 		\toprule
-		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c}{Parameter} & Transition \\ \midrule
+		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c@{\hskip 3em}}{Parameter} & Transition \\ \midrule
 		0 & 4 & Temp. 1 & = & 109.4375 & \ok \ar \hilim \\
 		1.5 & 7 & Temp. 1 & = & 109.4375 & \ok \ar \hilim \\[1ex]
 		\multicolumn{6}{c}{\textcolor{MaterialGrey500}{Failure isolation}}\\[1ex]
-		1.5 & 9 & Temp. \( \Delta \) & = & -79.9375 & \ok \ar \invalid \\
+		1.5 & 9 & Temp. \( \Delta \) & = & \textminus79.9375 & \ok \ar \invalid \\
 		1.5 & 10 & Temp. 1 & = & 109.4375 & \ok \ar \invalid \\
 		2 & 4 & Temp. 1 & = & 109.4375 & \hilim \ar \invalid \\
-		2 & 6 & Temp. \( \Delta \) & = & -79.9375 & \ok \ar \invalid \\
+		2 & 6 & Temp. \( \Delta \) & = & \textminus79.9375 & \ok \ar \invalid \\
 		2 & 7 & Temp. 1 & = & 109.4375 & \hilim \ar \invalid \\
 		\bottomrule
 	\end{tabularx}
@@ -2314,7 +2316,7 @@ The isolation \& recovery steps are the same as the ones from failure \texttt{F-
 \clearpage
 \paragraph{\textbf{\texttt{F-040} and \texttt{F-050}: Differential measurement}}\hspace{0pt}
 
-The \texttt{F-040} and \texttt{F-050} failures involve an auxiliary detection method: The \emph{large difference between 2 sensor measurement values}. Given the small threshold defined \Cref{tab:hsia} (\(\lvert \Delta \rvert \leq \SI{5}{\celsius}\)), this test is performed in hardware, by heating one of the two sensors.
+The \texttt{F-040} and \texttt{F-050} failures involve an auxiliary detection method: The \emph{large difference between 2 sensor measurement values}. Given the small threshold defined in \Cref{tab:hsia} (\(\lvert \Delta \rvert \leq \SI{5}{\celsius}\)), this test is performed in hardware, by heating one of the two sensors.
 
 \subparagraph{Procedure}
 \begin{compactenum}
@@ -2324,17 +2326,18 @@ The \texttt{F-040} and \texttt{F-050} failures involve an auxiliary detection me
 \subparagraph{Visual indications (temporary failure)} Both \acs{LED} lights simultaneously flash once and stay on.
 \subparagraph{Visual indications (permanent failure)} Both \acs{LED} lights simultaneously flash once, stays on, and then turn off permanently.
 
-\subparagraph{Results}
+\subparagraph{Results}\hspace{0pt}
+
 \begin{table*}[h]
 	\centering
 	\caption{Monitoring definition transitions table (temporary failure \texttt{F-040}, differential)}
 	\label{tab:f040dtran}
 	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
 		\toprule
-		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c}{Parameter} & Transition \\ \midrule
-		0 & 6 & Temp. \( \Delta \) & = & -6.1875 & \ok \ar \lolim \\[1ex]
+		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c@{\hskip 3em}}{Parameter} & Transition \\ \midrule
+		0 & 6 & Temp. \( \Delta \) & = & \textminus6.1875 & \ok \ar \lolim \\[1ex]
 		\multicolumn{6}{c}{\textcolor{MaterialGrey500}{Failure recovery}}\\[1ex]
-		7.5 & 6 & Temp. \( \Delta \) & = & -4.8125 & \lolim \ar \ok \\
+		7.5 & 6 & Temp. \( \Delta \) & = & \textminus4.8125 & \lolim \ar \ok \\
 		\bottomrule
 	\end{tabularx}
 	\vspace{10pt}
@@ -2348,18 +2351,18 @@ The differential case recovery actions are similar to the single case (\texttt{F
 	\label{tab:f050dtran}
 	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
 		\toprule
-		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c}{Parameter} & Transition \\ \midrule
-		0 & 6 & Temp. \( \Delta \) & = & -5.8125 & \ok \ar \lolim \\
-		2.5 & 9 & Temp. \( \Delta \) & = & -6 & \ok \ar \lolim \\[1ex]
+		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c@{\hskip 3em}}{Parameter} & Transition \\ \midrule
+		0 & 6 & Temp. \( \Delta \) & = & \textminus5.8125 & \ok \ar \lolim \\
+		2.5 & 9 & Temp. \( \Delta \) & = & \textminus6 & \ok \ar \lolim \\[1ex]
 		\multicolumn{6}{c}{\textcolor{MaterialGrey500}{Failure isolation}}\\[1ex]
 		2.5 & 10 & Temp. 1 & = & 38.3125 & \ok \ar \invalid \\
 		2.5 & 11 & Temp. 2 & = & 32.3125 & \ok \ar \invalid \\
 		3 & 4 & Temp. 1 & = & 38.3125 & \ok \ar \invalid \\
-		3 & 5 & Temp. 2 & = & -32.3125 & \ok \ar \invalid \\
+		3 & 5 & Temp. 2 & = & \textminus32.3125 & \ok \ar \invalid \\
 		3 & 6 & Temp. \( \Delta \) & = & -6 & \ok \ar \invalid \\
 		3 & 7 & Temp. 1 & = &38.3125 & \ok \ar \invalid \\
 		3 & 8 & Temp. 2 & = & 32.3125 & \ok \ar \invalid \\
-		3 & 9 & Temp. \( \Delta \) & = & -6 & \ok \ar \invalid \\
+		3 & 9 & Temp. \( \Delta \) & = & \textminus6 & \ok \ar \invalid \\
 		\bottomrule
 	\end{tabularx}
 	\vspace{10pt}
@@ -2387,13 +2390,13 @@ At this point we note that even when the design and the software are identical, 
 \clearpage
 \paragraph{\textbf{\texttt{F-130}: Overheating}}\hspace{0pt}
 
-In this test we do not investigate the failure of one of the sensors, but the failure of the subsystem itself, which is assumed to have overheated. To ease execution of this test, we used a virtual temperature increase via software.
+In this test we do not investigate the failure of one of the sensors, but the failure of the subsystem itself, which is assumed to have overheated. To ease execution of this test, we implemented a virtual temperature increase via software.
 
 \subparagraph{Procedure}
 \begin{compactenum}
 	\item Call the \texttt{bogus\_temp} \acs{ECSS} function via \acs{TC}. This function causes a gradual increase of the temperature by \SI{90}{\celsius} at maximum.
 \end{compactenum}
-\marginnote{
+\marginnote[-1cm]{%
 Alternatively, a hot air gun or another heat source can be used so that both sensors are heated to \SI{50}{\celsius}. In this case, we need to pay attention to have a uniform temperature increase, so as to not trigger the differential check.
 }
 
@@ -2406,7 +2409,7 @@ Alternatively, a hot air gun or another heat source can be used so that both sen
 	\label{tab:f130tran}
 	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
 		\toprule
-		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c}{Parameter} & Transition \\ \midrule
+		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c@{\hskip 3em}}{Parameter} & Transition \\ \midrule
 		0 & 10 & Temp. 1 & = & 92.288 & \ok \ar \hilim \\
 		\multicolumn{6}{l}{\cellcolor{MaterialYellow300}\textcolor{black}{Autonomous \acs{MCU} restart}}\\
 		\bottomrule
@@ -2414,14 +2417,14 @@ Alternatively, a hot air gun or another heat source can be used so that both sen
 	\vspace{10pt}
 \end{table*}
 
-In this example, only the monitoring definition connected with the \SI{50}{\celsius} is activated. Once the system spends some time in this temperature, an \acs{MCU} restart takes place immediately. This restart would continue to occur repeatedly, if the temperature remained out of bounds.
+In this example, only the monitoring definition linked with the \SI{50}{\celsius} value is activated. Once the system spends some time in this temperature, an \acs{MCU} restart takes place immediately. This restart would continue to occur repeatedly, if the temperature remained out of bounds.
 
 This failure essentially belongs to subsystem level, and not unit (sensor) level. We also note that due to the large amount of time between restarts, operators have enough time to receive \acsp{TM} and transmit the necessary \acsp{TC} to deal with the issue.
 
-\begin{figure*}
+\begin{figure}
 	\includegraphics{screenshots/yamcs_f130_parameters}
 	\caption[Temperature measurements with bogus values added, as seen in YAMCS]{Temperature measurements with bogus values added, as seen in \acs{YAMCS}. The temperature reaches \SI{90}{\celsius}, until the \acs{MCU} restarts, at which point the temperature is restored to nominal levels.}
-\end{figure*}
+\end{figure}
 
 \clearpage
 \subsection{Real-time modification of \ac{FDIR}}
@@ -2434,6 +2437,7 @@ The level of reconfigurability possible is defined by requirements listed in \pa
 	\centering
 	\caption{\ac{FDIR} reconfigurability requirements}
 	\label{tab:fdir-recon-rq}
+	\renewcommand{\arraystretch}{1.2}
 	\begin{tabularx}{\textwidth}{@{}lXlL{4cm}@{}}
 		\toprule
  		\# & Requirement & Service & Details \\ \midrule
@@ -2442,6 +2446,7 @@ The level of reconfigurability possible is defined by requirements listed in \pa
 		\texttt{RC-030} & The capability shall be provided to add and delete parameters from the on‐board monitoring list. & ST[12] on-board monitoring & Via \emph{add}/\emph{delete} \emph{parameter monitoring definitions} commands  \\
 		\texttt{RC-040} & The capability shall be provided to modify the failure recovery actions associated with each on-board monitoring definition. & ST[19] event-action & Via \emph{add}, \emph{delete}, \emph{enable} and \emph{disable} \emph{event-action definitions} commands \\ \bottomrule
 	\end{tabularx}
+	\vspace{.3em}
 \end{table*}
 
 The \ac{YAMCS} platform was once again used to generate the wanted commands (\Cref{fig:yamcs_commands}). This section will analyse how \acs{ECSS} \acsp{TC} can be used to perform the required modifications.
@@ -2459,12 +2464,12 @@ The degree of observability required, in real and non-real time, is achieved usi
 	\item \texttt{TM[3,25]}: Periodic parameter value reporting (beacon)
 	\item \texttt{TM[5,1]} to \texttt{TM[5,4]}: Event reports at the time of occurrence
 	\item \texttt{TM[12,9]}: List of tracking definitions
-	\item \texttt{TM[12,12]}: Periodic reporting of state transitions in monitoring definitions\footnote{In simpler terms, we are informed when a parameter goes out of bounds, and when it returns to nominal state}
+	\item \texttt{TM[12,12]}: Periodic reporting of state transitions in monitoring definitions\footnote{In simpler terms, we are informed when a parameter goes out of bounds, and when it returns to nominal state.}
 	\item \texttt{TM[19,7]} and \texttt{TM[19,11]}: List of event-action definitions
 	\item \texttt{TM[20,2]}: Reporting of the value of any parameter in the system
 \end{compactitem}
 
-With the above set of telemetry, downlinked either periodically or after \acs{TC}, operators are able to examine the state of the system and its \acs{FDIR} in detail. All results in \Cref{sec:simul} were extracted using the above telemetry structures.
+With the above set of telemetry, downlinked either periodically or after \acs{TC}, operators are able to examine the state of the system and its \acs{FDIR} in detail. All the results of \Cref{sec:simul} were extracted using the above telemetry structures.
 
 \paragraph{\textbf{\texttt{RC-020} Enabling/Disabling \acs{FDIR}}}
 
@@ -2475,13 +2480,13 @@ The features implemented and tested that allow controlling \acs{FDIR} functions 
 	
 	This telecommand is defined in the \acs{PUS} standard and allows to completely disable the parameter monitoring function, and by extension, \textbf{completely disable the \acs{FDIR}}. After it is sent, any failure in the system is not detected, and no recovery operations are performed.
 	
-	It can be understood that such a command is fairly dangerous for the satellite system, as an incorrect execution will greatly reduce the possibility of recovery from a failure.\footnote{Critical commands such as this one are suggested to typically require two sub-commands to be sent in series (ARM--EXECUTE logic)} Nevertheless, it is useful if the \acs{FDIR} experiences problems such as spurious triggers that pose a higher risk to the mission.
+	It can be understood that such a command is fairly dangerous for the satellite system, as an untimely execution will greatly reduce the possibility of recovery from a failure.\footnote{Critical commands such as this one are suggested to typically require two sub-commands to be sent in series (ARM--EXECUTE logic).} Nevertheless, it is useful if the \acs{FDIR} experiences problems such as spurious triggers that pose a higher risk to the mission.
 	
 	We note here that this command does not prevent status queries or configuration changes in the on-board monitoring service.
 	
 	\item \texttt{TC[12,15]}: \emph{enable the parameter monitoring function}
 	
-	All \acsp{TC} to disable a function are followed by their ``enable'' counterpart. For example, this telecommand enables the parameter monitoring to be re-enabled if it was previously disabled.
+	All \acsp{TC} to disable a function are followed by their ``enable'' counterpart. For example, this telecommand allows parameter monitoring to be re-enabled if it was previously disabled.
 
 	\item \texttt{TC[12,2]}: \emph{disable parameter monitoring definitions}
 	
@@ -2499,7 +2504,7 @@ The features implemented and tested that allow controlling \acs{FDIR} functions 
 	
 	\item \texttt{TC[19,5]}: \emph{disable event-action definitions}
 	
-	In addition to disabling the entire \acs{FDIR} for a component, it is possible to disable only the ``IR''\footnote{\textcolor{MaterialGrey400}{Detection, }Isolation \& Recovery} part of it. This means that while failures are detected, no attempt is made to isolate or repair them. In this way, we can disable the \acs{FDIR}, but maintain observability of parameters and bound violations.
+	In addition to disabling the entire \acs{FDIR} for a component, it is possible to disable only the ``IR''\footnote{\textcolor{MaterialGrey400}{Detection, }Isolation \& Recovery} part of it. This means that while failures are detected, no attempt is made to isolate or repair them. In this way, we can disable the \acs{FDIR}, but maintain observability of parameters and limit violations.
 
 	In technical terms, this command disables the event-action definitions for specific events. The behaviour of a typical failure after executing this command is shown in \Cref{tab:eaofftr}.
 
@@ -2509,15 +2514,15 @@ The features implemented and tested that allow controlling \acs{FDIR} functions 
 	\label{tab:eaofftr}
 	\begin{tabularx}{\linewidth}{@{}S[table-format=4.0]c@{\hskip 3em}rcl@{\hskip 3em}X@{}}
 		\toprule
-		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c}{Parameter} & Transition \\ \midrule
+		\multicolumn{1}{l}{Time (s)} & \acs{PMON} & \multicolumn{3}{c@{\hskip 3em}}{Parameter} & Transition \\ \midrule
 		0 & 4 & Temp. \(\Delta\) & = & 110.625 & \ok \ar \hilim \\
 		1.5 & 7 & Temp. \( \Delta \) & = & 110.6875 & \ok \ar \hilim \\
-		2 & 6 & Temp. \( \Delta \) & = & -79.9375 & \ok \ar \lolim \\
-		4.5 & 9 & Temp. \( \Delta \) & = & -79.875 & \ok \ar \lolim \\
+		2 & 6 & Temp. \( \Delta \) & = & \textminus79.9375 & \ok \ar \lolim \\
+		4.5 & 9 & Temp. \( \Delta \) & = & \textminus79.875 & \ok \ar \lolim \\
 		5 & 10 & Temp. \( \Delta \) & = & 110.625 & \ok \ar \hilim \\
 		\bottomrule
 	\end{tabularx}
-	\vspace{10pt}
+	\vspace{.5em}
 \end{table*}
 
 \item \texttt{TC[19,4]}: \emph{enable event-action definitions}
@@ -2543,15 +2548,16 @@ The features implemented and tested that allow controlling \acs{FDIR} functions 
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=\textwidth]{screenshots/yamcs_add_definition}
-		\caption{Add tracking definition environment from \acs{YAMCS}}
+		\caption{\emph{Add monitoring definition command} from \acs{YAMCS}}
 		\label{fig:yamcs_add_definition}
 	\end{figure}
 	
 	Note that using this command presents some difficulties, due to the many different possible types of parameters and controls, leading to different message formats. For this reason, in this example we only implemented the \mintinline{cpp}{uint64_t} type for expected value checks, and \mintinline{cpp}{float} for limit checks. Definitions with the previous datatypes were coded so as to be compatible with all other numerical parameters in the space segment code.
-		
+	
+	\pagebreak[4]
 	\item \texttt{TC[12,6]}: \emph{delete parameter monitoring definitions}
 		
-		This command can delete monitoring definitions, and, when used with \texttt{TC[12,5]}, can modify monitoring definitions.
+		This command can delete monitoring definitions, and, when used with \texttt{TC[12,5]}, help in modifying monitoring definitions.
 		
 		Note that modification via \emph{delete-and-add} is not recommended by \acs{SAVOIR} \autocite{SAVOIR-HB-003}, as it runs the risk that one of the two commands will not be executed, and the system will be in an undesirable state. \emph{\texttt{TC[12,7]} modify parameter monitoring definitions} can be used to remedy this issue, which was however not implemented for this demonstration.
 		
@@ -2559,7 +2565,7 @@ The features implemented and tested that allow controlling \acs{FDIR} functions 
 	
 	\paragraph{\textbf{\texttt{RC-040} Addition/Deletion of event-action definitions}}\hspace{0pt}
 	
-	Similar to the aforementioned \acsp{TC}, operators can modify the list of event-action definitions, or even link them to specific monitoring definitions, by taking advantage of the \emph{\texttt{ST[19]} eventaction} service functions. In all of the following functions, the definitions are accessed based on the Application Process ID and the event ID.
+	Similar to the aforementioned \acsp{TC}, operators can modify the list of event-action definitions, or even link them to specific monitoring definitions, by taking advantage of the \emph{\texttt{ST[19]} eventaction} service functions. In all of the following functions, the definitions are accessed based on the application process ID and the event ID.
 	
 
 		
