@@ -341,7 +341,7 @@ The AcubeSAT project follows an \textbf{open-source philosophy}, making its soft
 
 AcubeSAT's main mission is the study of \textbf{eukaryotic cells} in \acl{LEO}, and more specifically the assessment of the effects of \emph{radiation} and \emph{microgravity} on 190 different strains of the yeast species \emph{Saccharomyces Cerevisiae}. The previous are achieved with a novel lab-on-a-chip construction, structured around a \textbf{microfluidic chip} (\Cref{fig:microfluidic_chip}) \autocite{volpetti_microfluidic_biodisplay_2017} that allows the regulation of gene expression to be monitored in an unprecedented scale.
 
-The results of the experiment are telemetered to Earth in the form of photographs, where the entirety of the microfluidic chip's chambers are depicted, and results are extracted acording to the \textbf{fluorescence level} produced in each chamber. The results in orbit are compared to a similar ground-based reference experiment.
+The results of the experiment are telemetered to Earth in the form of photographs, where the entirety of the microfluidic chip's chambers are depicted, and results are extracted according to the \textbf{fluorescence level} produced in each chamber. The results in orbit are compared to a similar ground-based reference experiment.
 
 \begin{figure}[t]
 	\centering
@@ -575,7 +575,7 @@ The \acl{SU} subteam is responsible for the conceptualisation and implementation
 
 The payload is composed of the following functional parts \autocite{DDJF_PL}:
 \begin{compactitem}
-	\item The \textbf{payload container}, an almost 2U aluminum structure, pressurised at standard atmospheric pressure, and designed to host all the payload instrumentation. The container also accomodates a unibody which mechanically supports all \ac{SU} components.
+	\item The \textbf{payload container}, an almost 2U aluminium structure, pressurised at standard atmospheric pressure, and designed to host all the payload instrumentation. The container also accommodates a unibody which mechanically supports all \ac{SU} components.
 	\item A \textbf{microfluidic chip} based on \ac{PDMS}, hosting 384 chambers capable of probing 190 distinct strains of \emph{Saccharomyces Cerevisiae} for each subexperiment.
 	\item A \textbf{fluidic system} composed from 2 pumps, 8 latching solenoid valves, 6 non-latching solenoid valves, and 3 fluid medium containers
 	\item An \textbf{imaging system} operating as a microscope, containing a camera and a series of lights, filters and a lens
@@ -594,7 +594,7 @@ The payload is composed of the following functional parts \autocite{DDJF_PL}:
 \phantomsection\label{sec:su_fdir}
 There is a number of constraints that the payload imposes on \ac{FDIR} design:
 \begin{enumerate}
-	\item \textbf{Interruption} of one of the three 72-hour subexperiments during execution may mean complete loss of the subexperiment. The impact of such an event depends on the duration and timepoint of its occurence. In any case, adequate observability will allow the ground-control experiment to mimic the in-orbit conditions as much as possible.
+	\item \textbf{Interruption} of one of the three 72-hour subexperiments during execution may mean complete loss of the subexperiment. The impact of such an event depends on the duration and timepoint of its occurrence. In any case, adequate observability will allow the ground-control experiment to mimic the in-orbit conditions as much as possible.
 	\item \textbf{Freezing} of liquids inside the chip and fluidic tubes may lead to permanent damage on the setup. As such, heater operation may be required even during Safe Mode, if the first sub-experiment has been performed and liquid has flown into the system. This characteristic imposes further restrictions on the minimum availability of the system, depending on the thermal conditions.
 \end{enumerate}
 
@@ -668,7 +668,7 @@ This standard is intended for use in any space mission, complementing other stan
 \marginnote[1cm]{%
 	\textbf{Application Process}: Any physical (hardware) or logical (software) entity that can receive telecommands and generate telemetry in terms of the \acs{PUS}
 	
-	\textbf{Event}: Occurence of a set of conditions that can arise during the mission, such as:
+	\textbf{Event}: Occurrence of a set of conditions that can arise during the mission, such as:
 	\begin{compactitem}
 		\item Autonomous actions taken
 		\item Detected fault or anomaly
@@ -1068,7 +1068,7 @@ The results of \eqref{eq:dual_redun}, \eqref{eq:colddrper}, \eqref{eq:tmr} and \
 \paragraph{\textbf{Vulnerable Voter}}\hspace{0pt}
 \acusepage{voter}
 
-The study of a vulnerable voter circuit in \acs{TMR} is of particular interest. In the context of this analysis, we will consider the independent reliabiliy value \( R_v < 1 \) of the voter. From \autocite[31]{birolini_reliability_engineering_2004}, we have:
+The study of a vulnerable voter circuit in \acs{TMR} is of particular interest. In the context of this analysis, we will consider the independent reliability value \( R_v < 1 \) of the voter. From \autocite[31]{birolini_reliability_engineering_2004}, we have:
 \begin{align}
 R_{3+v} &= (3R^2 - 2R^3)R_v \nonumber \\
 &= R_3R_v
@@ -1213,7 +1213,7 @@ The following section presents a list of the implemented methods to detect, prev
 		System & \textbf{No \acsp{TC} have been received for some time} & The \acs{GS} sends periodic ``refresh'' commands to the satellite on each pass. Failure to receive means loss of communication. \\
 		Software & \textbf{Hardware exception} & May be due to division by 0, attempting to access inaccessible memory, etc. \\
 		Software & \textbf{Assertion failed} & Using the C \texttt{assert} function \\
-		Software & \textbf{Unexpected microcontroller reset} & Possibly a watchdog trigger \parencite{beningo_review_watchdog_2018} or bug \\
+		Software & \textbf{Unexpected microcontroller reset} & Possibly a watchdog trigger \parencite{beningo_review_watchdog_2010} or bug \\
 		Software & \textbf{\acs{TMR} variables wrong} & \\ \bottomrule
 	\end{tabularx}
 \end{table*}
@@ -1232,7 +1232,7 @@ The following section presents a list of the implemented methods to detect, prev
 		1 & Hardware & Radiation-tolerant microcontroller \\
 		2 & Hardware & Microcontroller watchdogs \parencite{beningo_review_watchdog_2010} \\
 		3 & Hardware & System-level watchdogs \\
-		4 & Hardware & Hardware error correction \& detection algoritmhs \\
+		4 & Hardware & Hardware error correction \& detection algorithms \\
 		5 & Hardware & Dual redundancy in software memory \\
 		6 & Hardware & Current-limiting circuits \\
 		7 & Hardware & Subsystem overvoltage and overcurrent protection \\
@@ -2312,7 +2312,7 @@ The \acs{FDIR} process is again two-stepped:
 	\item After the first detection (definition \texttt{4}), the sensor is power-cycled, and the \acs{LED} blinks. The issue is however still not resolved.
 	\item After \SI{1.5}{\second}, definition \texttt{7} takes over. Since the value of the sensor is still beyond limits, the action taken is to disable the sensor. This is how the failure is isolated.
 	
-	After isolation, where the status of the sensor is set to \texttt{DISABLED}, the defitions that depend on the peripheral are also disabled (\invalid). As expected, isolation is now complete.
+	After isolation, where the status of the sensor is set to \texttt{DISABLED}, the definitions that depend on the peripheral are also disabled (\invalid). As expected, isolation is now complete.
 \end{enumerate}
 
 The isolation \& recovery steps are the same as the ones from failure \texttt{F-020}, and operator intervention is once again required before any other measure is taken.
