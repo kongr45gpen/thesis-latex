@@ -858,7 +858,7 @@ Moving on, a \textbf{configurable} implementation is proposed that takes advanta
 The above logic is summarized in \Cref{fig:fdirpus}. Its importance lies in that it provides a \textbf{structured} way for the system to handle any of the predicted problems, but at the same time enables developers and operators to:
 \begin{compactitem}
 	\item Obtain all information on the operational status of components and sensor values.
-	\item Safely interfere entirely with the operation of the \acs{FDIR} without changing the source code.
+	\item Safely interfere with the complete operation of the \acs{FDIR} without changing the source code.
 	\item Partially or completely disable \acs{FDIR}, if necessary for diagnostic purposes.
 	\item Use a ready and tested \acs{ECSS} services software suite to implement all of the above, reducing cost and development time.
 	\item Avoid unconfigurable ``hard-coding'' of \acs{FDIR} procedures at various points in the code.
@@ -873,28 +873,28 @@ In this chapter, a case study of the application of the above (\Cref{cap:savoir}
 \section{Basic principles}
 \label{sec:fdirbaspri}
 
-AcubeSAT's \acs{FDIR} requirements mostly stem from the mission requirements (\Cref{sec:su_fdir}) and the technical capabilities of a low-cost system (\Cref{cap:acubesat}). More specifically, the basic principles are:
+AcubeSAT's \acs{FDIR} needs mostly stem from the mission requirements (\Cref{sec:su_fdir}) and the technical capabilities of a low-cost system (\Cref{cap:acubesat}). More specifically, the basic principles are:
 \begin{enumerate}
 	\item \textbf{Modularity:} \acs{FDIR} should not be hard-coded in software, but should allow for easy modifications based on a well-structured database.
 		\item \textbf{Autonomy:} The satellite should be able to survive in orbit for more than \SI{24}{} hours without communication with the \acs{GS}, and should be able to remain in any system mode, especially \emph{Science Mode}.
-		\item \textbf{Configurability}: It is very difficult to predict the exact thresholds and behaviour of the \acs{FDIR} system and all components in orbit. Therefore, the operators should be given the possibility to fully configure and tune the \acs{FDIR} if necessary. This configurability may include disabling checks, modifying erroneous limits, or even adding new monitoring definitions.
+		\item \textbf{Configurability}: It is very difficult to predict the correct thresholds and behaviour of the \acs{FDIR} system and all components in orbit. Therefore, the operators should be given the possibility to fully configure and tune the \acs{FDIR} if necessary. This configurability may include disabling checks, modifying erroneous limits, or even adding new monitoring definitions.
 		\item \textbf{Observability,} by offering a large amount of information to the ground station in order to diagnose problems.
-		\item \textbf{No assumptions} for correct equipment functionality. Any software error condition or invalid input should be considered probably.
-		\item \textbf{Availability:} AcubeSAT benefits from long operational times in orbit, since this allows downloading larger amounts of scientific data and observability-related telemetry. In addition, brief interruption of any subexperiment may inherently lead to its complete failure (\Cref{sec:su}) Therefore, AcubeSAT follows a \emph{fail-operational} rather than \emph{fail-safe} approach on non-critical aspects.
+		\item \textbf{No assumptions} for correct equipment functionality. Any software error condition or invalid input should be considered possible.
+		\item \textbf{Availability:} AcubeSAT benefits from long operational times in orbit, since this allows downloading larger amounts of scientific data and observability-related telemetry. In addition, brief interruption of any subexperiment may inherently lead to its complete failure (\Cref{sec:su}). Therefore, AcubeSAT follows a \emph{fail-operational} rather than \emph{fail-safe} approach on non-critical aspects.
 		\item \textbf{Design} based on reliability. The team tries to implement design changes, to the extent possible by a low-cost CubeSat mission, before actual development or verification of the system.
 	\end{enumerate}
 	
 The above principles are covered by \acs{SAVOIR}'s logic (\Cref{cap:savoir}), which is also implemented in AcubeSAT.
 
-The levels of \acs{FDIR} in AcubeSAT are the following 3:
+The levels of \acs{FDIR} in AcubeSAT are the following three:
 \begin{enumerate}[label=Level \arabic*]
-	\item \textbf{Unit}/\textbf{Component}: Here, failures at component-level (e.g. temperature sensor) are detected and corrected. Simple failures at this level do not affect the next one, and can typically be corrected by simple actions (e.g. component power-cycle).
+	\item \textbf{Unit}/\textbf{Component}: Here, failures at component-level (e.g.\ temperature sensor) are detected and corrected. Simple failures at this level do not affect the next one, and can typically be corrected by simple actions (e.g.\ component power-cycle).
 	
-	This level is typically handled by the microcontroller of each subsystem. Although failures here may not be detected by other subsystems, the corresponding telemetry must be produced to provide to ensure observability from ground, or to predict other failures not detected by autonomously.
-	\item \textbf{Subsystem}: This includes serious failures affecting the entire operation of a subsystem (e.g. overheating, no response to pings, etc.). These failures do not necessarily halt the satellite's operations, but can be corrected by reboots or changes to the subsystem settings.
+	This level is typically handled by the microcontroller of each subsystem. Although failures here may not be detected by other subsystems, the corresponding telemetry must be produced to provide to ensure observability from ground, or to predict other failures not detected autonomously.
+	\item \textbf{Subsystem}: This includes serious failures affecting the entire operation of a subsystem (e.g.\ overheating, no response to pings, etc). These failures do not necessarily halt the satellite's operations, but can be corrected by reboots or changes to the subsystem settings.
 	
 	Failures at subsystem level and above are handled by the \acf{OBC} microcontroller, which contains the software to detect and recover from them. However, in the event of a failure of the \acs{OBC}, the \ac{ADCS} takes over the responsibility of the \acs{FDIR}.
-	\item \textbf{System}: This includes failures which cannot be corrected au\-to\-nom\-ous\-ly by the system (e.g. insufficient power, excessive angular velocity). The recovery action for system-level failures is usually to enter \emph{safe mode}, where only the most basic and vital satellite operations are performed until the failure is repaired by \acl{GS} commands.
+	\item \textbf{System}: This includes failures which cannot be corrected au\-to\-nom\-ous\-ly by the system (e.g.\ insufficient power, excessive angular velocity). The recovery action for system-level failures is usually to enter \emph{Safe Mode}, where only the most basic and vital satellite operations are performed until the failure is repaired by \acl{GS} commands.
 \end{enumerate}
 
 \section{Reliable Architectures}
@@ -906,7 +906,7 @@ Before implementing the \acs{FDIR}, it makes sense to study the different archit
 	\item \textbf{Single Component}
 	\item \textbf{Double Redundancy}, where two identical components perform the same function, and one can replace the other. This connectivity can follow the logic of \textbf{cold redundancy} or \textbf{hot redundancy}.
 	
-	In \textbf{cold redundancy}, only one of the components operates at a time, and an external circuit\footnote{or the components themselves, in the case of hot redundancy \autocite[20]{SAVOIR-HB-003}} checks which of the two is not in a fault state, so that control can be handed over to it.
+	In \textbf{cold redundancy}, only one of the components operates at a time, and an external circuit\footnote{or the components themselves, in the case of warm redundancy \autocite[20]{SAVOIR-HB-003}} checks which of the two is not in a fault state, so that control can be handed over to it.
 
 	In \textbf{hot redundancy}, both components are simultaneously functional, performing the same processes, and one component can take over the functional responsibilities of the other in the event of a failure.
 
@@ -922,11 +922,11 @@ Two types of failures will be applied to the aforementioned systems:
 \acusepage{voter}
 \end{marginfigure}
 \begin{itemize}
-\item In \textbf{permanent failures}, we consider events (e.g. radiation, loss of memory) that cannot be corrected and result in loss of mission. The analysis here is based on the concept of \e{reliability} \( R(t) \), i.e. the probability that the system will survive within a period of time \( t \).
-\item In \textbf{temporary failures} we consider events (e.g. bit changes, software bugs, message transfer errors) that are transient and usually affect only one measurement, action or result. The analysis here revolves around the concept of the failure rate \( \lambda \), i.e. the occurence frequency of failures in time.
+\item In \textbf{permanent failures}, we consider events (e.g.\ radiation, loss of memory) that cannot be corrected and result in loss of mission. The analysis here is based on the concept of \e{reliability} \( R(t) \), i.e.\ the probability that the system will survive within a period of time \( t \).
+\item In \textbf{temporary failures} we consider events (e.g.\ bit changes, software bugs, message transfer errors) that are transient and usually affect only one measurement, action or result. The analysis here revolves around the concept of the failure rate \( \lambda \), i.e.\ the occurrence frequency of failures in time.
 \end{itemize}
 
-As there are no large-scale data available for component failures in the space industry \autocite{esatec-qqd_effective_reliability_2016}, this analysis will show results over a range of reliability values.
+As there are no large-scale data available for component failures in the space industry \autocite{esatec-qqd_effective_reliability_2016}, this analysis will present results over a range of reliability values.
 
 As an example, failure rate of a device or unit due to radiation can range between \(10^{-11}\) to \(10^{-1}\) \(\frac{\text{failures}}{\text{second}}\), depending on the radiation environment, the severity of the failure, and the internals of each device \autocite[158-159]{gupta_analysis_single_2017}.
 
@@ -947,15 +947,16 @@ R_2 = 2R - R^2 = 1 - (1 - R)^2 \label{eq:dual_redun}
 	
 \eqref{eq:dual_redun} applies to \textbf{warm and hot redundancy}, as we assume that the system can recover from permanent failures by moving control to the unaffected component.
 
-On the other hand, most \textbf{cold redundancy} architectures assume that the unused component is inactive or not powered, and therefore is not affected by some failure causes (e.g. \acsp{SEL}). Assuming that a component is completely powered off if not active, let:
+On the other hand, most \textbf{cold redundancy} architectures assume that the unused component is inactive or not powered, and therefore is not affected by some failure causes (e.g.\ \acsp{SEL}). Assuming that a component is completely powered off if not active, let:
 \begin{align*}
 T: & \text{ the time of failure of the 2-component system}\\
 T_1: & \text{ the time of failure of the 1\textsuperscript{st} component}\\
-T_2: & \text{ the time of failure of the 2\textsuperscript{nd} component, so that } T_1 + T_2 = T\\
+T_2: & \text{ the time of failure of the 2\textsuperscript{nd} component, so that } T_1 + T_2 = T
 \end{align*}
 
-Then, the conditional probability of failure of the system, given the time of failure of the 1\textsuperscript{st} component is:
-\marginnote[2ex]{For some \(t,t_1 \geq 0 \)}
+Then, the conditional probability of failure of the system, given the time of failure of the 1\textsuperscript{st} component, is:
+\marginnote[2.5ex]{For some \(t,t_1 \geq 0 \)}
+\marginnote[6ex]{From the definition of reliability, \( R(t) = Pr(T>t) \).}
 \begin{align*}
 Pr\left( T > t \;\middle|\; T_1 = t_1 \right) &= Pr\left( T_1+T_2 > t \;\middle|\; T_1 = t_1  \right) \\
 &= Pr\left( T_2 > t - t_1 \;\middle|\; T_1 = t_1  \right) \\
@@ -975,7 +976,7 @@ Pr\left(T>t \;\middle|\; T_1\in(t_1,t_1+\Delta t) \right) \cdot Pr\left(T_1 \in 
 R(t) = Pr(T > t) = \int_t^\infty f(\tau) \dd{\tau} \label{eq:pdf}
 \end{equation}
 
-Using \eqref{eq:pdf}, \eqref{eq:prsum} can be rewritten using a Riemann integral:
+Using \eqref{eq:pdf}, \eqref{eq:prsum} can be rewritten as a Riemann integral:
 \begin{align}
 Pr(T>t) &= \int_{0}^{\infty} Pr\left(T>t \;\middle|\; T_1= t_1 \right) \cdot f(t_1) \dd{t_1}
 \end{align}
@@ -986,8 +987,7 @@ Pr(T>t) &= \int_{0}^{\infty} R(t-t_1) f(t_1) \dd{t_1} \label{eq:unfinishedint}
 
 \eqref{eq:unfinishedint} cannot be further processed, since it depends on the exact form of the \(R\) reliability function.
 
-In order to provide some indicative results, we will assume a typical reliability function for all components:
-\begin{marginfigure}
+\begin{marginfigure}%
 	\centering
 	\begin{tikzpicture}[scale=.7]
 	\begin{axis}[
@@ -1005,7 +1005,8 @@ In order to provide some indicative results, we will assume a typical reliabilit
 	\end{axis}
 	\end{tikzpicture}
 	\caption{The reliability function of \eqref{eq:typicalR}}
-\end{marginfigure}
+\end{marginfigure}%
+In order to provide some indicative results, we will assume a typical reliability function for all components:
 \begin{equation}
 R(t) = \begin{cases} e^{-at} &\text{ for } t \geq 0 \\ 1 & \text{ for } t < 0 \end{cases} \qquad \text{where } a>0 \label{eq:typicalR}
 \end{equation}
@@ -1015,14 +1016,14 @@ f(t) = \dv{R(t)}{t} = ae^{-at} \label{eq:typicalf}
 \end{equation}
 
 Then, \eqref{eq:unfinishedint} can be solved further:
-\marginnote[16.5ex]{From \eqref{eq:pdf}} %TODO: Check OK distance
+\marginnote[14.5ex]{From \eqref{eq:pdf}} %TODO: Check OK distance
 \begin{align*}
 Pr(T>t) &= \int_{0}^{t} R(t-t_1) f(t_1) \dd{t_1} + \int_{t}^{\infty} R(t-t_1) f(t_1) \dd{t_1}
 \\ &= \int_0^t e^{-a(t-t_1)} \cdot ae^{-at_1} \dd{t_1} + \int_{t}^{\infty} f(t_1) \dd{t_1}
 \\ &= \int_0^t ae^{-at} \dd{t_1} + R(t)
 \\ &= ate^{-at} + R(t)
 \\ &= -\ln \left(R(t)\right) \cdot R(t) + R(t)
-\\ &= R(t) \cdot (1 - \ln R(t)) \numberthis
+\\ &= R(t) \cdot (1 - \ln R(t)). \numberthis \label{eq:colddrper}
 \end{align*}
 
  
@@ -1043,7 +1044,6 @@ Pr(T>t) &= \int_{0}^{t} R(t-t_1) f(t_1) \dd{t_1} + \int_{t}^{\infty} R(t-t_1) f(
 	\item \textbf{Complex voter}, where if two components fail, the voter can switch to the remaining one, via telecommand or autonomously. This logic is rarely possible to implement, especially if mission-critical components are protected. Additionally, the increased voter complexity inherently reduces its reliability.
 	
 	For completeness purposes, we cite the reliability of the complex \acs{TMR} system, which stems from the probability that all 3 components fail within \( t \):
-
 	\begin{align}
 	R_{3c} &= 1 - (1 - R)^3
 	\label{eq:tmr_complex}
@@ -1058,17 +1058,17 @@ Pr(T>t) &= \int_{0}^{t} R(t-t_1) f(t_1) \dd{t_1} + \int_{t}^{\infty} R(t-t_1) f(
 	\label{fig:reliability_norepair}
 \end{figure}
 
-The results of \eqref{eq:dual_redun} and \eqref{eq:tmr} are shown in \Cref{fig:reliability_norepair}. It can be observed that, compared to the single component, the use of two redundant components increases the reliability of the system to a certain extent, since failures of one component can be repaired, but failures in both are catastrophic. In contrast, \textbf{\acs{TMR} introduces more points of failure}. Since failure of any combination of 2 of the 3 components is catastrophic, triple redundancy is sometimes less reliable than dual redundancy.
+The results of \eqref{eq:dual_redun}, \eqref{eq:colddrper}, \eqref{eq:tmr} and \eqref{eq:tmr_complex} are shown in \Cref{fig:reliability_norepair}. It can be observed that, compared to the single component, the use of two redundant components increases the reliability of the system to a certain extent, since failures of one component can be repaired, but failures in both are catastrophic. In contrast, \textbf{naive \acs{TMR} introduces more points of failure}. Since failure of any combination of 2 of the 3 components is catastrophic, majority logic is sometimes less reliable than dual redundancy.
 
 \paragraph{\textbf{Vulnerable Voter}}\hspace{0pt}
 \acusepage{voter}
 
 The study of a vulnerable voter circuit in \acs{TMR} is of particular interest. In the context of this analysis, we will consider the independent reliabiliy value \( R_v < 1 \) of the voter. From \autocite[31]{birolini_reliability_engineering_2004}, we have:
 \begin{align}
-R_{3+v} &= (3R^2 - 2R^3)R_v \\
+R_{3+v} &= (3R^2 - 2R^3)R_v \nonumber \\
 &= R_3R_v
 \end{align}
-and the reliability of the compound system is simply multiplied with the voter's reliability. The latter reduced the \acs{TMR} system reliability in a linear fashion.
+and the reliability of the compound system is simply multiplied with the voter's reliability. The voter reduced the \acs{TMR} system reliability in a linear fashion.
 
 \begin{figure}
 	\centering
@@ -1090,29 +1090,28 @@ In the case of hot redundancy, both components may fail, at a rate of \( \lambda
 	
 \marginnote{It is interesting to locate the failure rate where the probability of 2 failures is equal to 1\% of the probability of 1 failure, i.e. \(P(X=2) = 0.01P(X=1) \implies \frac{\lambda^2e^{-\lambda}}{2} = 0.01 \lambda e^{-\lambda } \implies \lambda = 0.02 \). So for \( \lambda < \SI{2e-2}{} \) the hypothesis is valid.}
 
-To simplify the analysis, we will assume that only 1 failure can occur in the time interval defined by the parameter \( \lambda \). This assumption is safe, as we can study short time intervals (usually seconds), where it is extremely unusual for more than 1 failure to occur.
+To simplify the analysis, we will assume that only \(k = 1\) failure can occur in the time interval defined by the parameter \( \lambda \). This assumption is safe, as we can study short time intervals (usually seconds), where it is extremely unusual for more than 1 failure to occur.
 	\begin{equation}
 	P = P(X) = \lambda e^{-\lambda}
 	\end{equation}
 	
-In hot dual redundancy, it is not always possible to identify the wrong and right output, so a failure in either component is considered a system failure. Thus, if \(X_1\) and \(X_2\) are the failure events of the 1\textsuperscript{th} and 2\textsuperscript{th} component respectively:
+In hot dual redundancy, it is not always possible to identify the wrong and correct output, so a failure in either component is considered a system failure. Thus, if \(X_1\) and \(X_2\) are the failure events of the 1\textsuperscript{st} and 2\textsuperscript{nd} component respectively:
 \begin{align}
 P_2 = P(X_1\text{ or }X_2) &= 1 - (1 - P(X))^2 \nonumber\\
 &= 1 - \left(1 - \lambda e^{-\lambda} \right)^2 \nonumber\\
 &=  2 \lambda e^{-\lambda} -\lambda^2e^{-2\lambda} \label{eq:lambda}
 \end{align}
 	
-\marginnote{Alternatively, we can ignore the negligible 2\textsuperscript{nd} term of \eqref{eq:lambda}, and have \( P_2 = 2\lambda e^{-\lambda} \). Since \(e^x \approx 1\) very close to \(x=0\), \eqref{eq:lambert_eqn} becomes:
-				\[
-				\lambda_2 = 2\lambda
-				\]
-				The above is also confirmed intuitively. After introducing 2 components, the error rate doubled.
-}%
-		
 \eqref{eq:lambda} does not follow the Poisson distribution, so it is not easy to directly derive the failure rate of the system. However, we can extract the \emph{average} failure rate, let \( \lambda_2 \), by trying to fit the Poisson distribution to the non-Poisson result:
-		\begin{align}
-		\lambda_2e^{-\lambda_2} = P_2 \label{eq:lambert_eqn}
-		\end{align}
+\begin{align}
+\lambda_2e^{-\lambda_2} = P_2 \label{eq:lambert_eqn}
+\end{align}
+\marginnote{Alternatively, we can ignore the negligible 2\textsuperscript{nd} term of \eqref{eq:lambda}, and have \( P_2 = 2\lambda e^{-\lambda} \). Since \(e^x \approx 1\) very close to \(x=0\), \eqref{eq:lambert_eqn} becomes:
+	\[
+	\lambda_2 = 2\lambda
+	\]
+	The above is also confirmed intuitively. After introducing 2 components, the error rate doubled.
+}%
 		
 	\eqref{eq:lambert_eqn} can be solved by using the Lambert W function \autocite{weisstein_lambert_wfunction_2003} defined as follows:
 \begin{align}
@@ -1152,10 +1151,11 @@ The results of \Cref{fig:reliability_norepair,fig:reliability_repair} are summar
 	
 %	\FloatBarrier
 As shown, each solution comes with a different set of positives and negatives. The use of voting can overwhelmingly reduce the failure rate for temporary failures, while the use of pure redundancy improves the behaviour on permanent failures and allows recovery from catastrophic faults.
-	
-\begin{table*}[h]
+
+\begin{table}[h]
 	\caption{Summary of reliable architecture analysis}
 	\label{tab:calcuresults}
+	\begin{adjustbox}{center}
 	\begin{tabular}{@{}rlll@{}}
 		\toprule
 		& \multicolumn{2}{l}{Tolerance to failures} & \\ \cmidrule{2-3}
@@ -1163,10 +1163,11 @@ As shown, each solution comes with a different set of positives and negatives. T
 		Single component & \color{MaterialGrey800} Normal & \color{MaterialGrey800} Normal & \color{MaterialGreen600} Low \\
 		Dual redundancy, cold & \color{MaterialGreenA700} Very good & \color{MaterialGrey800} Normal & \color{MaterialOrange900} Medium\\
 		Dual redundancy, hot & \color{MaterialGreen600} Good & \color{MaterialOrange900} Worse & \color{MaterialOrange900} Medium\\
-		\acl{TMR} & \color{MaterialTeal900} Better {\small(if \(R > 0.5\))} & \color{MaterialGreenA700} Excellent & \color{MaterialRed800} High \\ \bottomrule
+		Triple Mod. Redundancy & \color{MaterialLime800} Better {\footnotesize(if \(R > 0.5\))} & \color{MaterialGreenA700} Excellent & \color{MaterialRed800} High \\ \bottomrule
 	\end{tabular}
-	\vspace{1ex}
-\end{table*}
+	\end{adjustbox}
+	%\vspace{1ex}
+\end{table}
 
 
 
@@ -1174,17 +1175,17 @@ The final choice of architecture depends on the requirements \& needs of each pr
 
 In the AcubeSAT mission, where vulnerable \acs{COTS} components are used, the emphasis is on \emph{avoidance of catastrophic effects}. Although temporary failures can potentially degrade the experimental results and system availability, they are considered less critical than permanent ones. Especially in CubeSat projects, the \textbf{complexity} of the chosen architecture must also be taken into account, firstly in relation to the available \textbf{resources} and \textbf{time} of implementation, but also because a complex architecture can itself reduce the reliability of the system if not implemented and tested properly.
 
-The architecture chosen in AcubeSAT is as follows:
+The typical architecture chosen in AcubeSAT is as follows:
 \begin{itemize}
-	\item In \textbf{sensor} networks (e.g. temperature, pressure, magnetic field), \emph{double redundancy} is applied, and the possibility of recovering from the loss of a sensor is given.
+	\item In \textbf{sensor} networks (e.g.\ temperature, pressure, magnetic field), \emph{dual redundancy} is applied, and the possibility of recovering from the loss of a sensor is given.
 	\item For components with \textbf{flight heritage} that have proven their functionality in other missions, it is assumed that the \( R \) value is high enough, and no form of redundancy is implemented.
-	\item Specifically for microcontrollers, the chosen option is to use a more expensive \textbf{radiation-resistant} microcontroller, with an inherently higher \( R \) (\Cref{sec:obdh}), rather than attempting to increase \( R \) using redundancy.
+	\item Specifically for microcontrollers, the chosen option is to use a more expensive \textbf{radiation-resistant} \acs{MCU}, with an inherently higher \( R \) (\Cref{sec:obdh}), rather than attempting to increase \( R \) using redundancy.
 \end{itemize}
 
 \FloatBarrier
 \section{Detailed \acs{FDIR} Actions}
 
-The following section presents a list of the implemented methods to detect, prevent and recover from errors occurring on the satellite. For each possible failure identified in \acs{FMEA} \autocite{retselis_acubesat_fmea_2020}, one or more detection and correction methods are selected from these tables, and tailored to the respective element.
+The following section presents a list of the implemented methods to detect, prevent and recover from errors occurring on the satellite. For each possible failure identified in \acs{FMEA} \autocite{retselis_acubesat_fmea_2020}, one or more detection and correction methods are selected from \Cref{tab:fdir_detect,tab:fdir_preventive,tab:fdir_correction}, and tailored to the respective element.
 
 
 \clearpage
@@ -1198,16 +1199,16 @@ The following section presents a list of the implemented methods to detect, prev
 		\toprule
 		Level & Method & Description \\ \midrule
 		Unit & \textbf{Self-test does not return a correct value} & Connected peripherals may have self-test capabilities or may have stored default values that cannot be changed. \\
-		Unit & \textbf{Value out of range} & Unexpected sensor values may indicate actually dangerous environmental conditions, or simply faulty (e.g. \acs{SEFI}) sensors. Double or triple redundancy can increase observability in this case. \\
+		Unit & \textbf{Value out of range} & Unexpected sensor values may indicate actually dangerous environmental conditions, or simply faulty (e.g.\ \acs{SEFI}) sensors. Dual or triple redundancy can increase observability in this case. \\
 		Unit & \textbf{Sampled sensor values very different} & \\
 		Unit & \textbf{No response or incoherent values} & The unit or interface may be faulty. \\
 		Unit & \textbf{Abnormally high current consumption} & May be observed in units suffering from short circuits or \acs{SEL}. \\
 		Unit & \textbf{Scrubbing error} & Error correction and detection algorithms can indicate bit flips. \\
 		Subsystem & \textbf{No response to \acs{CAN} commands} & May be due to failure of the subsystem, or the \acs{CAN} transceiver. \\
-		System & \textbf{No \acs{TC} have been received for some time} & The \acs{GS} sends periodic ``refresh'' commands to the satellite on each pass. Failure to receive means loss of communication. \\
+		System & \textbf{No \acsp{TC} have been received for some time} & The \acs{GS} sends periodic ``refresh'' commands to the satellite on each pass. Failure to receive means loss of communication. \\
 		Software & \textbf{Hardware exception} & May be due to division by 0, attempting to access inaccessible memory, etc. \\
-		Software & \textbf{Assertion failed} & C \texttt{assert} function \\
-		Software & \textbf{Unexpected microcontroller reset} & \\
+		Software & \textbf{Assertion failed} & Using the C \texttt{assert} function \\
+		Software & \textbf{Unexpected microcontroller reset} & Possibly a watchdog trigger \parencite{beningo_review_watchdog_2018} or bug \\
 		Software & \textbf{\acs{TMR} variables wrong} & \\ \bottomrule
 	\end{tabularx}
 \end{table*}
@@ -1225,21 +1226,21 @@ The following section presents a list of the implemented methods to detect, prev
 		\# & Level & Action \\ \midrule
 		1 & Hardware & Radiation-tolerant microcontroller \\
 		2 & Hardware & Microcontroller watchdogs \parencite{beningo_review_watchdog_2010} \\
-		3 & Hardware & System-level wathcdogs \\
+		3 & Hardware & System-level watchdogs \\
 		4 & Hardware & Hardware error correction \& detection algoritmhs \\
-		5 & Hardware & Dual in software memory \\
+		5 & Hardware & Dual redundancy in software memory \\
 		6 & Hardware & Current-limiting circuits \\
 		7 & Hardware & Subsystem overvoltage and overcurrent protection \\
 		8 & Hardware & Use of radiation-resistant \acs{MRAM} memory \\
 		9 & Hardware & Dual redundancy in sensors \\
 		10 & Hardware & Derating in power electronics \\
-		11 & Hardware & Placement of vulnerable components close to the centre to reduce the effect of radiation \\
+		11 & Hardware & Placement of vulnerable components close to the centre of \acsp{PCB} to reduce the effect of radiation dose \\
 		12 & Hardware & Selection of components with available radiation test results \\
-		13 & Hardware & Double redundancy on the \acs{CAN} bus \\
+		13 & Hardware & Dual redundancy on the \acs{CAN} bus \\
 		14 & Software & Parity bit in the \acs{CAN} messages \\
 		15 & Software & Software error detection \& correction algorithms \\
 		16 & Software & Failure and power loss tolerant filesystem \\
-		17 & Software & Input filtering \acs{ADCS} \\
+		17 & Software & \acs{ADCS} input filtering \\
 		18 & Operational & Automatic periodic restarts \\
 		19 & Operational & Avoidance of dangerous operations in areas with high radiation levels \\
 		20 & Operational & Evaluation of available resources \& budgets before starting a subexperiment \\ \bottomrule
@@ -1262,9 +1263,9 @@ The following section presents a list of the implemented methods to detect, prev
 		Unit & \textbf{Power-cycle unit} & Some errors cannot be corrected until the power to the affected unit is cut off. Radiation-induced \acsp{SEL} are the main reason for this. \\
 		Module & \textbf{Isolate unit} & If a module cannot be repaired, the next step is to ignore its values and/or to disconnect its power supply, so that the rest of the system is not affected by its erroneous outputs. \\
 		Subsystem & \textbf{Power-cycle subsystem} & Radiation or other failures can lead a subsystem into an unexpected state, from which it can only escape by restarting. \\
-		Subsystem & \textbf{Reconfigure subsystem} & If a permanent failure cannot be corrected by a reboot, the spacecraft should attempt to resume normal operation. This can be done by changing the default configuration of a subsystem, e.g. by selecting different sensors, by changing the functionality of the subsystem, or by delegating its tasks to another module. \\
-		System & \textbf{Abort current function} & The currently running process (e.g. experiment initialisation, \acs{TM} transmission) can be interrupted, as long as this action does not affect the safety of the system. \\
-		System & \textbf{Enter safe mode} & This is the last step in the corrective efforts. The satellite enters safe mode to prevent further propagation of the fault, when all other actions have failed to resolve the issue. \\ \bottomrule
+		Subsystem & \textbf{Reconfigure subsystem} & If a permanent failure cannot be corrected by a reboot, the spacecraft should attempt to resume normal operation. This can be done by changing the default configuration of a subsystem, e.g.\ by selecting different sensors, by changing the functionality of the subsystem, or by delegating its tasks to another module. \\
+		System & \textbf{Abort current function} & The currently running process (e.g.\ experiment initialisation, \acs{TM} transmission) can be interrupted, as long as this action does not affect the safety of the system. \\
+		System & \textbf{Enter safe mode} & This is the last option in the corrective efforts. The satellite enters Safe Mode to prevent further propagation of the fault, when all other actions have failed to resolve the issue. \\ \bottomrule
 	\end{tabularx}
 \end{table*}
 
@@ -1284,11 +1285,12 @@ Once the recovery actions are completed, the responsibility shifts to the operat
 
 The typical flow shown in \Cref{fig:generalflow} describes the usual process of resolving a failure on the satellite. More specifically:
 \begin{enumerate}
-	\item If an observed parameter is out of bounds, a fix is first attempted at the unit level with \textbf{simple actions} (e.g. reset, power-cycle).
+	\item If an observed parameter is out of bounds, a fix is first attempted at the unit level with \textbf{simple actions} (e.g.\ reset, power-cycle).
 	\item If the failure persists, then a subsystem-level resolution is attempted. For critical components, this may mean restarting the entire subsystem; otherwise, it may mean simply powering down the unit.
 	
-	\marginnote{An alternative method of implementation is to define a parameter indicating the state or current step of \acs{FDIR} for each module, and have monitoring definitions triggered according to the value of this parameter.}
-	In technical terms, the separation between the component and subsystem levels is achieved by appropriate usage of the \textbf{\texttt{ST[12]} on-board monitoring service} (\Cref{sec:pus}). Using the \textbf{repetition number} parameter, the operator can set the failure duration thresholds, which are then used to differentiate between the type of recovery actions applied. For example, \( 2 \) out-of-limits measurements lead to a sensor restart, while 5 out-of-limits measurements can lead to complete isolation/deactivation.
+	In technical terms, the separation between the component and subsystem levels is achieved by appropriate usage of the \textbf{\texttt{ST[12]} on-board monitoring service} (\Cref{sec:pus}). Using the \textbf{repetition number} parameter, the operator can set the failure duration thresholds, which are then used to differentiate between the type of recovery actions applied. 	\marginnote[-3ex]{An alternative method of implementation is to define a parameter indicating the state or current step of \acs{FDIR} for each module, and have monitoring definitions triggered according to the value of this parameter.}
+	For example, \textbf{2} out-of-limits measurements lead to a sensor \textbf{restart}, while \textbf{5} out-of-limits measurements can lead to complete isolation/\textbf{deactivation}.
+
 	\item If the failure persists but is not critical, the unit and its \acs{FDIR} are permanently disabled, and the subsystem is reconfigured if necessary.
 	
 	At this point it should be emphasised that the disabled unit should not contribute to any of the satellite's operations. The \texttt{ST[12]} service allows the use of \textbf{check validity conditions}, which can disable a check if it refers to a disabled device or other conditions that prevent it.
@@ -1300,11 +1302,11 @@ All of the above are executed in the background of each microcontroller as an \a
 \subsection{Safe Mode}
 \label{itm:safe_mode}
 
-\begin{figure*}[h]
+\begin{figure}[h]
 	\includegraphics{FDIRsafe}
 	\caption{\acs{FDIR} flow in safe mode}
 	\label{fig:safeflow}
-\end{figure*}
+\end{figure}
 
 
 The goal of \emph{Safe Mode} is to provide a robust, well-tested and deterministic state where the satellite can operate autonomously, until the operators can remedy the mission-threatening failure. The \acs{FDIR} in Safe Mode also follows the \acs{PUS} principles and AcubeSAT's requirements (\Cref{sec:fdirbaspri}), continuing to allow on-the-fly modifications by operators.
@@ -1315,14 +1317,14 @@ The generic architecture for \acs{FDIR} during Safe Mode is shown in \Cref{fig:s
 	\item Isolating components and reconfiguring subsystems accordingly. The smaller number of active components in Safe Mode translates to a safer design and testing process.
 \end{itemize}
 
-AcubeSAT's operators are responsible for determining the cause of the failure and required actions as soon as they receive the telemetry announcing the failure, and must intervene immediately after a safe course of action has been decided. Exit from Safe Mode can \emph{only} be made after \acs{TC}, and only after the initial fault has been corrected and no other faults are evident (e.g. due to fault propagation).
+AcubeSAT's operators are responsible for determining the cause of the failure and required actions as soon as they receive the telemetry announcing the failure, and must intervene immediately after a safe course of action has been decided. Exit from Safe Mode can \emph{only} be made after \acs{TC}, and only after the initial fault has been corrected and no other faults are evident (e.g.\ due to fault propagation).
 
 The actions that operators can take to recover from failures are:
 \begin{compactitem}
 	\item Modify the satellite configuration via the \acs{ECSS} services.
-	\item More often, changing the satellite's \textbf{software}, by uploading updated binary images\footnote{This process requires the execution of a full software test campaign on the ground, and a reliable process of reprogramming the satellite in orbit \autocite[45]{DDJF_OBSW}.}
+	\item More often, change the satellite's \textbf{software}, by uploading updated binary images\footnote{This process requires the re-execution of a full software test campaign on the ground, and a reliable process of reprogramming the satellite in orbit \autocite[45]{DDJF_OBSW}.}
 	\item Permanently deactivate all defective units
-	\item Wait until the satellite is in favourable connditions
+	\item Wait until the satellite is in favourable environmental (orbital, thermal, solar) conditions
 	\item None, if the fault was detected by mistake, or corrected automatically
 \end{compactitem}
 
@@ -1330,7 +1332,7 @@ The actions that operators can take to recover from failures are:
 \section{Next steps}
 The combination of \acs{FMEA} and \acs{HSIA} of AcubeSAT contains 928 potential failures, of which 185 are considered critical items \autocite{retselis_acubesat_fmea_2020}.
 
-After formulating the architecture and design of the \acs{FDIR}, its implementation follows. For this purpose, the team has developed a library that implements the \acs{PUS}\footurl{https://gitlab.com/acubesat/obc/ecss-services} services and can meet the needs of this section.
+After formulating the architecture and design of the \acs{FDIR}, its implementation follows. For this purpose, the team is developing a library that implements the \acs{PUS} services\footurl{https://gitlab.com/acubesat/obc/ecss-services} and can meet the needs of this section.
 
 Verification of \acs{FDIR} is the last part of the process, and involves checking for any feared event through hardware or software simulation.
 
@@ -1735,7 +1737,7 @@ The \ac{HSIA} adds the following significant pieces of information to the \ac{FM
 	
 	It is important to note that no single out-of-bounds value can trigger a recovery action. This is recommended in order to prevent transient errors or temporary communication protocol issues from triggering an unnecessary response which might disable a well-functioning component.
 	
-%	\marginnote{\textbf{Temporary failure}: Caused by events such as bit flips, noise or transients, and can be corrected without intervention, or with a simple restart/power-cycle.\par\textbf{Permament failure}: A failure (typically in hardware, e.g. due to latchups or short-circuits) that cannot be corrected autonomously.}
+%	\marginnote{\textbf{Temporary failure}: Caused by events such as bit flips, noise or transients, and can be corrected without intervention, or with a simple restart/power-cycle.\par\textbf{Permament failure}: A failure (typically in hardware, e.g.\ due to latchups or short-circuits) that cannot be corrected autonomously.}
 	The distinction between \emph{temporary} and \emph{permanent} failures is made by \textbf{counting the number of consecutive failures}. Before a permanent action to disable a sensor is enacted, at least 5 attempts to communicate must have failed.
 	
 	The use of 2 hot-redundant sensor also allows us to investigate the difference between the two temperatures to deduce the health of the produced data. If the absolute difference between the 2 values is too high, assuming the sensors are placed close enough together, an error condition is assumed. However, as triple modular redundancy was not implemented for this system, it is not possible to deduce which sensor has failed.
@@ -2358,7 +2360,7 @@ The differential case recovery actions are similar to the single case (\texttt{F
 \FloatBarrier
 \paragraph{\textbf{\texttt{F-060}: \acs{I2C} bus pin output stuck}}\hspace{0pt}
 
-This failure is simulated by connecting an extra cable. Generally, in cases of cable harness modifications, care must be taken so that connections that can harm the test system (e.g. short circuits) are avoided, especially if there are no suitable protection circuits.
+This failure is simulated by connecting an extra cable. Generally, in cases of cable harness modifications, care must be taken so that connections that can harm the test system (e.g.\ short circuits) are avoided, especially if there are no suitable protection circuits.
 
 \subparagraph{Procedure}
 \begin{compactenum}
@@ -2427,7 +2429,7 @@ The level of reconfigurability possible is defined by requirements listed in \pa
 	\begin{tabularx}{\textwidth}{@{}lXlL{4cm}@{}}
 		\toprule
  		\# & Requirement & Service & Details \\ \midrule
-		\texttt{RC-010} & The reporting of FDIR activities shall contain all information for failure analysis (e.g. time of occurrence, parameter out‐of‐limit, switching performed). & ST[12] on-board monitoring & Via periodic \emph{check transition reports} \\
+		\texttt{RC-010} & The reporting of FDIR activities shall contain all information for failure analysis (e.g.\ time of occurrence, parameter out‐of‐limit, switching performed). & ST[12] on-board monitoring & Via periodic \emph{check transition reports} \\
 		\texttt{RC-020} & The capability shall be provided to enable and to disable any on‐board FDIR function by telecommand. & ST[12] on-board monitoring & Via \emph{enable}/\emph{disable} \emph{parameter monitoring definitions} commands  \\
 		\texttt{RC-030} & The capability shall be provided to add and delete parameters from the on‐board monitoring list. & ST[12] on-board monitoring & Via \emph{add}/\emph{delete} \emph{parameter monitoring definitions} commands  \\
 		\texttt{RC-040} & The capability shall be provided to modify the failure recovery actions associated with each on-board monitoring definition. & ST[19] event-action & Via \emph{add}, \emph{delete}, \emph{enable} and \emph{disable} \emph{event-action definitions} commands \\ \bottomrule
@@ -2578,7 +2580,7 @@ Despite the potential offered by such a system, we noted the following implement
 \begin{itemize}
 	\item A hasty implementation of \acs{FDIR} can lead to a large increase in complexity, and difficulty managing all reliability definitions. Complexity increases the possibility of human error, undetected errors, and system malfunction. In non-critical systems, it is suggested that the number of definitions be limited to a manageable number, preventing over-design. In our example, monitoring of the \(\Delta\) difference of temperatures could be skipped, in favour of triggering a system restart only when both sensors are out of range.
 	\item The different types of parameter variables (\mintinline{cpp}{uint16_t}, \mintinline{cpp}{uint32_t}, \mintinline{cpp}{float} etc.) pose technical challenges in type-safe environments (such as that of C++), and it may be necessary to use more ``unsafe'' structures and pointers, rather than a templated implementation.
-	\item It is important to consider the correlations between monitoring definitions, and to ensure that one definition does not cause another to trigger faster or slower (e.g. due to a sensor restart that resets all other definitions).
+	\item It is important to consider the correlations between monitoring definitions, and to ensure that one definition does not cause another to trigger faster or slower (e.g.\ due to a sensor restart that resets all other definitions).
 	\item The \texttt{ECSS-E-ST-70-41C} standard does not provide flexibility in defining ``smart'' parameters, and data such as the \emph{difference between values} must be manually defined in the code. In addition, there is reduced flexibility in defining multiple event-action definitions, as each event can be associated with only one configurable reaction.
 \end{itemize}
 
@@ -2600,7 +2602,7 @@ In addition to the continued implementation of \acs{FDIR} on the nanosatellite, 
 	\item Comparison with other satellite control architectures and \acs{FDIR} philosophies typically used in the industry \parencite{NASA-HDBK-1002,zolghadri_advanced_modelbased_2012}
 	\item Extension of the theoretical analyses (\Cref{sec:theoretical}) and incorporation of parameters such as cost \parencite{chang_development_reliabilitycorrected_2013}, complexity, past experience and further architectures
 	\item Study of modern reliability assessment techniques and their application to the nanosatellite, during design or in orbit
-	\item Planning of tests to extract actual component reliability results (e.g. heavy ion radiation tests)
+	\item Planning of tests to extract actual component reliability results (e.g.\ heavy ion radiation tests)
 \end{itemize}
 
 
