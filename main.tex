@@ -1343,8 +1343,8 @@ As a proof of concept for AcubeSAT's \ac{FDIR} implementation, a practical setup
 \begin{compactitem}
 	\item A Cortex-M7 \textbf{microcontroller}, used to simulate a \textbf{satellite subsystem}
 	\item A number of redundant \textbf{sensors} used as the potential failure points
-	\item The accompanying \textbf{software} that includes an implementation of the \ac{ECSS} services and the \ac{SAVOIR} \ac{FDIR} methodology
-	\item A desktop computer, serving as the \textbf{ground station} to provide the necessary commanding and observing capabilities
+	\item The accompanying \textbf{software} that includes an implementation of the \acs{ECSS} services and the \acs{SAVOIR} \acs{FDIR} methodology
+	\item A desktop computer, serving as the \textbf{\acl{GS}} to provide the necessary commanding and observing capabilities
 \end{compactitem}
 
 \begin{figure*}[h]
@@ -1353,6 +1353,7 @@ As a proof of concept for AcubeSAT's \ac{FDIR} implementation, a practical setup
 	\label{fig:block}
 \end{figure*}
 
+\pagebreak[4]
 \section{System Description}
 
 \subsection{Functionality}
@@ -1370,31 +1371,30 @@ In order to justify implementing an \ac{FDIR} approach for this system, we will 
 
 The detailed design of this simple demonstration system is presented in the following sections, and was architected to match the functionality, interfaces, design and software of the AcubeSAT nanosatellite as much as possible.
 
+\subsection{Hardware}
+
+The centre of the demonstration system is the \ac{MCU} used to simulate the design and functionality of one of AcubeSAT's subsystems (\Cref{sec:obdh}). The selected \ac{MCU} is the Atmel \texttt{ATSAMV71Q21} hosted on the \foothref{https://www.microchip.com/Developmenttools/ProductDetails/ATSAMV71-XULT}{\texttt{ATSAMV71-XULT}} development board. This \ac{MCU} is functionally identical to the one that will be used in orbit, featuring a 32-bit ARM Cortex-M7 core with \SI{2}{\mebi\byte} of flash and \SI{384}{\kibi\byte} of \acs{SRAM} memory, and a maximum clock speed of \SI{300}{\mega\hertz}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=.7\textwidth]{atsamv71xult}
+	\caption{Manufacturer's photo of the \texttt{ATSAMV71-XULT} development board}
+\end{figure}
+
 \begin{figure}
 	\includegraphics{test-system}\par
 	\vspace*{3ex}
 	\includegraphics{system_top}
-	\caption[The complete development system]{The complete development system. On the left is the blue development board of the \acs{MCU}. On the right is the breadboard housing the two temperature sensors. The cabling between the breadboard and the \acs{MCU} can also be discerned. The two bright \acsp{LED} show if the adjacent component is receiving power or not.}
+	\caption[The complete development system]{The complete development system. On the left is the blue development board of the \acs{MCU}. On the right is the breadboard housing the two temperature sensors. The cabling between the breadboard and the \acs{MCU} can also be discerned. The two installed \acsp{LED} show if the adjacent component is receiving power or not.}
 \end{figure}
 \acuse{LED}
-
-\subsection{Hardware}
-
-\begin{figure}
-      \centering
-      \includegraphics[width=.7\textwidth]{atsamv71xult}
-      \caption{Manufacturer's photo of the \texttt{ATSAMV71-XULT} development board}
-\end{figure}
-
-
-The centre of the demonstration system is the \ac{MCU} used to simulate the design and functionality of one of AcubeSAT's subsystems (\Cref{sec:obdh}). The selected \ac{MCU} is the Atmel \texttt{ATSAMV71Q21} hosted on the \foothref{https://www.microchip.com/Developmenttools/ProductDetails/ATSAMV71-XULT}{\texttt{ATSAMV71-XULT}} development board. This \ac{MCU} is functionally identical to the one that will be used in orbit, featuring a 32-bit ARM Cortex-M7 core with \SI{2}{\mebi\byte} of flash and \SI{384}{\kibi\byte} of \acs{SRAM} memory, and a maximum clock speed of \SI{300}{\mega\hertz}.
 
 \begin{marginfigure}
 	      \includegraphics{mcp9808}
 	      \caption{The MCP9808 temperature sensor, soldered onto the breakout \acs{PCB}}
 \end{marginfigure}
 
-The \ac{MCU} is accompanied by two \textbf{temperature sensors} which are used to simulate subsystem components which are prone to failure. The selected sensor is the Microchip \foothref{https://www.microchip.com/wwwproducts/en/MCP9808}{\texttt{MCP9808}} which offers an accurate and frequent temperature readout over an \ac{I2C} bus. The maximum acquisition interval for the sensor is \SI{250}{\milli\second}.
+The \ac{MCU} is accompanied by two \textbf{temperature sensors} which are used to simulate subsystem components that are prone to failure. The selected sensor is the Microchip \foothref{https://www.microchip.com/wwwproducts/en/MCP9808}{\texttt{MCP9808}} which offers an accurate and frequent temperature readout over an \ac{I2C} bus. The maximum acquisition interval for the sensor is \SI{250}{\milli\second}.
 
 \marginnote{%
 \textbf{Cold redundancy:} Only one component is operating, while the others are not.
@@ -1404,30 +1404,34 @@ The \ac{MCU} is accompanied by two \textbf{temperature sensors} which are used t
 \textbf{Hot redundancy:} Two or more simultaneously active parts operate in parallel \autocite{SAVOIR-HB-003}.
 }
 
-The two sensors are wired in a \textbf{hot-redundant} configuration, due to their extremely low operating power. The two sensors are connected to different \ac{I2C} buses, so that the failure of one bus will not affect the operation of the other sensor.
+The two sensors are wired in a \textbf{hot-redundant} configuration, allowed by their extremely low operating power. The two sensors are connected to different \ac{I2C} buses, so that the failure of one bus will not affect the operation of the other sensor.
 
-\paragraph{\acs{USB} interface} In order to receive \acl{TM} and transmit \acl{TC} to the demonstrative space segment, a \acs{USB} link with a desktop computer is integrated into the design. This link uses the \acs{UART} peripheral of the microcontroller, which solely transfers \acs{ECSS} messages between the microcontroller and the desktop. These messages include the typical \acs{TM} reports and \acs{TC} requests, but also log messages intended for diagnostic purposes.
+\paragraph{\acs{USB} interface} In order to receive \acl{TM} and transmit \acl{TC} to the demonstrative space segment, a \acs{USB} link with a desktop computer is integrated into the design. This link uses the \acs{UART} peripheral of the microcontroller, which solely transfers \acs{ECSS} messages between the microcontroller and the desktop. These messages include the typical \acs{TM} reports and \acs{TC} requests, but also textual log messages intended for diagnostic purposes.
 
 As the \acs{UART} protocol does not offer packetisation facilities by default, \ac{COBS} encoding \autocite{cheshire_consistent_overhead_1997} is implemented for all transmitted messages.
 
+\paragraph{Connections}
+The development board and sensors were laid out and connected directly. The sensor \acp{IC} were soldered on breakout \acp{PCB} which were manufactured based on Jaroslav Sýkora's design.\footnote[][-2ex]{\url{https://bit.ly/3vZwuh1}}
+
+The electrical schematic of the implementation is shown in \Cref{fig:schematic}.
+The two sensors are wired via \ac{I2C} with the necessary pull-up resistors. Their power is controlled directly by microcontroller outputs, allowing the user to completely cut the power of the sensors if needed. The \texttt{A} pins of the sensors are arbitrarily set to select the \ac{I2C} address of each device. The same address was used, as the two \ac{I2C} buses are separate.
+
 \begin{figure*}[h]
 	\includegraphics{ElectricalSchematic}
-	\caption[Simplified electrical schematic of the implementation]{Simplified electrical schematic of the implementation. The two sensors are wired via \ac{I2C} with the necessary pull-up resistors. Their power is controlled directly by microcontroller outputs, allowing the user to completely cut the power of the sensors if needed. The \texttt{A} pins of the sensors are arbitrarily set to select the \ac{I2C} address of each device. The same address was used, as the two \ac{I2C} buses are separate. Decoupling capacitors, crystals and other boilerplate components are not shown, as they are already included in the \ac{MCU} development board.}
+	\caption[Simplified electrical schematic of the implementation]{Simplified electrical schematic of the implementation. Decoupling capacitors, crystals and other boilerplate components are not shown, as they are already included in the \ac{MCU} development board.}
 	\label{fig:schematic}
 \end{figure*}
 
-\paragraph{Connections}
-The development board and sensors were laid out and connected directly. The sensor \acp{IC} were soldered on breakout \acp{PCB} which were manufactured based on Jaroslav Sýkora's design.\footnote{\url{https://bit.ly/3vZwuh1}}
-
+\FloatBarrier
 \section{Software}
 
 \subsection{Flight Segment}
 
-All \ac{FDIR} operations and functionality are developed using the \textbf{C++} language\footnote{The \texttt{C++17} standard has been selected} on the \ac{MCU}. All developments rely on free and open source software which is freely available for download and modification. The \foothref{https://git-scm.com/}{Git} version control is used for all software projects.
+All \ac{FDIR} operations and functionality are developed using the \textbf{C++} language\footnote{The \texttt{C++17} standard has been selected} on the \ac{MCU}. All developments rely on free and open source software which is freely available for download and modification. \foothref{https://git-scm.com/}{Git} version control is used for all software projects.
 
-The \ac{FDIR} functionality is structured around the \textbf{ECSS-E-ST-70-41C \ac{PUS} implementation created by the AcubeSAT team}\footnote{\url{https://gitlab.com/acubesat/obc/ecss-services}}, which offers a modular implementation of the standard utilising modern C++.
+The \ac{FDIR} functionality is structured around the \textbf{ECSS-E-ST-70-41C \ac{PUS} implementation created by the AcubeSAT team},\footnote{\url{https://gitlab.com/acubesat/obc/ecss-services}} which offers a modular implementation of the standard utilising modern C++.
 
-The \ac{MCU} software and business logic are built on \textbf{\foothref{https://www.freertos.org/}{Free\acs{RTOS}}}, a low-footprint real-time operating system targeted towards embedded devices. FreeRTOS provides the capability of safe concurrency, along with support for well-controlled tasks and a number of synchronisation primitives.
+The \ac{MCU} software and business logic are built on \foothref[,]{https://www.freertos.org/}{\textbf{Free\acs{RTOS}}} a low-footprint real-time operating system targeted towards embedded devices. FreeRTOS provides the capability of safe concurrency, along with support for well-controlled tasks and a number of synchronisation primitives.
 
 \begin{table*}[h]
 	\centering
@@ -1437,36 +1441,39 @@ The \ac{MCU} software and business logic are built on \textbf{\foothref{https://
 	\begin{tabularx}{\textwidth}{@{}llX@{}}
 		\toprule
 		Name & Stack size & Description \\ \midrule
-		\texttt{Internal\_Temp} & \SI{2.5}{\kilo\byte} & Receives diagnostic measurements from the internal \acs{MCU} temperature sensoor, and blinks an \acs{LED} for observability purposes \\
+		\texttt{Internal\_Temp} & \SI{2.5}{\kilo\byte} & Receives diagnostic measurements from the internal \acs{MCU} temperature sensor, and blinks an \acs{LED} for observability purposes \\
 		\texttt{ECSS} & \SI{3}{\kilo\byte} & Executes the periodic processes dictated by the \acs{ECSS} services. This includes beacon transmission and evaluation of the on-board monitoring definitions. This task essentially implements \acs{FDIR}. \\
-		\texttt{\acs{UART}\_Tx} & \SI{3}{\kilo\byte} & Transmission of \acs{UART} messages to the computer. This task works as a ``gatekeeper task'', and is the only one that can send \acs{UART} messages. All other task communicate with this one via a Free\acs{RTOS} stack. \\
+		\texttt{\acs{UART}\_Tx} & \SI{3}{\kilo\byte} & Transmission of \acs{UART} messages to the computer. This task works as a ``gatekeeper task'', and is the only one that can send \acs{UART} messages. All other tasks communicate with this one via a Free\acs{RTOS} stack. \\
 		\texttt{\acs{UART}\_Rx} & \SI{6}{\kilo\byte} & Reception of \acs{UART} messages from the computer. For simplicity, this task is also responsible for the execution of such received commands. \\
 		\texttt{T1} & \SI{1.5}{\kilo\byte} & Communication with temperature sensor \#1 and update of relevant \acs{ECSS} parameters \\
 		\texttt{T2} & \SI{1.5}{\kilo\byte} & Communication with temperature sensor \#2 and update of relevant \acs{ECSS} parameters \\ \bottomrule
 	\end{tabularx}
 \end{table*}
 
+To ensure high reliability and a low resource footprint of the software, the following \textbf{constraints} are enacted in C++ development:
+\begin{compactenum}
+	\item Dynamic memory allocation\footnote{Use of \mintinline{cpp}{malloc}, \mintinline{cpp}{new} etc.} is banned completely from the code.
+	\label{itm:malloc}
+	\item \Cref{itm:malloc} means that standard C++ containers cannot be used. Instead, the \foothref{https://www.etlcpp.com/}{\acf{ETL}} is integrated in the software.
+	\item ``Expensive'' features such as Run-Time Type Inference, Dynamic Casts or Exceptions are also prohibited.
+\end{compactenum}
+
+The \href{https://www.microchip.com/en-us/development-tools-tools-and-software/embedded-software-center/mplab-harmony-v3}{MPLAB Harmony}\footnote[][1.5cm]{\url{https://www.microchip.com/en-us/development-tools-tools-and-software/embedded-software-center/mplab-harmony-v3}} \ac{HAL} and configurator are used to interface with all the \acs{MCU}'s peripherals. \foothref{https://www.jetbrains.com/clion/}{CLion} has been selected as the \acs{IDE}, along with the \foothref{https://cmake.org/}{CMake} build system.
+
+All software developed in the scope of this thesis is available online, and listed in \Cref{tab:new_software}. A summary of used libraries can also be found in \Cref{tab:old_software}.
+
 \begin{figure*}[h]
+	\vspace{1cm}
 	\includegraphics{SoftwareFlow}
 	\caption{View of the software components and the data flow between them}
 	\label{sec:softwareflow}
 \end{figure*}
 
-To ensure high reliability and a low resource footprint of the software, the following \textbf{constraints} are enacted in C++ development:
-\begin{compactenum}
-	\item Dynamic memory allocation\footnote{Use of \texttt{malloc}, \texttt{new} etc.} is banned completely from the code.
-	\label{itm:malloc}
-	\item \Cref{itm:malloc} means that standard C++ containers cannot be used. Instead, the \foothref{https://www.etlcpp.com/}{\acf{ETL}} is integrated in the software.
-	\item ``Expensive'' features such as Run-Time Type Inference, Dynamic Casts or exceptions are also prohibited.
-\end{compactenum}
-
-The \foothref{https://www.microchip.com/en-us/development-tools-tools-and-software/embedded-software-center/mplab-harmony-v3}{MPLAB Harmony} \ac{HAL} and configurator are used to interface with all the \acs{MCU}'s peripherals. \foothref{https://www.jetbrains.com/clion/}{CLion} has been selected as the \acs{IDE}, along with the \foothref{https://cmake.org/}{CMake} build system.
-
-All software developed in the scope of this thesis is available online, and listed in \Cref{tab:new_software}. A summary of used libraries can also be found in \Cref{tab:old_software}.
-
+\FloatBarrier
 \begin{table*}[h]
 	\centering
 	\caption[][5pt]{List of new software developed for this thesis}
+	\renewcommand{\arraystretch}{1.2}
 	\label{tab:new_software}
 	\begin{tabularx}{\textwidth}{@{}lXp{6cm}@{}}
 		\toprule
@@ -1479,10 +1486,10 @@ All software developed in the scope of this thesis is available online, and list
 
 \begin{table*}[h]
 	\centering
-	\vspace{2em}
 	\caption[][5pt]{List of used ``off-the-shelf'' software libraries}
 	\renewcommand{\arraystretch}{1.5}
 	\label{tab:old_software}
+	\vspace{1.3cm}
 	\begin{tabularx}{\textwidth}{@{}lp{6cm}X@{}}
 		\toprule
 		Library name & Description & Modifications \\ \midrule
@@ -1525,7 +1532,6 @@ Since we are developing an embedded system with limited resources, it makes sens
 		\acs{RAM}   &   \SI{205992}{\byte}   &    \SI{384}{\kilo\byte} &     52.39\% \\ \bottomrule
 	\end{tabular}
 	\vspace{2ex}
-	\setfloatalignment{b}
 \end{table}
 
 \begin{table}[h]
@@ -1534,7 +1540,7 @@ Since we are developing an embedded system with limited resources, it makes sens
 	\label{tab:romusage}
 	\begin{tabularx}{\textwidth}{@{}S[table-format=5.0]X@{}}
 		\toprule
-		\multicolumn{1}{s}{Size (\si{\byte})} & File \\ \midrule
+		\multicolumn{1}{r}{Size (\si{\byte})} & File \\ \midrule
 		22515 & \texttt{ServicePool.cpp} \\
 		12350 & \texttt{main.cpp} \\
 		9271 & \texttt{TimeBasedSchedulingService.cpp} \\
@@ -1547,8 +1553,6 @@ Since we are developing an embedded system with limited resources, it makes sens
 		3281 & \texttt{Logger.cpp} \\
 		\bottomrule
 	\end{tabularx}
-	\vspace{2ex}
-	\setfloatalignment{b}
 \end{table}
 
 \begin{table}[h]
@@ -1557,7 +1561,7 @@ Since we are developing an embedded system with limited resources, it makes sens
 	\label{tab:ramusage}
 	\begin{tabularx}{\textwidth}{@{}S[table-format=5.0]X@{}}
 		\toprule
-		\multicolumn{1}{s}{Size (\si{\byte})} & File \\ \midrule
+		\multicolumn{1}{r}{Size (\si{\byte})} & File \\ \midrule
 		131104 & \texttt{heap\_4.c} \\
 		38088 & \texttt{ServicePool.cpp} \\
 		11192 & \texttt{UARTTask.cpp} \\
@@ -1571,11 +1575,10 @@ Since we are developing an embedded system with limited resources, it makes sens
 	\end{tabularx}
 \end{table}
 
-\vspace{2ex}
 
-Note that no attempts were made to manually optimise the memory consumption or the performance of the system. Also, note that due to the usage of the \acs{ETL} library and the ban on dynamic memory allocation, the values shown in \Cref{tab:ramusage} refer to the majority of runtime \acs{RAM} consumption. In fact, the stack used by all Free\acs{RTOS} is already listed as part of the \texttt{heap\_4.c} file.
+Note that no attempts were made to manually optimise the memory consumption or the performance of the system. Also, note that due to the usage of the \acs{ETL} library and the ban on dynamic memory allocation, the values shown in \Cref{tab:ramusage} refer to the majority of runtime \acs{RAM} consumption. In fact, the stack used by all Free\acs{RTOS} tasks is already listed as part of the \texttt{heap\_4.c} file.
 
-
+\FloatBarrier
 \subsection{\ac{I2C} Failure Detection}
 
 It is of interest to investigate how the hardware \ac{I2C} peripheral provided by the microcontroller can be used to monitor the symptoms of bus failure.
@@ -1588,7 +1591,7 @@ It is of interest to investigate how the hardware \ac{I2C} peripheral provided b
 	
 	\item \textbf{Response timeout}
 	
-	For some adverse \ac{I2C} bus conditions, such as incorrectly chosen pull-up resistor values or large amounts of capacitive load, \ac{I2C} signal integrity may be lost (\Cref{subfig:i2c_clean}). This error is not detected by the microcontroller's peripheral directly, but can be diagnosed by adding a timeout to the sensor's data readouts.
+	For some adverse \ac{I2C} bus conditions, such as incorrectly chosen pull-up resistor values or large amounts of capacitive load, \ac{I2C} signal integrity may be lost (\Cref{subfig:i2c_dirty}). This error is not detected by the microcontroller's peripheral directly, but can be diagnosed by adding a timeout to the sensor's data readouts.
 	
 	\item \textbf{Chip ID}
 	
@@ -1604,7 +1607,7 @@ It is of interest to investigate how the hardware \ac{I2C} peripheral provided b
 		\end{tabularx}
 	\end{margintable}
 	
-	It is possible that the sensor suffers a severe fault but is still able to respond to \ac{I2C} commands or set the \emph{acknowledge} bit. For this reason, a more rigid check of the sensor's status is performed before each temperature read: the \emph{permanently-set} registers of the peripheral contain values which, under nominal conditions, are hard-coded and will not change, barring hardware failure. If any value other than the expected one is return, the peripheral or the bus are assumed to have a fault.
+	It is possible that the sensor suffers a severe fault but is still able to respond to \ac{I2C} commands or set the \emph{acknowledge} bit. For this reason, a more rigid check of the sensor's status is performed before each temperature read: the \emph{permanently-set} registers of the peripheral contain values which, under nominal conditions, are hard-coded and will not change, barring hardware failure. If any value other than the expected one is returned, the peripheral or the bus are assumed to have a fault.
 \end{enumerate}
 
 \begin{figure}[h]
@@ -1632,6 +1635,7 @@ The \ac{ECSS} protocol \autocite{ECSS-E-ST-70-41C} is not supported by \acs{YAMC
 \begin{figure}[h]
 	\includegraphics{screenshots/yamcs_replay}
 	\caption{\acs{YAMCS} parameter and archive views}
+	\setfloatalignment{b}
 \end{figure}
 
 \subsection{\acs{PUS} database}
@@ -1653,38 +1657,40 @@ The application was written in HTML and Javascript, taking advantage of the WebS
 The purpose of the test setup is to observe the response of the system to any failure of the two ``vulnerable'' temperature sensors. For this purpose, we will attempt to simulate every failure mode of each sensor, and design an \ac{FDIR} implementation that anticipates all those failures.
 
 \marginnote{Double failures are not investigated in the scope of this document, as they are mostly considered only for launchers and manned missions \parencite{SAVOIR-HB-003}.}
-As a required input for the \ac{FDIR} detailed design, a \ac{FMEA} analysis needs to be prepared for the system. All \ac{FMEA} performed follows the requirements of the ECSS-Q-ST-30-02C standard.\autocite{ECSS-Q-ST-30-02C} The analysis is based on the \ac{FMEA} performed for the AcubeSAT nanosatellite,\autocite{retselis_acubesat_fmea_2020} and can be seen in \Cref{tab:fmea} for the reduced system. All expected failure modes for the two sensors are investigated, as well as a failure mode for the entire system that can be detected by correctly-operating sensors. Each of those failure modes will be later verified by injecting software or hardware modifications.
+As a required input for the \ac{FDIR} detailed design, a \ac{FMEA} analysis needs to be prepared for the system. All \ac{FMEA} performed follows the requirements of the ECSS-Q-ST-30-02C standard \autocite{ECSS-Q-ST-30-02C}. The analysis is based on the \ac{FMEA} performed for the AcubeSAT nanosatellite \autocite{retselis_acubesat_fmea_2020}, and can be seen in \Cref{tab:fmea} for the reduced system. All expected failure modes for the two sensors are investigated, as well as a failure mode for the entire system that can be detected by correctly-operating sensors. Each of those failure modes will be later verified by injecting software or hardware modifications.
 
 \begin{table*}[h]
 	\centering
 	\caption[][10pt]{\acs{FMEA} on demonstration system}
 	\label{tab:fmea}
+	\renewcommand{\arraystretch}{1.2}
 	\begin{adjustbox}{width=1.05\textwidth,center}
-	\begin{tabular}{@{}lL{4cm}L{2cm}L{1cm}L{4cm}L{2cm}L{4cm}L{1.5cm}L{3cm}@{}}
-		\toprule
-		\multicolumn{1}{l}{ID}                            & Failure Mode                     & Failure Cause(s)     & Mission Phase     & Failure effects: Local                                    & Failure effects: End effects & Failure Detection/Observable symptoms                                               & Severity level & Compensating provisions             \\ \midrule
-		\multicolumn{9}{l}{Temperature sensor MCP9808 \#1}                                                                                                                                                                                                                                                                                                                                                               \\ \midrule
-		\textbf{\texttt{F-010}}                                      & Temporary loss of function       & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-020}}                                      & Permanent loss of function       & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-030}}                                      & Short Circuit between power pins & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Current-limiting resistor           \\
-		\textbf{\texttt{F-040}}                                      & Temporary Value Shift            & Intrinsic, Radiation & All & Incorrect temperature readings                            & None                         & Temperature difference between 2 redundant sensors bigger than a safety value  & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-050}}                                      & Permanent Value Shift            & Intrinsic, Radiation & All & Incorrect temperature readings                            & None                         & Temperature difference between 2 redundant sensors bigger than a safety value  & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-060}}                                      & \acs{I2C} bus pin output stuck         & Intrinsic, Radiation, Pull-up Resistor parameter change & All & Inability to communicate with both sensors & None                         & No communication via \acs{I2C} for all temperature sensors                                & 4              & Sensors wired on separate \acs{I2C} buses \\
-		\midrule
-		\multicolumn{9}{l}{Temperature sensor MCP9808 \#2}                        \\ \midrule
-		\textbf{\texttt{F-070}}                                      & Temporary loss of function       & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-080}}                                      & Permanent loss of function       & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-090}}                                      & Short Circuit between power pins & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Current-limiting resistor           \\
-		\textbf{\texttt{F-100}}                                      & Temporary Value Shift            & Intrinsic, Radiation & All & Incorrect temperature readings                            & None                         & Temperature difference between 2 redundant sensors bigger than a safety value & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-110}}                                      & Permanent Value Shift            & Intrinsic, Radiation & All & Incorrect temperature readings                            & None                         & Temperature difference between 2 redundant sensors bigger than a safety value  & 4              & Dual-redundant temperature sensor   \\
-		\textbf{\texttt{F-120}}                                      & \acs{I2C} bus pin output stuck         & Intrinsic, Radiation, Pull-up Resistor parameter change & All & Inability to communicate with both sensors & None                         & No communication via \acs{I2C} for all temperature sensors                                & 4              & Sensors wired on separate \acs{I2C} buses \\ \midrule
-		\multicolumn{9}{l}{Subsystem}                        \\ \midrule
-		\textbf{\texttt{F-130}}                                      & Overheating       & Short circuit, Environmental & All & Vulnerable component failure             & Loss of subsystem functionality           & Measured temperature outside expected range  & 3              & Thermal analysis with uncertainty margins, overcurrent protection   \\
-		\bottomrule
-	\end{tabular}
+		\begin{tabular}{@{}lL{4cm}L{2cm}L{1cm}L{4cm}L{2cm}L{4cm}L{1.5cm}L{3cm}@{}}
+			\toprule
+			\multicolumn{1}{l}{ID}                            & Failure Mode                     & Failure Cause(s)     & Mission Phase     & Failure effects: Local                                    & Failure effects: End effects & Failure Detection/Observable symptoms                                               & Severity level & Compensating provisions             \\ \midrule
+			\multicolumn{9}{l}{Temperature sensor MCP9808 \#1}                                                                                                                                                                                                                                                                                                                                                               \\ \midrule
+			\textbf{\texttt{F-010}}                                      & Temporary loss of function       & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Dual-redundant temperature sensor   \\
+			\textbf{\texttt{F-020}}                                      & Permanent loss of function       & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Dual-redundant temperature sensor   \\
+			\textbf{\texttt{F-030}}                                      & Short Circuit between power pins & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Current-limiting resistor           \\
+			\textbf{\texttt{F-040}}                                      & Temporary Value Shift            & Intrinsic, Radiation & All & Incorrect temperature readings                            & None                         & Temperature difference between 2 redundant sensors bigger than a safety value  & 4              & Dual-redundant temperature sensor   \\
+			\textbf{\texttt{F-050}}                                      & Permanent Value Shift            & Intrinsic, Radiation & All & Incorrect temperature readings                            & None                         & Temperature difference between 2 redundant sensors bigger than a safety value  & 4              & Dual-redundant temperature sensor   \\
+			\textbf{\texttt{F-060}}                                      & \acs{I2C} bus pin output stuck         & Intrinsic, Radiation, Pull-up Resistor parameter change & All & Inability to communicate with both sensors & None                         & No communication via \acs{I2C} for all temperature sensors                                & 4              & Sensors wired on separate \acs{I2C} buses \\
+			\midrule
+			\multicolumn{9}{l}{Temperature sensor MCP9808 \#2}                        \\ \midrule
+			\textbf{\texttt{F-070}}                                      & Temporary loss of function       & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Dual-redundant temperature sensor   \\
+			\textbf{\texttt{F-080}}                                      & Permanent loss of function       & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Dual-redundant temperature sensor   \\
+			\textbf{\texttt{F-090}}                                      & Short Circuit between power pins & Intrinsic, Radiation & All & No temperature measurement from this sensor               & None                         & No communication via \acs{I2C}                                                            & 4              & Current-limiting resistor           \\
+			\textbf{\texttt{F-100}}                                      & Temporary Value Shift            & Intrinsic, Radiation & All & Incorrect temperature readings                            & None                         & Temperature difference between 2 redundant sensors bigger than a safety value & 4              & Dual-redundant temperature sensor   \\
+			\textbf{\texttt{F-110}}                                      & Permanent Value Shift            & Intrinsic, Radiation & All & Incorrect temperature readings                            & None                         & Temperature difference between 2 redundant sensors bigger than a safety value  & 4              & Dual-redundant temperature sensor   \\
+			\textbf{\texttt{F-120}}                                      & \acs{I2C} bus pin output stuck         & Intrinsic, Radiation, Pull-up Resistor parameter change & All & Inability to communicate with both sensors & None                         & No communication via \acs{I2C} for all temperature sensors                                & 4              & Sensors wired on separate \acs{I2C} buses \\ \midrule
+			\multicolumn{9}{l}{Subsystem}                        \\ \midrule
+			\textbf{\texttt{F-130}}                                      & Overheating       & Short circuit, Environmental & All & Vulnerable component failure             & Loss of subsystem functionality           & Measured temperature outside expected range  & 3              & Thermal analysis with uncertainty margins, overcurrent protection   \\
+			\bottomrule
+		\end{tabular}
 	\end{adjustbox}
 \end{table*}
 
+\FloatBarrier
 \subsection{\ac{FDIR} detailed design}
 
 \begin{figure*}[ht]
@@ -1696,12 +1702,12 @@ As a required input for the \ac{FDIR} detailed design, a \ac{FMEA} analysis need
 The \ac{FDIR} of the sensors follows the hierarchical process described in \Cref{sec:fdir_operating_modes}, which is shown in \Cref{fig:fdirtemp} as tailored for the sensors.
 
 The approach acts using the following steps, which are constantly being executed in the background:
-\marginnote{For this demonstration, we will not investigate failures of the microcontroller itself and its internals. Refer to \parencite{retselis_acubesat_fmea_2020} for AcubeSAT's \acs{FMEA} and \acs{HSIA} on the microcontrollers.}
-\begin{compactenum}
+\marginnote[2cm]{For this demonstration, we will not investigate failures of the microcontroller itself and its internals. Refer to \parencite{retselis_acubesat_fmea_2020} for AcubeSAT's \acs{FMEA} and \acs{HSIA} on the microcontrollers.}
+\begin{enumerate}
 	\item The \ac{I2C} bus health status is monitored. Any failure or lack of communication indicates a failure in the sensor's electronics.
 	\item The temperature output of the sensors is monitored. Any values which are outside the bounds of the physically possible thermal conditions are considered to indicate sensor or communication failures. Any values outside the operational limits of the subsystem's electronics are considered to indicate overheating and lead to a subsystem restart.
 	\item In order to recover from the failures, first a restart of the sensor is attempted. If the erroneous values still persist, then the sensor cannot recover from the failure, but is just isolated and disabled instead.
-\end{compactenum}
+\end{enumerate}
 
 \begin{margintable}
 	\begin{tabularx}{\linewidth}{@{}rX@{}}
@@ -1718,36 +1724,16 @@ The approach acts using the following steps, which are constantly being executed
 \clearpage
 \paragraph{\acl{HSIA}}
 
-After defining the possible failure modes and logic of the system, we are ready to analyse each entry to provide the correct software inputs to implement the required \ac{FDIR}. More specifically, for each failure, the following must be defined: \autocite[84]{SAVOIR-HB-003}
+After defining the possible failure modes and logic of the system, we are ready to analyse each entry to provide the correct software inputs to implement the required \ac{FDIR}. More specifically, for each failure, the following must be defined \autocite[84]{SAVOIR-HB-003}:
 \begin{compactitem}
 	\item Parameters to be monitored for detection
 	\item Value ranges to be used to warn that a parameter is exceeding a specified range
 	\item Isolation and reconfiguration actions to prevent failure propagation and, if possible, bring the system to a well operating state
 \end{compactitem}
 
-The above information is listed in the \acf{HSIA} table, which links each failure (identified in the \acl{FMEA}) to the corresponding low-level software parameters (\Cref{tab:hsia}).
+The above information is listed in the \textbf{\acf{HSIA}} table, which links each failure (identified in the \acl{FMEA}) to the corresponding low-level software parameters (\Cref{tab:hsia}).
 
 For the purposes of this demonstration, we will consider that all \ac{FMEA} items can lead to \emph{feared events}, i.e. that \ac{FDIR} will anticipate all identified possible failures.
-
-The \ac{HSIA} adds the following significant pieces of information to the \ac{FMEA} \autocite{ECSS-Q-ST-30-02C}:
-\begin{itemize}
-	\item The \textbf{monitored parameters} and the \textbf{conditions} that trigger the recovery action.
-	
-	These are listed here in terms of \ac{PUS} parameters which can be easily identified and compared by software. This list is then linked to the corresponding \emph{\texttt{ST[12]} on-board monitoring} service definitions, listed in \Cref{tab:demo_monitoring}.
-	
-	It is important to note that no single out-of-bounds value can trigger a recovery action. This is recommended in order to prevent transient errors or temporary communication protocol issues from triggering an unnecessary response which might disable a well-functioning component.
-	
-%	\marginnote{\textbf{Temporary failure}: Caused by events such as bit flips, noise or transients, and can be corrected without intervention, or with a simple restart/power-cycle.\par\textbf{Permament failure}: A failure (typically in hardware, e.g.\ due to latchups or short-circuits) that cannot be corrected autonomously.}
-	The distinction between \emph{temporary} and \emph{permanent} failures is made by \textbf{counting the number of consecutive failures}. Before a permanent action to disable a sensor is enacted, at least 5 attempts to communicate must have failed.
-	
-	The use of 2 hot-redundant sensor also allows us to investigate the difference between the two temperatures to deduce the health of the produced data. If the absolute difference between the 2 values is too high, assuming the sensors are placed close enough together, an error condition is assumed. However, as triple modular redundancy was not implemented for this system, it is not possible to deduce which sensor has failed.
-	
-	\item The \textbf{failure recovery and isolation actions}.
-	
-	These are listed in terms of \ac{PUS} events (\emph{\texttt{ST[05]} event reporting}) and event-actions (\emph{\texttt{ST[19]} eventaction}), which are linked to \Cref{tab:demo_eventaction}.
-	
-	The selected recovery actions match the approach shown in \Cref{fig:fdirtemp}. Additionally, when it is not known which sensor has failed, a fail-safe approach of restarting or disabling both sensors is used.
-\end{itemize}
 
 \begin{table*}
 	\centering
@@ -1766,15 +1752,15 @@ The \ac{HSIA} adds the following significant pieces of information to the \ac{FM
 		\textbf{\texttt{F-040}} & Temporary Value Shift & 
 		\(
 		\begin{cases}
-			\left|\Delta T\right| & > \SI{20}{\celsius} \text{ or} \\
-			T_1 &> \SI{100}{\celsius} \text{ or} \\
-			T_1 &< \SI{-40}{\celsius}
+		\left|\Delta T\right| & > \SI{5}{\celsius} \text{ or} \\
+		T_1 &> \SI{100}{\celsius} \text{ or} \\
+		T_1 &< \SI{-40}{\celsius}
 		\end{cases}
 		\) \newline for 2 times
-		 & 4, 6 & 0, 4 & Power-cycle sensor 1 \\
+		& 4, 6 & 0, 4 & Power-cycle sensor 1 \\
 		\textbf{\texttt{F-050}} & Permanent Value Shift & \(
 		\begin{cases}
-		\left|\Delta T\right| & > \SI{20}{\celsius} \text{ or} \\
+		\left|\Delta T\right| & > \SI{5}{\celsius} \text{ or} \\
 		T_1 &> \SI{100}{\celsius} \text{ or} \\
 		T_1 &< \SI{-40}{\celsius}
 		\end{cases}
@@ -1793,7 +1779,7 @@ The \ac{HSIA} adds the following significant pieces of information to the \ac{FM
 		\textbf{\texttt{F-100}} & Temporary Value Shift & 
 		\(
 		\begin{cases}
-		\left|\Delta T\right| & > \SI{20}{\celsius} \text{ or} \\
+		\left|\Delta T\right| & > \SI{5}{\celsius} \text{ or} \\
 		T_2 &> \SI{100}{\celsius} \text{ or} \\
 		T_2 &< \SI{-40}{\celsius}
 		\end{cases}
@@ -1801,7 +1787,7 @@ The \ac{HSIA} adds the following significant pieces of information to the \ac{FM
 		& 5, 6 & 1, 4 & Power-cycle sensor 2 \\
 		\textbf{\texttt{F-110}} & Permanent Value Shift & \(
 		\begin{cases}
-		\left|\Delta T\right| & > \SI{20}{\celsius} \text{ or} \\
+		\left|\Delta T\right| & > \SI{5}{\celsius} \text{ or} \\
 		T_2 &> \SI{100}{\celsius} \text{ or} \\
 		T_2 &< \SI{-40}{\celsius}
 		\end{cases}
@@ -1814,16 +1800,36 @@ The \ac{HSIA} adds the following significant pieces of information to the \ac{FM
 		
 		
 		
-		\textbf{\texttt{F-130}} & Overheating & \(T_1 > \SI{40}{\celsius}\) or \(T_2 > \SI{40}{\celsius}\) & 10, 11 & 6 & Restart subsystem \\ \bottomrule
+		\textbf{\texttt{F-130}} & Overheating & \(T_1 > \SI{50}{\celsius}\) or \(T_2 > \SI{50}{\celsius}\) & 10, 11 & 6 & Restart subsystem \\ \bottomrule
 	\end{tabular}
 	\vspace{2pt}
 \end{table*}
 
-\clearpage
+The \ac{HSIA} adds the following significant pieces of information to the \ac{FMEA} \autocite{ECSS-Q-ST-30-02C}:
+\begin{itemize}
+	\item The \textbf{monitored parameters} and the \textbf{conditions} that trigger the recovery action.
+	
+	These are listed here in terms of \ac{PUS} parameters which can be easily identified and compared by software. This list is then linked to the corresponding \emph{\texttt{ST[12]} on-board monitoring} service definitions, listed in \Cref{tab:demo_monitoring}.
+	
+	It is important to note that no single out-of-bounds value can trigger a recovery action. This is recommended in order to prevent transient errors or temporary communication protocol issues from triggering an unnecessary response which might disable a well-functioning component.
+	
+%	\marginnote{\textbf{Temporary failure}: Caused by events such as bit flips, noise or transients, and can be corrected without intervention, or with a simple restart/power-cycle.\par\textbf{Permament failure}: A failure (typically in hardware, e.g.\ due to latchups or short-circuits) that cannot be corrected autonomously.}
+	The distinction between \emph{temporary} and \emph{permanent} failures is made by \textbf{counting the number of consecutive failures}. Before a permanent action to disable a sensor is enacted, at least 5 attempts to communicate must have failed.
+	
+	The use of dual hot-redundant sensors also allows us to investigate the difference between the two temperatures to deduce the health of the produced data. If the absolute difference between the 2 values is too high, assuming the sensors are placed close enough together, an error condition is assumed. However, as triple modular redundancy was not implemented for this system, it is not possible to deduce which sensor has failed.
+	
+	Note that for this demonstration, we chose thresholds and timings that may slightly differ from the actual mission thresholds and limits, in order to ease testing and results presentation.
+	
+	\item The \textbf{failure recovery and isolation actions}.
+	
+	These are listed in terms of \ac{PUS} events (\emph{\texttt{ST[05]} event reporting}) and event-actions (\emph{\texttt{ST[19]} eventaction}), which are linked to \Cref{tab:demo_eventaction}.
+	
+	The selected recovery actions match the approach shown in \Cref{fig:fdirtemp}. Additionally, when it is not known which sensor has failed, a fail-safe approach of restarting or disabling both sensors is used.
+\end{itemize}
 
 \paragraph{Parameters}
 
-After investigating the \acl{HSIA}, we can list the scalar parameters for the \emph{\texttt{ST[20]} parameter management} service\autocite{ECSS-E-ST-70-41C} (\Cref{tab:demo_params}).
+After investigating the \acl{HSIA}, we can list the scalar parameters for the \emph{\texttt{ST[20]} parameter management} service (\Cref{tab:demo_params}).
 
 Beyond the actual temperature values, we have included the \textbf{difference} (\(\Delta\)) between the two temperatures, since the \acs{PUS} standard does not provide ways to perform arithmetic calculations without hard-coded software. Additionally, the status of each sensor peripheral is included, which is an enumerated value.\footnote{One of \texttt{NOMINAL}, \texttt{TIMEOUT} or \texttt{DISABLED}} 
 
@@ -1843,6 +1849,7 @@ These parameters are telemetered to the ground segment and displayed to the user
 		4            & Temperature 2 Status         &       & Enumerated   & RW  \\
 		5			 & Temperature 1+2 Status       &		& Enumerated   & R  \\ \bottomrule
 	\end{tabularx}
+	\vspace{.5em}
 \end{table}
 
 \paragraph{On-board monitoring definitions}
@@ -1867,23 +1874,24 @@ The \emph{check validity conditions} are important to mention in this case, as t
 		\midrule
 		4 & Temperature 1 & Temp. 1 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 2 & Range & \( -\SI{40}{\celsius} < t < \SI{100}{\celsius} \) \\
 		5 & Temperature 2 & Temp. 2 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 2 & Range & \( -\SI{40}{\celsius} < t < \SI{100}{\celsius} \) \\
-		6 & \(\Delta\) Temperature & Temp. 1+2 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 2 & Range & \( -\SI{20}{\celsius} < \Delta < \SI{20}{\celsius} \) \\
+		6 & \(\Delta\) Temperature & Temp. 1+2 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 2 & Range & \( -\SI{5}{\celsius} < \Delta < \SI{5}{\celsius} \) \\
 		\midrule
 		7 & Temperature 1 & Temp. 1 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Range & \( -\SI{40}{\celsius} < t < \SI{100}{\celsius} \) \\
 		8 & Temperature 2 & Temp. 2 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Range & \( -\SI{40}{\celsius} < t < \SI{100}{\celsius} \) \\
-		9 & \(\Delta\) Temperature & Temp. 1+2 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Range & \( -\SI{20}{\celsius} < \Delta < \SI{20}{\celsius} \) \\
+		9 & \(\Delta\) Temperature & Temp. 1+2 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Range & \( -\SI{5}{\celsius} < \Delta < \SI{5}{\celsius} \) \\
 		\midrule
 		10 & Temperature 1 & Temp. 1 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Range & \( t < \SI{50}{\celsius} \) \\
 		11 & Temperature 2 & Temp. 2 Status & \texttt{NOMINAL} & \SI{500}{\milli\second} & 5 & Range & \( t < \SI{50}{\celsius} \) \\ \bottomrule
 	\end{tabular}
 	\end{adjustbox}
+	\vspace{.5em}
 \end{table*}
 
 \paragraph{Event-action definitions}
 
 The final part of the puzzle are the event-action definitions, which can be seen on \Cref{tab:demo_eventaction} and combine:
 \begin{itemize}
-	\item \ac{PUS} events (\texttt{ST[05]} service) which are automatically generated when an on-board monitoring definition goes out of limits
+	\item \ac{PUS} events (\texttt{ST[05]} service) which are automatically generated when an on-board monitoring definition goes out of limits.
 	\item \ac{PUS} event-action definitions (\texttt{ST[19]} service), which link every occurrence of an event to a stored \ac{TC} that is immediately executed.
 	They define the \acs{FDIR} recovery actions.
 \end{itemize}
