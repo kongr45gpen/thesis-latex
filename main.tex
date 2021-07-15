@@ -1,4 +1,4 @@
-\documentclass[a4paper,nobib]{tufte-book}
+\documentclass[a4paper,nobib,final]{tufte-book}
 
 \hypersetup{colorlinks}% uncomment this line if you prefer colored hyperlinks (e.g., for onscreen viewing)
 
@@ -6,7 +6,7 @@
 
 %%
 % Book metadata
-\title{Design of Fault Detection, Isolation and Recovery in the AcubeSAT nanosatellite\thanks{AcubeSAT}}
+\title{Design of FDIR in the AcubeSAT nanosatellite\thanks{AcubeSAT}}
 \author[Konstantinos Kanavouras]{Konstantinos Kanavouras}
 \publisher{Aristotle University of Thessaloniki}
 
@@ -17,6 +17,13 @@
 \def\acusepage#1{}
 
 \usepackage{microtype}
+
+\hypersetup{
+	pdftitle={Design of FDIR in the AcubeSAT nanosatellite},
+	pdfsubject={Design of Fault Detection, Isolation and Recovery in the AcubeSAT Nanosatellite},
+	pdfauthor={Konstantinos Kanavouras},
+	addtopdfcreator={tufte-book class}
+}
 
 \begin{document}
 
@@ -307,7 +314,7 @@ This document begins with a summary of the AcubeSAT mission, which is the main m
 
 The last chapter includes a practical demonstration of the proposed \acs{FDIR} on a simple two-sensor test system (\Cref{cap:practical}). The system is constructed so that it can detect and recover from all foreseen possible failures, using software libraries covering the \acs{ECSS} and \acs{FDIR} standards. After the system has been developed, a full test of its response to failures is performed. This simulation platform is configured to emulate the satellite system, including the microcontroller and the ground station.
 
-\chapter{The AcubeSAT mission}
+\chapter{The AcubeSAT Mission}
 \label{cap:acubesat}
 
 \begin{marginfigure}
@@ -635,7 +642,7 @@ As a complex project, AcubeSAT uses a set of supporting utilities, ready-made or
 	\item \foothref[,]{https://gitlab.com/acubesat/utilities/mattermost-documentation-bot}{Documentation List} a platform for cataloguing and navigating the documents produced by the team
 \end{compactitem}
 
-\chapter{The SAVOIR \acs{FDIR} concept}
+\chapter{The SAVOIR \acs{FDIR} Concept}
 \label{cap:savoir}
 
 In this section, we will briefly examine the combination of two philosophies used by European organisations active in the space domain. The first philosophy is linked to the \textbf{\texttt{ECSS-E-ST-70-41C} standard} \autocite{ECSS-E-ST-70-41C} developed by the \acf{ECSS}, which defines the basic set of telemetry (\acs{TM}) and telecommands (\acs{TC}) that a satellite platform needs, so that it can be fully controllable by ground operators.
@@ -895,7 +902,7 @@ The levels of \acs{FDIR} in AcubeSAT are the following three:
 	\item \textbf{System}: This includes failures which cannot be corrected au\-to\-nom\-ous\-ly by the system (e.g.\ insufficient power, excessive angular velocity). The recovery action for system-level failures is usually to enter \emph{Safe Mode}, where only the most basic and vital satellite operations are performed until the failure is repaired by \acl{GS} commands.
 \end{enumerate}
 
-\section{Reliable Architectures}
+\section{Reliable architectures}
 \label{sec:theoretical}
 
 Before implementing the \acs{FDIR}, it makes sense to study the different architectural decisions that can be made during the design of a small satellite system. In particular, the following designs will be compared \autocite{birolini_reliability_engineering_2004}:
@@ -1181,13 +1188,13 @@ The typical architecture chosen in AcubeSAT is as follows:
 \end{itemize}
 
 \FloatBarrier
-\section{Detailed \acs{FDIR} Actions}
+\section{Detailed \acs{FDIR} actions}
 
 The following section presents a list of the implemented methods to detect, prevent and recover from errors occurring on the satellite. For each possible failure identified in \acs{FMEA} \autocite{retselis_acubesat_fmea_2020}, one or more detection and correction methods are selected from \Cref{tab:fdir_detect,tab:fdir_preventive,tab:fdir_correction}, and tailored to the respective element.
 
 
 \clearpage
-\subsection{Detection Actions}
+\subsection{Detection actions}
 \begin{table*}[h]
 	\centering
 	\caption[][10pt]{AcubeSAT \acs{FDIR} failure detection methods}
@@ -1212,7 +1219,7 @@ The following section presents a list of the implemented methods to detect, prev
 \end{table*}
 
 \clearpage
-\subsection{Preventive Actions}
+\subsection{Preventive actions}
 
 \begin{table*}[h]
 	\centering
@@ -1334,7 +1341,7 @@ After formulating the architecture and design of the \acs{FDIR}, its implementat
 
 Verification of \acs{FDIR} is the last part of the process, and involves checking for any feared event through hardware or software simulation.
 
-\chapter{Practical demonstration of \ac{FDIR}}
+\chapter{Practical Demonstration of \acs{FDIR}}
 \label{cap:practical}
 
 As a proof of concept for AcubeSAT's \ac{FDIR} implementation, a practical setup to simulate the satellite's behaviour was prepared (\Cref{fig:block}). Key elements of the setup are:
@@ -1423,7 +1430,7 @@ The two sensors are wired via \ac{I2C} with the necessary pull-up resistors. The
 \FloatBarrier
 \section{Software}
 
-\subsection{Flight Segment}
+\subsection{Flight segment}
 
 All \ac{FDIR} operations and functionality are developed using the \textbf{C++} language\footnote{The \texttt{C++17} standard has been selected} on the \ac{MCU}. All developments rely on free and open source software which is freely available for download and modification. \foothref{https://git-scm.com/}{Git} version control is used for all software projects.
 
@@ -1509,7 +1516,7 @@ All software developed in the scope of this thesis is available online, and list
 
 
 \FloatBarrier
-\subsection{Software Size}
+\subsection{Software size}
 
 Since we are developing an embedded system with limited resources, it makes sense to analyse the size of the generated code. The \texttt{gcc} compiler allows measuring the memory consumption of the software in detail. The total size of the software is shown in \Cref{tab:resusage}, and the C++ files with the largest footprint are shown in \Cref{tab:ramusage,tab:romusage}.\footnote{The data was generated using the \href{https://github.com/PromyLOPh/linkermapviz}{\texttt{linkermapviz}} library.}
 
@@ -1577,7 +1584,7 @@ Since we are developing an embedded system with limited resources, it makes sens
 Note that no attempts were made to manually optimise the memory consumption or the performance of the system. Also, note that due to the usage of the \acs{ETL} library and the ban on dynamic memory allocation, the values shown in \Cref{tab:ramusage} refer to the majority of runtime \acs{RAM} consumption. In fact, the stack used by all Free\acs{RTOS} tasks is already listed as part of the \texttt{heap\_4.c} file.
 
 \FloatBarrier
-\subsection{\ac{I2C} Failure Detection}
+\subsection{\ac{I2C} failure detection}
 
 It is of interest to investigate how the hardware \ac{I2C} peripheral provided by the microcontroller can be used to monitor the symptoms of bus failure.
 
@@ -1622,7 +1629,7 @@ It is of interest to investigate how the hardware \ac{I2C} peripheral provided b
 
 \FloatBarrier
 
-\subsection{Mission Control}
+\subsection{Mission control}
 
 The ground segment desktop computer needs to parse received packets and send commands, as well as display information about the sensor measurements, \ac{FDIR} status and health of the connected flight system.
 
@@ -1650,7 +1657,7 @@ To allow for a quick overview of the \acs{FDIR} status, we implemented an online
 
 The application was written in HTML and Javascript, taking advantage of the WebSocket technology, and its GUI is based on the Material Design Lite library.\footnote[]{\url{https://getmdl.io/}} It is located in the\foothref{https://github.com/kongr45gpen/fdir-demo-yamcs/tree/master/ecss-interface}{\texttt{fdir-demo-yamcs}} repository, along with the other parts of the demo \acl{GS}.
 
-\section{\ac{FDIR} setup}
+\section{\acs{FDIR} setup}
 
 The purpose of the test setup is to observe the response of the system to any failure of the two ``vulnerable'' temperature sensors. For this purpose, we will attempt to simulate every failure mode of each sensor, and design an \ac{FDIR} implementation that anticipates all those failures.
 
@@ -1689,7 +1696,7 @@ As a required input for the \ac{FDIR} detailed design, a \ac{FMEA} analysis need
 \end{table*}
 
 \FloatBarrier
-\subsection{\ac{FDIR} detailed design}
+\subsection{\acs{FDIR} detailed design}
 
 \begin{figure*}[ht]
 	\includegraphics{TempSensorFDIR}
@@ -2130,7 +2137,7 @@ After the failure is detected, the corresponding \textbf{event} is generated and
 \label{fig:yamcsf010event}
 \end{figure*}
 
-After the event has been reported, the event-action mechanism is triggered. The action associated with the temporary failure of the sensor is to call the \texttt{restart\_sensor} function\footnote{\emph{\texttt{ST[08]} function management} service} with an argument value of ``\texttt{1}'', which signals the restart of the 1\textsuperscript{st} sensor. On human observers, the indicator light \textbf{flashes} as the system power-cycles the sensor. This was the first attempt to fix the problem.
+After the event has been reported, the event-action mechanism is triggered. The action associated with the temporary failure of the sensor is to call the \texttt{restart\_sensor} function\footnote{\emph{\texttt{ST[08]} function management} service} with an argument value of ``\texttt{1}'', which signals the restart of the 1\textsuperscript{st} sensor. To human observers, the indicator light \textbf{flashes} as the system power-cycles the sensor. This was the first attempt to fix the problem.
 	
 At this point, as part of the test procedure, the experimenter reconnects the remote sensor, thus simulating the ``fix'' of the problem. The attempts to communicate with the sensor are now successful, and the system assumes that the fault has been repaired.
 	
@@ -2425,7 +2432,7 @@ This failure essentially belongs to subsystem level, and not unit (sensor) level
 \end{figure}
 
 \clearpage
-\subsection{Real-time modification of \ac{FDIR}}
+\subsection{Real-time modification of \acs{FDIR}}
 
 The power of \acs{SAVOIR}'s \ac{FDIR} approach lies in the fact that the entire \ac{FDIR} concept can be safely modified via \ac{TC} without requiring any modifications or reuploads of the spacecraft's software. The application of the \acs{ECSS} services paradigm allows customising all on-board \ac{FDIR} functions and associated services using predefined \ac{TC} structures. In this section, \acs{ECSS} commands will be executed to demonstrate these capabilities and their control from the Ground Station.
 
