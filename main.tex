@@ -1,4 +1,4 @@
-\documentclass[a4paper,nobib,final]{tufte-book}
+\documentclass[a4paper,nobib,justified,final]{tufte-book}
 
 \hypersetup{colorlinks}% uncomment this line if you prefer colored hyperlinks (e.g., for onscreen viewing)
 
@@ -109,8 +109,6 @@ Copyright \copyright\ \the\year\ \thanklessauthor
 \par\smallcaps{Published by the \thanklesspublisher}
 
 \par\smallcaps{\href{https://github.com/kongr45gpen/thesis-latex}{Https://GitHub.com/Kongr45gpen/Thesis-Latex}}
-
-\justify
 
 \par Licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License (the ``License''); you may not
 use this file except in compliance with the License. You may obtain a copy
@@ -1471,7 +1469,7 @@ To ensure high reliability and a low resource footprint of the software, the fol
 	\item ``Expensive'' features such as Run-Time Type Inference, Dynamic Casts or Exceptions are also prohibited.
 \end{compactenum}
 
-The \href{https://www.microchip.com/en-us/development-tools-tools-and-software/embedded-software-center/mplab-harmony-v3}{MPLAB Harmony}\footnote[][1.5cm]{\url{https://www.microchip.com/en-us/development-tools-tools-and-software/embedded-software-center/mplab-harmony-v3}} \ac{HAL} and configurator are used to interface with all the \acs{MCU}'s peripherals. \foothref{https://www.jetbrains.com/clion/}{CLion} has been selected as the \acs{IDE}, along with the \foothref{https://cmake.org/}{CMake} build system.
+The \href{https://www.microchip.com/en-us/development-tools-tools-and-software/embedded-software-center/mplab-harmony-v3}{MPLAB Harmony}\footnote[]{\url{https://www.microchip.com/en-us/development-tools-tools-and-software/embedded-software-center/mplab-harmony-v3}} \ac{HAL} and configurator are used to interface with all the \acs{MCU}'s peripherals. \href{https://www.jetbrains.com/clion/}{CLion}\footnote[][3ex]{\url{https://www.jetbrains.com/clion/}} has been selected as the \acs{IDE}, along with the \foothref{https://cmake.org/}{CMake} build system.
 
 All software developed in the scope of this thesis is available online, and listed in \Cref{tab:new_software}. A summary of used libraries can also be found in \Cref{tab:old_software}.
 
@@ -1663,7 +1661,7 @@ The \acs{YAMCS} suite does not provide built-in support for monitoring and contr
 	
 To allow for a quick overview of the \acs{FDIR} status, we implemented an online interface showing the above (\Cref{fig:pusviewer}). The interface is updated in real-time via the \acs{YAMCS} \acs{HTTP} \acs{API}, and displays both \acs{FDIR} definitions and live status.
 
-The application was written in HTML and Javascript, taking advantage of the WebSocket technology, and its GUI is based on the Material Design Lite library.\footnote[]{\url{https://getmdl.io/}} It is located in the\foothref{https://github.com/kongr45gpen/fdir-demo-yamcs/tree/master/ecss-interface}{\texttt{fdir-demo-yamcs}} repository, along with the other parts of the demo \acl{GS}.
+The application was written in HTML and Javascript, taking advantage of the WebSocket technology, and its GUI is based on the Material Design Lite library.\footnote[]{\url{https://getmdl.io/}} It is located in the \foothref{https://github.com/kongr45gpen/fdir-demo-yamcs/tree/master/ecss-interface}{\texttt{fdir-demo-yamcs}} repository, along with the other parts of the demo \acl{GS}.
 
 \section{\acs{FDIR} setup}
 
