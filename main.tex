@@ -461,7 +461,7 @@ We have created a Python library consolidating the above steps\footurl{https://g
 %	\end{subfigure}
 %	\includegraphics[width=.45\textwidth]{/home/kongr45gpen/Pictures/jeka8ara kapoglis.png}
 
-	\caption[Dynamic power budget analysis]{Dynamic power budget analysis. Left: Power consumption \& generation for the orbit. Right: Battery discharge level throughout the mission}
+	\caption[Dynamic power budget analysis]{Dynamic power budget analysis. Left: Power consumption \& generation for the orbit. Right: Battery discharge level throughout the mission.}
 \end{figure*}
 
 \subsection{\acf{OBDH}}
@@ -635,18 +635,20 @@ As a complex project, AcubeSAT uses a set of supporting utilities, ready-made or
 	\item \foothref[,]{https://gitlab.com/acubesat/utilities/mattermost-documentation-bot}{Documentation List} a platform for cataloguing and navigating the documents produced by the team
 \end{compactitem}
 
+\end{comment}
+
 \chapter{The SAVOIR \ac{FDIR} concept}
 \label{cap:savoir}
 
 In this section, we will briefly examine the combination of two philosophies used by European organisations active in the space domain. The first philosophy is linked to the \textbf{\texttt{ECSS-E-ST-70-41C} standard} \autocite{ECSS-E-ST-70-41C} developed by the \acf{ECSS}, which defines the basic set of telemetry (\acs{TM}) and telecommands (\acs{TC}) that a satellite platform needs, so that it can be fully controllable by ground operators.
 
-The second philosophy is based on the \textbf{\texttt{SAVOIR-HB-003} \acs{SAVOIR} \acs{FDIR} Handbook} \autocite{SAVOIR-HB-003} of the \textbf{\acf{SAVOIR}} initiative. This handbook is based on the functions of the aforementioned \texttt{ECSS-E-ST-70-41C} standard, and proposes a detailed methodology for the development of \ac{FDIR} in a space project. This handbook is \textbf{the basis of the philosophy} followed in the remainder of this thesis.
+The second philosophy is based on the \textbf{\texttt{SAVOIR-HB-003} \acs{SAVOIR} \acs{FDIR} Handbook} \autocite{SAVOIR-HB-003} of the \textbf{\acf{SAVOIR}} initiative. This handbook revolves around the functions of the aforementioned \texttt{ECSS-E-ST-70-41C} standard, and proposes a detailed methodology for the development of \ac{FDIR} in a space project. This handbook is \textbf{the basis of the philosophy} followed in the remainder of this thesis.
 
 \section{The \acs{ECSS} \acl{PUS}}
 \label{sec:pus}
 
 
-The \texttt{ECSS-E-ST-70-41C} standard, or \textbf{\acs{PUS}} for short (\acl{PUS}), defines a set of structured \textbf{telecommands} and \textbf{telemetry} that a spacecraft can use to communicate with a \acl{GS}. It can be likened to a 'language' that lets operators be fully aware of a satellite's status and control all of its operational aspects. At the same time, it strictly specifies the basic functions that an autonomous system must perform, and defines the concepts of \textbf{applications}, \textbf{parameters} and \textbf{events}.
+The \texttt{ECSS-E-ST-70-41C} standard, or \textbf{\acs{PUS}} for short (\acl{PUS}), defines a set of structured \textbf{telecommands} and \textbf{telemetry} that a spacecraft can use to communicate with a \acl{GS}. It can be likened to a ``language'' that lets operators be fully aware of a satellite's status and control all of its operational aspects. At the same time, it strictly specifies the basic functions that an autonomous system must perform, and defines the concepts of \textbf{application processes}, \textbf{parameters} and \textbf{events}.
 
 \begin{marginfigure}
 	\includegraphics{ECSS-rq}
@@ -658,7 +660,7 @@ The \texttt{ECSS-E-ST-70-41C} standard, or \textbf{\acs{PUS}} for short (\acl{PU
 
 This standard is intended for use in any space mission, complementing other standards for mission-specific operations, communications or file transfer. Its authors recommend \acs{PUS} users to tailor it to their needs, viewing it as a ``menu'' from where the applicable parts are selected for each specific mission. In summary, the following 20 distinct ``services'' are provided in the standard \autocite{ECSS-E-ST-70-41C,ECSS-E-70-41A,kaufeler_esa_standard_1994}:
 
-\marginnote{%
+\marginnote[1cm]{%
 	\textbf{Application Process}: Any physical (hardware) or logical (software) entity that can receive telecommands and generate telemetry in terms of the \acs{PUS}
 	
 	\textbf{Event}: Occurence of a set of conditions that can arise during the mission, such as:
@@ -715,6 +717,7 @@ This standard is intended for use in any space mission, complementing other stan
 	
 	Provides the capability of running predefined actions that can receive further parameters. These actions can correspond to payload, platform, or any other functionality.
 	
+	\pagebreak[4] % to not break the next service in half
 	\item \textbf{\texttt{ST[09]}: Time management}
 	
 	Allows periodic reporting of the current absolute spacecraft time for observability and correlation purposes.
@@ -729,7 +732,7 @@ This standard is intended for use in any space mission, complementing other stan
 	
 	\item \textbf{\texttt{ST[12]}: On-board monitoring}
 	
-	This service allows checking parameter values to ensure that they remain within configurable limits. Whenever a violation occurs, an \texttt{ST[05]} can be optionally generated for further processing.
+	This service allows checking parameter values to ensure that they remain within configurable limits. Whenever a violation occurs, an \texttt{ST[05]} event can be optionally generated for further processing.
 	
 	\item \textbf{\texttt{ST[13]}: Large packet transfer}
 	
@@ -741,7 +744,7 @@ This standard is intended for use in any space mission, complementing other stan
 	
 	\item \textbf{\texttt{ST[15]}: On-board storage and retrieval}
 	
-	This service allows storing generated report on-board, as well as their commanded mass retrieval when the spacecraft has \acl{GS} visibility.
+	This service allows storing generated reports on-board, as well as their commanded mass retrieval when the spacecraft has \acl{GS} visibility.
 	
 	\item \textbf{\texttt{ST[16]}: On-board traffic management} \emph{(deprecated)}
 	
@@ -785,6 +788,8 @@ This standard is intended for use in any space mission, complementing other stan
 The \texttt{SAVOIR-HB-003} handbook describes in detail the processes and \acs{FDIR} methodology, based on results \& lessons learned from previous space missions. In this chapter, we will provide brief commentary on the parts concerning a low-cost CubeSat mission.
 
 \subsection{\acs{FDIR} process steps}
+\bgroup
+\Crefname{enumi}{Step}{Steps}
 
 The steps of the \acs{FDIR} process are defined as follows:
 \begin{enumerate}
@@ -793,9 +798,9 @@ The steps of the \acs{FDIR} process are defined as follows:
 	\label{itm:fdir_reqs}
 
 	
-	Although the formulation of technical specifications for random events and failures is difficult, especially if there is a lack of reliability data, the handbook suggests a set of technical specifications \autocite[42]{SAVOIR-HB-003} that can be used by missions. A large set of these specifications are also met by the design presented in the following sections.
+	Although the formulation of technical specifications for random events and failures is difficult, especially if there is a lack of reliability data, the handbook suggests a set of technical specifications \autocite[42]{SAVOIR-HB-003} that can be used by missions. A large set of these specifications are also met by the design presented in the following chapters.
 	
-	\item \textbf{Concept definition}: This stage involves the comparison of the general \acs{FDIR} strategies that can solve the requirements of \Cref{itm:fdir_reqs}. Solutions such as redundancy, cross-strapping, triple-redundant voting or inherently reliable (high-cost) components.
+	\item \textbf{Concept definition}: This stage involves the comparison of the general \acs{FDIR} strategies that can solve the requirements of \Cref{itm:fdir_reqs}. Solutions include redundancy, cross-strapping, \acl{TMR} or inherently reliable (high-cost) components.
 	
 	
 	\label{itm:fdir_concept}
@@ -809,7 +814,7 @@ The steps of the \acs{FDIR} process are defined as follows:
 	
 	Then, for every feared event of the \acs{FMEA} catalogue, we perform the \textbf{\acf{HSIA}} \autocite{ECSS-Q-ST-30-02C}. In essence, this is where the \textbf{observed data} and \textbf{recovery \& isolation actions} are listed for each failure.
 	
-	Apart from the aforementioned, the exact operating method and flow of the \acs{FDIR} is detailed for every satellite mode, with special attention given to \emph{Safe Mode} (\Cref{itm:safe_mode}).
+	Apart from the aforementioned, the exact operating method and flow of the \acs{FDIR} is detailed for every satellite mode, with special attention given to \emph{Safe Mode} (\Cpageref{itm:safe_mode}).
 	
 	\item \textbf{Implementation \& Verificaton}: At this stage, the \acs{FDIR} hardware and software are constructed, ready to detect and respond to satellite failures. Additionally, for every item in the \acs{HSIA}, \textbf{verification} is performed by analysis or testing. In particular, each feared event must be simulated, and the correct handling of it by the system must by ensured.
 	\label{itm:fdir_valid}
@@ -819,10 +824,12 @@ The steps of the \acs{FDIR} process are defined as follows:
 	\item \textbf{In-operations preparation}: In the last step, final changes are made to the literature \& documentation to enhance the remote operability of the mission.
 \end{enumerate}
 
+
 Although all the above steps have high significance, ``lean'' missions need to especially focus on requirements (\Cref{itm:fdir_reqs}), concept definition (\Cref{itm:fdir_concept}), detailed design (\Cref{itm:fdir_cdr}) and verification (\Cref{itm:fdir_valid}). A simple example of an application of this process can be found in \Cref{cap:practical}.
 
 At this point, it should be made clear that the \acs{FDIR} design process and the system reliability analysis in general should be taken into account \textbf{throughout the lifetime} of a space project, and not only after the rest of the platform has been designed or implemented. The \ac{RAMS} domain is directly linked to all other subsystems, receiving the required inputs but also heavily influencing the rest of the design. In particular, young CubeSat projects tend to not pay the necessary attention to the reliability domain \autocite{langer_reliability_estimation_2017}.
 
+\egroup
 \subsection{Proposed architecture}
 
 The handbook proposes some principles for the architectural design of an \acs{FDIR} system, the first of which considers it as a \textbf{hierarchical} system, where minor failures are caused and corrected at component level, or are propagated as major failures to the rest of the system and require more impactful recovery actions.
@@ -835,7 +842,7 @@ The handbook proposes some principles for the architectural design of an \acs{FD
 
 Moving on, a \textbf{configurable} implementation is proposed that takes advantage of the spacecraft's \textbf{database} in order to store the detection and recovery events. The database and communication tools from the \textbf{\acs{PUS} services} of \Cref{sec:pus} are utilised to fully meet these requirements. This logic entails the following:
 \begin{compactenum}
-	\item Reliability-related data are stored in \textbf{parameters} (e.g. sensor values, peripheral status
+	\item Reliability-related data are stored in \textbf{parameters} (e.g.\ sensor values, peripheral status)
 	\item These parameters are \textbf{monitored} by the \emph{on-board monitoring} service. When a parameter gets out of bounds, a failure event is assumed.
 	\item Each out-of-bounds parameter creates an \textbf{event} that is telemetered to the ground segment.
 	\item Each event is associated with an \textbf{action}, stored in the \emph{event-action} service.
