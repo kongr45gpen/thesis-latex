@@ -324,15 +324,15 @@ The last chapter includes a practical demonstration of the proposed \acs{FDIR} o
 
 The implementation framework of this work is the \textbf{``AcubeSAT''} nanosatellite project, which, as of 2021, is under development by students of the Aristotle University of Thessaloniki, and aims to perform biology-centred research in space.
 
-The project was initiated in 2016. In February 2020, it became part of the \foothref{https://www.esa.int/Education/CubeSats_-_Fly_Your_Satellite}{``Fly Your Satellite!\ 3''} programme by the European Space Agency, aiming at a 2023 launch.
+The project was initiated in 2016. In February 2020, it became part of the \foothref{https://www.esa.int/Education/CubeSats_-_Fly_Your_Satellite}{``Fly Your Satellite!\ 3''} programme by the European Space Agency, aiming for a 2023 launch.
 
-AcubeSAT is three CubeSat units large (3U), measuring \SI[product-units = single]{10 x 10 x 34.05}{\centi\metre} and weighing \SI{4.26}{\kilo\gram}. Physically, the CubeSat contains the \textbf{experimental payload}, covering the bottom 2U, and the rest of the \textbf{spacecraft platform} which takes up the remaining 1U.
+AcubeSAT is three CubeSat units large (3U), measuring \linebreak[4]\SI[product-units = single]{10 x 10 x 34.05}{\centi\metre} and weighing \SI{4.26}{\kilo\gram}. Physically, the CubeSat contains the \textbf{experimental payload}, covering the bottom 2U, and the rest of the \textbf{spacecraft platform} which takes up the remaining 1U.
 
-The AcubeSAT project follows an \textbf{open-source philosophy}, making the software, developments and documentation available to the public under free licenses, at \url{https://gitlab.com/acubesat/}.
+The AcubeSAT project follows an \textbf{open-source philosophy}, making its software, developments and documentation available to the public under free licenses, at \url{https://gitlab.com/acubesat/}.
 
 \section{The mission}
 
-AcubeSAT's main mission is the study of \textbf{eukaryotic cells} in \acl{LEO}, and more specifically the assessment of the effects of \emph{radiation} and \emph{microgravity} on 190 different strains of the yeast species \emph{Saccharomyces Cerevisiae}. The previous are achieved with a novel lab-on-a-chip construction, structured around a \textbf{microfluidic chip} (\Cref{fig:microfluidic_chip}) \autocite{volpetti_microfluidic_biodisplay_2017} that allows the regulation of gene expression to be monitored on an unprecedented scale.
+AcubeSAT's main mission is the study of \textbf{eukaryotic cells} in \acl{LEO}, and more specifically the assessment of the effects of \emph{radiation} and \emph{microgravity} on 190 different strains of the yeast species \emph{Saccharomyces Cerevisiae}. The previous are achieved with a novel lab-on-a-chip construction, structured around a \textbf{microfluidic chip} (\Cref{fig:microfluidic_chip}) \autocite{volpetti_microfluidic_biodisplay_2017} that allows the regulation of gene expression to be monitored in an unprecedented scale.
 
 The results of the experiment are telemetered to Earth in the form of photographs, where the entirety of the microfluidic chip's chambers are depicted, and results are extracted acording to the \textbf{fluorescence level} produced in each chamber. The results in orbit are compared to a similar ground-based reference experiment.
 
@@ -352,15 +352,15 @@ The AcubeSAT nanosatellite is technically and programmatically split into 11 dif
 	\label{fig:microfluidic_chip}
 \end{marginfigure}
 
-In the following sections, a brief introduction on the function and design of each subsystem is presented. As the Systems Engineering and \acl{PA} process is inherently connected to the function of all subsystems, the details relevant to \acs{FDIR} are also mentioned. For more detailed information, the reader is encouraged to refer to \foothref{https://acubesat.spacedot.gr/subsystems/}{AcubeSAT's website}, or to the publicly available \foothref{https://gitlab.com/acubesat/documentation/cdr-public}{\ac{CDR} documents}.
+In the following sections, a brief introduction on the function and design of each subsystem is presented. As the Systems Engineering and \acl{PA} process is inherently connected to the function of all subsystems, the details relevant to \acs{FDIR} are also mentioned. For more detailed information, the reader is encouraged to refer to \foothref[,]{https://acubesat.spacedot.gr/subsystems/}{AcubeSAT's website} or to the publicly available \foothref[.]{https://gitlab.com/acubesat/documentation/cdr-public}{\ac{CDR} documents}
 \subsection{\acf{ADCS}}
 \label{sec:adcs}
 
-The \ac{ADCS} subteam is responsible for controlling the \textbf{attitude} and orientation of the spacecraft in orbit. This is achieved using a series of \ac{COTS} control actuators (one 3-axis magnetorquer board, one 1-axis reaction wheel), sensors for attitude determination (1 gyroscope and 2 magnetometers), and filtering, determination \& control algorithms \autocite{DDJF_AOCS}.
+The \ac{ADCS} subsystem is responsible for controlling the \textbf{attitude} and orientation of the spacecraft in orbit. This is achieved using a series of \ac{COTS} control actuators (one 3-axis magnetorquer board, one 1-axis reaction wheel), sensors for attitude determination (1 gyroscope and 2 magnetometers), and filtering, determination \& control algorithms \autocite{DDJF_AOCS}.
 
-The \ac{ADCS} can operate under different pointing profiles for different attitude needs:
+The \ac{ADCS} can operate under different \textbf{pointing profiles} for different attitude needs:
 \begin{enumerate}
-	\item \textbf{Detumbling}, where the satellite is attempting to minimize its angular acceleration close to 0, to ensure a stable communications link, prevent detachment of parts and allow easier regaining of pointing.
+	\item \textbf{Detumbling}, where the satellite is attempting to minimize its angular acceleration, to ensure a stable communications link, prevent detachment of parts and allow easier regaining of pointing.
 	
 	\begin{marginfigure}
 		\centering
@@ -373,7 +373,7 @@ The \ac{ADCS} can operate under different pointing profiles for different attitu
 	
 	\item \textbf{Nadir pointing}, where the satellite points the \(+X\) side towards the Earth. This profile is used during \emph{Nominal Mode} on passes over the \acl{GS}, where the directional patch antenna needs direct visibility.
 	
-	\item \textbf{Sun pointing}, where the satellite points two sides to the sun with a \SI{45}{\degree} angle of incident each, in order to maximise solar panel input. This profile is used during \emph{Nominal Mode}, between \ac{GS} passes, in order to ensure a positive power budget.
+	\item \textbf{Sun pointing}, where the satellite points two sides to the sun, each with a \SI{45}{\degree} angle of incidence, in order to maximise solar panel input. This profile is used during \emph{Nominal Mode}, between \ac{GS} passes, in order to ensure a positive power budget.
 \end{enumerate}
 
 \begin{margintable}
@@ -396,7 +396,7 @@ The communications subsystem is responsible for transmitting data between the Ea
 \begin{itemize}
 	\item \textbf{\acf{TC}}: Commands from the Earth to the satellite. They can be used to request information, or to perform specific spacecraft actions.
 	\item \textbf{\acf{TM}}: Information sent from the satellite towards Earth, typically including vital information such as sensor values, system status, timestamps and events.
-	\item \textbf{Science data}: The scientific data generated by the payload. These are the highest-volume data and represent the main scientific output of the mission.
+	\item \textbf{Science data}: The scientific data generated by the payload. These are the highest-volume data and represent the main scientific output of the mission (i.e.\ fluorescence photographs).
 \end{itemize}
 
 It is important to mention that the satellite orbit only allows for a very short visibility duration every day, increasing the needs for on-board autonomy and the importance of a correctly implemented \acs{FDIR} method.
@@ -408,7 +408,7 @@ It is important to mention that the satellite orbit only allows for a very short
 
 The main component of the \acs{COMMS} subsystem is the \textbf{SatNOGS COMMS board} \autocite{surligas_satnogscomms_2021}, an open-source \acs{RF} transceiver developed by the \href{https://libre.space/}{LibreSpace Foundation}, based on \acs{CCSDS} telecommunications standards.
 
-Communication will take place using 2 frequency bands on the \acs{ISM} range, namely \SI{436.5}{\mega\hertz} and \SI{2.425}{\giga\hertz}, supported by a deployable turnstile and a directional patch antenna respectively. The use of \acs{ISM} frequencies allows easy radio-amateur access to the satellite. The first (\acs{UHF}) band also emits a periodic \textbf{beacon}, listing information about satellite status.
+Communication takes place using 2 frequency bands on the \acs{ISM} range, namely \SI{436.5}{\mega\hertz} and \SI{2.425}{\giga\hertz}, supported by a deployable turnstile and a directional patch antenna respectively. The use of \acs{ISM} frequencies allows easy radio-amateur access to the satellite. The first (\acs{UHF}) band also emits a periodic \textbf{beacon}, listing information about satellite status.
 
 The communications subsystem is also responsible for the \ac{EMC} analysis and interference mitigation, as well as the design and construction of the satellite \acl{GS}. The \acl{GS} will be part of \textbf{SatNOGS} \autocite{white_overview_satellite_2018}, a global network of satellite ground stations based on open technologies and open data.
 
@@ -443,9 +443,9 @@ AcubeSAT has opted for a \ac{COTS} subsystem approach for the \ac{EPS} \autocite
 \FloatBarrier
 A dynamic approach is taken with regards to power budget calculation:
 \begin{compactenum}
-	\item The in-orbit power generation is calculated for the duration of the mission using the \textbf{STK} software, taking into account satellite orientation, pointing profiles and eclipse, with a \SI{1}{\minute} resolution.
+	\item The in-orbit power generation is calculated for the duration of the mission using the \textbf{STK} software,\footurl{https://www.agi.com/products/stk} taking into account satellite orientation, pointing profiles and eclipse, with a \SI{1}{\minute} resolution.
 	\item The power consumption of the system is calculated on average for each different operational mode.
-	\item \acs{MPPT} efficiencies and battery charge level are calculated for each timepoint, assuming worst-case thermal and electrical conditions
+	\item \acs{MPPT} efficiencies and battery charge level are calculated for each timepoint, assuming worst-case thermal and electrical conditions.
 	\item A system-wide 10\% margin is applied to the results.
 \end{compactenum}
 
@@ -467,9 +467,9 @@ We have created a Python library consolidating the above steps\footurl{https://g
 \subsection{\acf{OBDH}}
 \label{sec:obdh}
 
-The \ac{OBDH} subsystem is responsible for the design of the spacecraft's data interfaces, as well as the design of the \textbf{\acf{OBC}} board, tasked with controlling the basic spacecraft functions.\autocite{DDJF_OBDH}
+The \ac{OBDH} subsystem is responsible for the design of the spacecraft's data interfaces, as well as the design of the \textbf{\acf{OBC}} board, tasked with controlling the basic spacecraft functions \autocite{DDJF_OBDH}.
 
-The \ac{OBC} board contains the main \ac{OBC} logic, and is based around a \foothref{https://www.microchip.com/wwwproducts/en/SAMV71Q21RT}{Microchip SAMV71Q21RT} radiation-tolerant microcontroller and an \acs{MRAM} memory, used to store critical data. The board also hosts the in-house components of the \ac{ADCS} subsystem, as a space-saving measure.
+The \ac{OBC} board contains the main \ac{OBC} logic, and is based around a \foothref{https://www.microchip.com/wwwproducts/en/SAMV71Q21RT}{Microchip SAMV71Q21RT} radiation-tolerant microcontroller, and an \acs{MRAM} memory used to store critical data. The board also hosts the in-house components of the \ac{ADCS} subsystem, as a space-saving measure.
 
 \begin{marginfigure}
 	\centering
@@ -490,11 +490,11 @@ The \ac{OBSW} subsystem is responsible for the design and development of the nan
 
 The operations subsystem is responsible for the devising the operational modes \& procedures of the spacecraft, and ensuring the functionality, commandability and observability of the satellite before and during its mission.
 
-During flight, AcubeSAT can remain within one of the following \textbf{system modes}:\autocite{MDO}
+During flight, AcubeSAT can remain within one of the following so-called \textbf{system modes} \autocite{MDO}:
 \begin{itemize}
-	\item \textbf{Launch/Off mode}: During this mode, the satellite is turned completely off, and no subsystems are energised. This is used to represent the state of the spacecraft inside the deployer, where no electronics are allowed to be energised,\autocite[req. 3.3.3]{CDS13} and the CubeSat is in a completely dormant state.
+	\item \textbf{Launch/Off mode}: During this mode, the satellite is turned completely off, and no subsystems are powered. This is used to represent the state of the spacecraft inside the deployer, where no electronics are allowed to be energised \autocite[req. 3.3.3]{CDS13}, and the CubeSat is in a completely dormant state.
 	
-	\item \textbf{Commissioning mode}: This mode is initiated as soon as the CubeSat exits the deployer, meaning that launch is complete. It contains the initial boot actions of the spacecraft, including detumbling and antenna deployment. No science takes place during commissioning mode.
+	\item \textbf{Commissioning mode}: This mode is initiated as soon as the CubeSat exits the deployer, meaning that launch is complete. It contains the initial boot actions of the spacecraft, including detumbling and antenna deployment. No science takes place during Commissioning mode.
 	
 	\item \textbf{Nominal mode}: This mode represents the state where the CubeSat will spend most of the time on. Apart from the necessary autonomy functions and battery charging, the CubeSat will also downlink telemetry and science data. No science takes place during nominal mode, except for health checks commanded from the ground. Nominal mode is also the only mode where the satellite performs nadir or sun pointing (\Cref{sec:adcs}).
 	
@@ -502,9 +502,9 @@ During flight, AcubeSAT can remain within one of the following \textbf{system mo
 	
 	AcubeSAT has split science mode into \textbf{3 distinct occurrences}, termed sub-experiments \(\alpha\), \(\beta\) and \(\gamma\), lasting 72 hours each, and taking place at different points of the mission to investigate the time-dependence of the observed results.
 	
-	\item \textbf{Safe mode}: It is common for spacecraft systems to include a \emph{Safe Mode},\autocite[385]{aguirre_introduction_space_2013} where the spacecraft switches off all non-essential systems and function, in order to respond to major malfunctions that cannot be corrected by autonomous procedures. Safe mode is intended as a well-defined and well-tested mode which is easy to maintain and reduces risk of any malfunction.
+	\item \textbf{Safe mode}: It is common for spacecraft systems to include a \emph{Safe Mode} \autocite[385]{aguirre_introduction_space_2013}, where the spacecraft switches off all non-essential systems and functions, in order to respond to major faults that cannot be corrected by autonomous procedures. Safe mode is intended as a well-defined and well-tested mode which is easy to maintain and reduces risk of any malfunction.
 	
-	On AcubeSAT, spacecraft functionality is significantly reduced, and the attitude profile includes pointing only. However, \ac{UHF} communication and beacon transmission are still active for observability purposes.
+	On AcubeSAT, spacecraft functionality in Safe Mode is significantly reduced, and the attitude profile includes detumbling only. However, \ac{UHF} communication and beacon transmission are still active for observability purposes.
 \end{itemize}
 
 \begin{table*}[h]
@@ -529,7 +529,7 @@ Each mode is associated with a \textbf{functional flow} diagram, showing a high-
 \begin{figure}
 	\centering
 	\includegraphics[width=.6\textwidth]{AcubeSAT_System_Modes}
-	\caption[][3cm]{All transitions between system modes}
+	\caption[][3cm]{All transitions between system modes \parencite{acubesatteam_acubesat_functional_2021}}
 	\label{fig:transitions}
 \end{figure}
 
@@ -554,7 +554,7 @@ The Structural subsystem has taken over:
 
 The \acl{SYE} subteam serves as the technical authority for the satellite. It is responsible for coordinating the developments and interfaces between subsystems, ensuring the conformance to standards and technical requirements, and identifying \& resolving all issues arising from the complex multi-discipline design of the CubeSat.
 
-Additionally, the \ac{SYE} team is responsible for some specific technical developments that do not belong in any of the other subsystems, such as \ac{RAMS}, \ac{FMEA}, harnessing and the \acl{MAIV} plan.
+Additionally, the \ac{SYE} team is responsible for some specific technical developments that do not belong in any of the other subsystems, such as \ac{RAMS}, \ac{FMEA}, harnessing, and the \ac{MAIV} plan.
 
 \subsection{\acf{SU}}
 \label{sec:su}
@@ -588,7 +588,7 @@ The payload is composed of the following functional parts \autocite{DDJF_PL}:
 There is a number of constraints that the payload imposes on \ac{FDIR} design:
 \begin{enumerate}
 	\item \textbf{Interruption} of one of the three 72-hour subexperiments during execution may mean complete loss of the subexperiment. The impact of such an event depends on the duration and timepoint of its occurence. In any case, adequate observability will allow the ground-control experiment to mimic the in-orbit conditions as much as possible.
-	\item \textbf{Freezing} of liquids inside the chip and fluidic tubes may lead to permanent damage on the setup. As such, heater operation may be required even during safe mode, after the first sub-experiment has been performed and liquid has flown into the system. This characteristics imposes further restrictions on the minimum availability of the system, depending on the thermal conditions.
+	\item \textbf{Freezing} of liquids inside the chip and fluidic tubes may lead to permanent damage on the setup. As such, heater operation may be required even during Safe Mode, if the first sub-experiment has been performed and liquid has flown into the system. This characteristic imposes further restrictions on the minimum availability of the system, depending on the thermal conditions.
 \end{enumerate}
 
 \begin{figure*}
@@ -606,9 +606,9 @@ There is a number of constraints that the payload imposes on \ac{FDIR} design:
 
 \subsection{Thermal}
 
-The Thermal subteam is responsible for the thermal analysis of the satellite, where the solar and earth albedo conditions are combined with the components' heat dissipation to determine the worst-case temperatures experienced by the satellite in hot and cold conditions.
+The Thermal subteam is responsible for the thermal analysis of the spacecraft, where the solar and earth albedo conditions are combined with the components' heat dissipation to determine the worst-case temperatures experienced by the satellite in hot and cold conditions.
 
-The results of thermal analysis typically lead to implementation of passive or active thermal control methods. Notably, in AcubeSAT, 3 electronically-controlled heaters are used for the batteries, \acs{PDMS} chip and valves.
+The results of thermal analysis typically lead to implementation of passive or active thermal control methods. Notably, in AcubeSAT, three electronically-controlled heaters are used for the batteries, \acs{PDMS} chip and valves.
 
 \subsection{Trajectory}
 
@@ -628,11 +628,11 @@ AcubeSAT's requirements do not dictate use of thrusters, meaning that the satell
 
 As a complex project, AcubeSAT uses a set of supporting utilities, ready-made or built by the team, to fulfil its technical and organisational needs. The following tools play a crucial role in the organisation:
 \begin{compactitem}
-	\item \foothref{https://gitlab.com/acubesat}{GitLab}, for sharing code and organizing tasks
-	\item \foothref{https://ocdt.esa.int/}{Open Concurrent Design Tool}, a platform for sharing technical data and values for satellite components
-	\item \foothref{https://www.latex-project.org/}{\LaTeX} and \foothref{https://www.overleaf.com/}{Overleaf}, for writing technical literature and documentation
-	\item \foothref{https://acubesat.spacedot.gr/requirements-tree}{Requirements Tree}, an interactive view of the technical specifications of the satellite
-	\item \foothref{https://gitlab.com/acubesat/utilities/mattermost-documentation-bot}{Documentation List}, a platform for cataloguing and navigating the documents produced by the team
+	\item \foothref[,]{https://gitlab.com/acubesat}{GitLab} for sharing code and organizing tasks
+	\item \foothref[,]{https://ocdt.esa.int/}{Open Concurrent Design Tool} a platform for sharing technical data and values for satellite components
+	\item \foothref{https://www.latex-project.org/}{\LaTeX} and \foothref[,]{https://www.overleaf.com/}{Overleaf} for writing technical literature and documentation
+	\item \foothref[,]{https://acubesat.spacedot.gr/requirements-tree}{Requirements Tree} an interactive view of the technical specifications of the satellite
+	\item \foothref[,]{https://gitlab.com/acubesat/utilities/mattermost-documentation-bot}{Documentation List} a platform for cataloguing and navigating the documents produced by the team
 \end{compactitem}
 
 \chapter{The SAVOIR \ac{FDIR} concept}

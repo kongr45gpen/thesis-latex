@@ -6,13 +6,13 @@
 \newcommand\footurl@[1]{\footnote{\url@{#1}}}
 \DeclareRobustCommand{\footurl}{\hyper@normalise\footurl@}
 
-\newcommand\foothref@[2]{\href@{#1}{#2}\footnote{\url@{#1}}}
+\newcommand\foothref@[2]{\href@{#1}{#2}\hyper@punct\footnote{\url@{#1}}}
 \def\Hy@foothref#{%
 	\hyper@normalise\foothref@
 }
 \DeclareRobustCommand*{\foothref}[1][]{%
 	\begingroup
-	\setkeys{href}{#1}%
+	\global\def\hyper@punct{#1}
 	\@ifnextchar\bgroup\Hy@foothref{\hyper@normalise\foothref@}%
 }
 \makeatother
