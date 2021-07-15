@@ -26,6 +26,8 @@
 }
 
 \begin{document}
+	
+\addcontentsline{toc}{chapter}{Preamble}
 
 % Front matter
 %\frontmatter
@@ -95,6 +97,8 @@
 
 % v.4 copyright page
 \newpage
+\phantomsection
+\addcontentsline{toc}{section}{Copyrights}
 \begin{fullwidth}
 ~\vfill
 \thispagestyle{empty}
@@ -124,24 +128,28 @@ under the License.\index{license}
 
 \par The AcubeSAT project is carried out with the support of the Education Office of the \href{https://www.esa.int/}{European Space Agency}, under the educational \href{https://www.esa.int/Education/CubeSats_-_Fly_Your_Satellite/}{Fly Your Satellite! programme}.
 
-\par The views expressed herein by the authors can \smallcaps{in no way be taken to reflect} the official opinion, or endorsement, of the European Space Agency.
+\par The views expressed herein by the author can \smallcaps{in no way be taken to reflect} the official opinion, or endorsement, of the European Space Agency.
 
 \par\textit{Rendered on \today{} (\texttt{\gitcommit}: \gitcommitmessage)}
 \end{fullwidth}
 
 % r.5 contents
 \tableofcontents
+\addcontentsline{toc}{section}{Contents}
 
 \begin{fullwidth}
 \listoffigures
+\addcontentsline{toc}{section}{List of Figures}
 
 \listoftables
+\addcontentsline{toc}{section}{List of Tables}
 
 %\chapter*{List of Acronyms}
 %\acuseall%
 \bgroup
 \setlength\parskip{1ex}
 \printacronyms[pages={display=all,seq/use=false},]
+\addcontentsline{toc}{section}{Acronyms}
 \egroup
 
 \end{fullwidth}
@@ -2440,7 +2448,7 @@ The level of reconfigurability possible is defined by requirements listed in \pa
 
 \begin{table*}[h]
 	\centering
-	\caption{\ac{FDIR} reconfigurability requirements}
+	\caption{\acs{FDIR} reconfigurability requirements}
 	\label{tab:fdir-recon-rq}
 	\renewcommand{\arraystretch}{1.2}
 	\begin{tabularx}{\textwidth}{@{}lXlL{4cm}@{}}
